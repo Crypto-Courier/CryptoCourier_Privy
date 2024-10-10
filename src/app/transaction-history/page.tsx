@@ -12,11 +12,8 @@ import { sendEmail } from "../../components/Email/Emailer";
 import { renderEmailToString } from "../../components/Email/renderEmailToString";
 import { Transaction } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import lLogo from "../../assets/lLogo.png";
-import dLogo from "../../assets/dLogo.png";
-import { X } from "lucide-react"; // You can replace this with an actual icon library
 import loader from "../../assets/loading.gif";
-import Joyride from "react-joyride";
+
 
 const TxHistory: React.FC = () => {
   const router = useRouter();
@@ -25,49 +22,10 @@ const TxHistory: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showHelp, setShowHelp] = useState(false);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null);
   const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
-  const [runTour2, setRunTour2] = useState(false); // Initially set to false
-  const [pageLoaded, setPageLoaded] = useState(false);
-
   const { theme } = useTheme();
 
-  const steps = [
-    {
-      target: ".resend",
-      disableBeacon: true,
-      content: "Click here to resend email to receiver",
-    },
-    {
-      target: ".trx",
-      disableBeacon: true,
-      content: "Click here to show transaction data in block explorer.",
-    },
-    {
-      target: ".showhelp",
-      disableBeacon: true,
-      content: "Need help? Click here for assistance.",
-    },
-  ];
-
-  // Check if the tour has been completed previously
-  useEffect(() => {
-    const tourCompleted = localStorage.getItem("tourCompleted2");
-    if (!tourCompleted && pageLoaded) {
-      setRunTour2(true);
-    }
-  }, [pageLoaded]);
-
-  // Handle the completion of the tour
-  const handleTourCallback = (data: any) => {
-    const { status } = data;
-    const finishedStatuses = ["finished", "skipped"];
-    if (finishedStatuses.includes(status)) {
-      localStorage.setItem("tourCompleted2", "true");
-      setRunTour2(false);
-    }
-  };
   // Condition routing to send token page
   const SendToken = () => {
     if (isConnected) {
@@ -78,12 +36,6 @@ const TxHistory: React.FC = () => {
       );
     }
   };
-
-  useEffect(() => {
-    if (!isLoading && (transactions.length > 0 || error)) {
-      setPageLoaded(true);
-    }
-  }, [isLoading, transactions, error]);
 
   // useEffect to fetch the transaction detail from database
   useEffect(() => {
@@ -316,7 +268,7 @@ const TxHistory: React.FC = () => {
                         </div>
                         <div className="flex gap-3">
                           {tx.senderWallet === address && (
-                            <div className="bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2">
+                            <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2">
                               {loadingTxId === index ? (
                                 <Image
                                   src={loader}
@@ -326,17 +278,17 @@ const TxHistory: React.FC = () => {
                               ) : (
                                 <button
                                   onClick={() => handleResend(tx, index)} // Pass the index to identify transaction
-                                  className="resend text-[15px] "
+                                  className=" text-[15px] "
                                 >
                                   Resend
                                 </button>
                               )}
                             </div>
                           )}
-                          <div className="bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex item-center gap-2">
+                          <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex item-center gap-2">
                             <Image src={trx} alt="" />
                             <button
-                              className="trx text-[15px] "
+                              className=" text-[15px] "
                               onClick={() =>
                                 openTransactionReciept(tx.customizedLink)
                               }
@@ -350,7 +302,7 @@ const TxHistory: React.FC = () => {
                   )
                 ) : (
                   <div
-                    className={`text-center font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] ${
+                    className={`text-center font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
                       theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
                     }`}
                   >
@@ -364,164 +316,6 @@ const TxHistory: React.FC = () => {
       </div>
 
       <Footer />
-      <button
-        className={`showhelp fixed bottom-4 right-4 bg-[#000000] text-white font-bold w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-2xl z-50 ${
-          !showHelp ? "animate-pulse" : ""
-        }`}
-        onClick={toggleHelp}
-        onMouseEnter={() => setTooltipVisible(true)} // Show tooltip on hover
-        onMouseLeave={() => setTooltipVisible(false)} // Hide tooltip when not hovering
-      >
-        {showHelp ? (
-          <X className="w-6 h-6" /> // Close icon when popup is open
-        ) : (
-          "?" // Pulsing Question mark icon when popup is closed
-        )}
-      </button>
-
-      {/* Tooltip */}
-      {tooltipVisible && !showHelp && (
-        <div
-          className={`absolute bottom-16 right-1 text-sm rounded-lg px-3 py-1 z-50 shadow-lg mb-2 ${
-            theme === "dark"
-              ? "bg-[#FFFFFF] text-blue-700"
-              : "bg-[#1C1C1C] text-[#FFE500]"
-          }`}
-        >
-          Help Center
-        </div>
-      )}
-      {/* Help Popup */}
-      {showHelp && (
-        <div
-          ref={helpRef}
-          className={`border border-[#FF3333] fixed  p-6 rounded-lg shadow-lg w-[90%] sm:w-[70%] md:w-[50%] lg:w-[35%] h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[60vh] z-50 overflow-y-auto scroll ${
-            theme === "dark" ? "bg-black" : "bg-white"
-          }`}
-          style={{
-            position: "absolute",
-            top: "30%", // Slightly adjusted top for better viewing on smaller screens
-            right: "10px", // Aligns with the button's right side
-          }}
-        >
-          <div>
-            <div
-              className="w-[9rem] sm:w-40 md:w-48 lg:w-56 logo"
-              style={{ marginLeft: "-17px" }}
-            >
-              {theme === "light" ? (
-                <Image
-                  src={dLogo}
-                  alt="CRYPTO-COURIER Dark Logo"
-                  width={400}
-                  height={400}
-                  className="w-full h-auto "
-                />
-              ) : (
-                <Image
-                  src={lLogo}
-                  alt="CRYPTO-COURIER Light Logo"
-                  width={400}
-                  height={400}
-                  className="w-full h-auto "
-                />
-              )}
-            </div>
-            <div>
-              <h2 className="text-xl font-bold mb-4 ">Help Information</h2>
-              <p className="">
-                CryptoCourier makes it easy for you to send tokens to anyone
-                using just their email address, even if they are new to crypto.
-              </p>
-              <p className="mt-2">
-                <strong> About the Page: </strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li>You can view your transactions directly on this page.</li>
-                <li>
-                  You can see your transaction history for all the transactions
-                  you've made using the platform.
-                </li>
-                <li>
-                  Each transaction comes with a "View Tx" button. When you click
-                  it, you’ll be taken to a block explorer for Txn details.
-                </li>
-                <li>
-                  If you sent tokens to someone and they didn’t receive the
-                  email or accidentally deleted it, don't worry! You can click
-                  on the "Resend" button to send the claim token email again, so
-                  they can still receive their tokens.
-                </li>
-                <li>
-                  Not able to see any transaction details? Just invite or send
-                  token to other.
-                </li>
-              </ul>
-              <p>
-                <strong>What is a Transaction?</strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li>
-                  {" "}
-                  A transaction in crypto is when you send tokens from your
-                  wallet to someone else.{" "}
-                </li>
-                <li>
-                  {" "}
-                  In the traditional banking world, it’s similar to sending
-                  money to another bank account.{" "}
-                </li>
-                <li>
-                  {" "}
-                  In the world of blockchain, transactions are recorded on a
-                  decentralized system, which means no one controls the data,
-                  and everything is secure and transparent.{" "}
-                </li>
-              </ul>
-              <p>
-                <strong>What’s a Block Explorer?</strong>
-              </p>
-              <p>
-                A block explorer is like a public search engine for the
-                blockchain. It allows you to track your transactions by showing
-                details like
-                <ul className="list-disc list-inside mt-2 mb-4 ">
-                  <li> Time when it was confirmed </li>
-                  <li> Amount sent </li>
-                  <li> Sender and receiver wallet address </li>
-                  <li> Fees that sender paid for confirm transaction </li>
-                </ul>
-                This gives you full transparency and peace of mind, knowing that
-                your tokens are safely transferred.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-      <Toaster position="top-center" reverseOrder={false} />
-      {/* Joyride for the tour */}
-      <Joyride
-        steps={steps}
-        run={runTour2 && pageLoaded}// Only run if tour is not completed
-        continuous
-        showSkipButton
-        showProgress
-        styles={{
-          options: {
-            zIndex: 1000,
-            primaryColor: "#FF3333", // Customize button color to match your theme
-          },
-          buttonNext: {
-            backgroundColor: "#FF3333",
-            color: "#fff",
-          },
-        }}
-        locale={{
-          next: "Next", // Customize 'Next' button text
-          last: "Finish",
-        }}
-        callback={handleTourCallback} // Handle tour completion
-      />
     </div>
   );
 };

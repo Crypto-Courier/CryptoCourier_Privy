@@ -7,16 +7,12 @@ import Footer from "../../../components/Footer";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
-import lLogo from "../../../assets/lLogo.png";
-import dLogo from "../../../assets/dLogo.png";
-import { X } from "lucide-react"; // You can replace this with an actual icon library
 import trx from "../../../assets/trx.png";
 import { sendEmail } from "../../../components/Email/Emailer";
 import { renderEmailToString } from "../../../components/Email/renderEmailToString";
 import { usePrivy, useLogout, PrivyProvider } from "@privy-io/react-auth";
 import toast from "react-hot-toast";
 import { Transaction } from "../../../types/types";
-import Joyride from "react-joyride";
 
 const WalletAddressPage: React.FC = () => {
   const router = useRouter();
@@ -27,9 +23,7 @@ const WalletAddressPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [exportStatus, setExportStatus] = useState<string>("");
   const [showHelp, setShowHelp] = useState(false);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
-  const [runTour4, setRunTour4] = useState(false); // Initially set to false
 
   const { logout } = useLogout({
     onSuccess: () => {
@@ -41,50 +35,8 @@ const WalletAddressPage: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [bttBalance, setBttBalance] = useState<string>("0");
   const [isWalletReady, setIsWalletReady] = useState(false);
-
   const { theme } = useTheme();
-
   const walletAddress = params?.walletAddress as string;
-
-  const steps = [
-    {
-      target: ".Export",
-      disableBeacon: true,
-      content: "Click here to export your wallet.",
-    },
-    {
-      target: ".logout",
-      disableBeacon: true,
-      content: "Click here to logout.",
-    },
-    {
-      target: ".invite",
-      disableBeacon: true,
-      content: "Click here to invite your friends.",
-    },
-    {
-      target: ".showhelp",
-      disableBeacon: true,
-      content: "Need help? Click here for assistance.",
-    },
-  ];
-  // Check if the tour has been completed previously
-  useEffect(() => {
-    const tourCompleted = localStorage.getItem("tourCompleted4");
-    if (!tourCompleted) {
-      setRunTour4(true); // Run the tour if it hasn't been completed
-    }
-  }, []);
-
-  // Handle the completion of the tour
-  const handleTourCallback = (data: any) => {
-    const { status } = data;
-    const finishedStatuses = ["finished", "skipped"];
-    if (finishedStatuses.includes(status)) {
-      localStorage.setItem("tourCompleted4", "true"); // Set tour as completed
-      setRunTour4(false); // Stop running the tour
-    }
-  };
 
   useEffect(() => {
     let mounted = true;
@@ -526,230 +478,6 @@ const WalletAddressPage: React.FC = () => {
         </div>
       </div>
       <Footer />
-      <button
-        className={`showhelp fixed bottom-4 right-4 bg-[#000000] text-white font-bold w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-2xl z-50 ${
-          !showHelp ? "animate-pulse" : ""
-        }`}
-        onClick={toggleHelp}
-        onMouseEnter={() => setTooltipVisible(true)} // Show tooltip on hover
-        onMouseLeave={() => setTooltipVisible(false)} // Hide tooltip when not hovering
-      >
-        {showHelp ? (
-          <X className="w-6 h-6" /> // Close icon when popup is open
-        ) : (
-          "?" // Pulsing Question mark icon when popup is closed
-        )}
-      </button>
-      {/* Tooltip */}
-      {tooltipVisible && !showHelp && (
-        <div
-          className={`absolute bottom-16 right-1 text-sm rounded-lg px-3 py-1 z-50 shadow-lg mb-2 ${
-            theme === "dark"
-              ? "bg-[#FFFFFF] text-blue-700"
-              : "bg-[#1C1C1C] text-[#FFE500]"
-          }`}
-        >
-          Help Center
-        </div>
-      )}
-      {/* Help Popup */}
-      {showHelp && (
-        <div
-          ref={helpRef}
-          className={`border border-[#FF3333] fixed  p-6 rounded-lg shadow-lg w-[90%] sm:w-[70%] md:w-[50%] lg:w-[35%] h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[60vh] z-50 overflow-y-auto scroll ${
-            theme === "dark" ? "bg-black" : "bg-white"
-          }`}
-          style={{
-            position: "absolute",
-            top: "30%", // Slightly adjusted top for better viewing on smaller screens
-            right: "10px", // Aligns with the button's right side
-          }}
-        >
-          <div>
-            <div
-              className="w-[9rem] sm:w-40 md:w-48 lg:w-56 logo"
-              style={{ marginLeft: "-17px" }}
-            >
-              {theme === "light" ? (
-                <Image
-                  src={dLogo}
-                  alt="CRYPTO-COURIER Dark Logo"
-                  width={400}
-                  height={400}
-                  className="w-full h-auto "
-                />
-              ) : (
-                <Image
-                  src={lLogo}
-                  alt="CRYPTO-COURIER Light Logo"
-                  width={400}
-                  height={400}
-                  className="w-full h-auto "
-                />
-              )}
-            </div>
-            <div>
-              <h2 className="text-xl font-bold mb-4 ">Help Information</h2>
-              <p className="">
-                CryptoCourier makes it easy for you to send tokens to anyone
-                using just their email address, even if they are new to crypto.{" "}
-              </p>
-              <p className="mt-2">
-                <strong> About the Page: </strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li>You can view your transactions directly on this page.</li>
-                <li>
-                  You can see your transaction history for all the transactions
-                  you've made using the platform.
-                </li>
-                <li>
-                  If you want control over your wallet then click on address
-                  then export wallet. Read below instructions for more.
-                </li>
-                <li>
-                  If you want to invite your friends then click on Invite button
-                  but for that export wallet first.
-                </li>
-                <li>
-                  If you want to sign out then click on wallet then sign out
-                  button.
-                </li>
-              </ul>
-              <p className="mt-2">
-                <strong> What is Exporting Your Wallet? </strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li>
-                  Exporting your wallet means saving the private keys or
-                  recovery phrase associated with your wallet.
-                </li>
-                <li>This allows you to access your wallet from any device.</li>
-                <li>
-                  It's important to keep your private keys safe, as anyone with
-                  access to them can control your wallet and the assets within
-                  it.
-                </li>
-              </ul>
-              <p className="mt-2">
-                <strong>To export your wallet:</strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li> Click on wallet address.</li>
-                <li>Find the "Export Wallet" option in dropdown.</li>
-                <li>Copy and save your private key or recovery phrase.</li>
-                <li>
-                  <span className="text-red-400">
-                    Make sure to secure your private key or recovery phrase
-                    because it is type of password for your wallet but you can't
-                    forget or change it.
-                  </span>
-                </li>
-              </ul>
-              <p className="mt-2">
-                <strong>Download a Wallet:</strong>
-              </p>
-              <p className="mb-2">
-                If you don't have a wallet yet, you can download one from the
-                below links:
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4">
-                <li>
-                  <a
-                    href="https://metamask.io/download/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    MetaMask
-                  </a>{" "}
-                  - Recommanded for New User.
-                </li>
-                <li>
-                  <a
-                    href="https://rainbow.me/download/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    Rainbow Wallet
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.coinbase.com/wallet/downloads/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    Coinbase wallet
-                  </a>
-                </li>
-              </ul>
-              <p className="mt-2">
-                <strong>What is Importing Your Wallet?</strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4 ">
-                <li>
-                  Importing your wallet means restoring access to your existing
-                  wallet on a new device by using your private key or recovery
-                  phrase.
-                </li>
-                <li>
-                  This process is essential when switching devices or recovering
-                  access to your wallet.
-                </li>
-                <li>
-                  Importing a wallet ensures you can continue managing your
-                  tokens and assets securely.
-                </li>
-              </ul>
-              <p className="mt-2">
-                <strong>How to Import Your Wallet:</strong>
-              </p>
-              <ul className="list-disc list-inside mt-2 mb-4">
-                <li>Open your wallet application (such as MetaMask).</li>
-                <li>Select the "Import Wallet" option from the menu.</li>
-                <li>
-                  Enter your private key recovery phrase that you saved during
-                  the export process.
-                </li>
-                <li>
-                  Confirm the import and access your wallet on the new device.
-                </li>
-              </ul>
-
-              <p className="mt-2">
-                By importing your wallet, you can access your tokens and assets
-                from any device, allowing for easy management and secure access.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}{" "}
-      {/* Joyride for the tour */}
-      <Joyride
-        steps={steps}
-        run={runTour4} // Only run if tour is not completed
-        continuous
-        showSkipButton
-        showProgress
-        styles={{
-          options: {
-            zIndex: 1000,
-            primaryColor: "#FF3333", // Customize button color to match your theme
-          },
-          buttonNext: {
-            backgroundColor: "#FF3333",
-            color: "#fff",
-          },
-        }}
-        locale={{
-          next: "Next", // Customize 'Next' button text
-          last: "Finish",
-        }}
-        callback={handleTourCallback} // Handle tour completion
-      />
     </div>
   );
 };
