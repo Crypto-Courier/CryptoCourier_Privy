@@ -1,0 +1,38 @@
+.sec3Bg {
+  background-image: url("../assets/sec3bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  background-size: cover;
+  justify-content: center;
+  /* padding: 70px 60px; */
+  width: 100%;
+}
+.send {
+  /* background-color: rgba(253, 253, 253, 0.25); */
+  padding: 15px 30px;
+  outline: 0.1px solid rgba(255, 255, 255, 0.823);
+  outline-offset: -0.5px;
+  color: white;
+}
+.s3div {
+  border: 0.1px solid rgba(255, 255, 255, 0.485);
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  backdrop-filter: blur(15px);
+}
+.s3subdiv {
+  /* padding: 50px 40px; */
+  border: 0.1px solid rgba(255, 255, 255, 0.485);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  background: transparent;
+  backdrop-filter: blur(15px);
+  position: relative;
+  z-index: 999;
+}

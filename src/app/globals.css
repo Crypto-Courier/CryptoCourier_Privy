@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: white;
+  --text-color: black;
+}
+.txbgg {
+  height: 100vh;
+  background-image: url("..//assets//txbg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.navbar {
+  position: relative;
+  z-index: 80;
+}
+body {
+  background-color: white;
+  color: black;
+  --sb-track-color: linear-gradient(to right, #da619c, #ff844a), #0a11b5;
+  --sb-thumb-color: white;
+  --sb-size: 2px;
+
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+}
+body::-webkit-scrollbar {
+  width: 4px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 10px;
+}
+
+.dark body {
+  background-image: url("..//assets//darkbg.png");
+  color: white;
+  background-color: #171717;
+}
+.main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+button:focus,
+a:focus {
+  outline: none;
+}
+* {
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes btn {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

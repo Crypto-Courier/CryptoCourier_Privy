@@ -1,0 +1,47 @@
+{
+  "name": "crypto-courier",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@privy-io/react-auth": "^1.88.0",
+    "@privy-io/server-auth": "^1.14.2",
+    "@rainbow-me/rainbowkit": "^2.1.6",
+    "@react-email/components": "^0.0.25",
+    "@sendgrid/mail": "^8.1.3",
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-table": "^8.20.5",
+    "antd": "^5.21.2",
+    "axios": "^1.7.7",
+    "ethers": "^6.13.2",
+    "lucide-react": "^0.446.0",
+    "mongodb": "^6.9.0",
+    "next": "14.2.10",
+    "next-themes": "^0.3.0",
+    "nodemailer": "^6.9.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.4.1",
+    "react-joyride": "^2.9.2",
+    "react-router-dom": "^6.26.2",
+    "react-toggle": "^4.1.3",
+    "resend": "^4.0.0",
+    "viem": "^2.21.9",
+    "wagmi": "^2.12.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/nodemailer": "^6.4.16",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-toggle": "^4.0.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
