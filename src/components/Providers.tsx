@@ -74,27 +74,27 @@ const queryClient = new QueryClient();
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-      <PrivyProvider
+    <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
       config={{
         loginMethods: ['email', 'wallet'],
         appearance: {
           theme: 'light',
           accentColor: '#676FFF',
-          // You can customize other appearance options here
+          walletList: ['metamask', 'rainbow', 'wallet_connect', 'coinbase_wallet'],
         },
-        // Add any other Privy configuration options here
+        // Add any additional Privy configuration options here
       }}
     >
-        <RainbowKitProvider theme={myCustomTheme}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-          </ThemeProvider>
-        </RainbowKitProvider>
-        </PrivyProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider theme={myCustomTheme}>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              {children}
+            </ThemeProvider>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </PrivyProvider>
   );
 }

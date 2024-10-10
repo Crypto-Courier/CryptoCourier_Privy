@@ -1,104 +1,113 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import React, { useEffect, useState, useCallback } from 'react';
+import { usePrivy, useLogout } from '@privy-io/react-auth';
+import { useDisconnect } from 'wagmi';
 
 export const Connect = () => {
+  const { 
+    login, 
+    authenticated, 
+    ready, 
+    user,
+    connectWallet,
+  } = usePrivy();
+
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+
+  const { logout } = useLogout({
+    onSuccess: () => {
+      setIsWalletConnected(false);
+    },
+  });
+
+  const { disconnect: wagmiDisconnect } = useDisconnect();
+
+  const checkWalletConnection = useCallback(() => {
+    if (authenticated && user) {
+      const connectedWallets = user.linkedAccounts?.filter(account => account.type === 'wallet') || [];
+      setIsWalletConnected(connectedWallets.length > 0);
+    } else {
+      setIsWalletConnected(false);
+    }
+  }, [authenticated, user]);
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, [checkWalletConnection]);
+
+  useEffect(() => {
+    // Listen for external wallet disconnection
+    window.ethereum?.on('accountsChanged', (accounts: string[]) => {
+      if (accounts.length === 0) {
+        setIsWalletConnected(false);
+      } else {
+        checkWalletConnection();
+      }
+    });
+
+    return () => {
+      window.ethereum?.removeListener('accountsChanged', () => {});
+    };
+  }, [checkWalletConnection]);
+
+  if (!ready) {
+    return (
+      <div className="opacity-0 pointer-events-none user-select-none" aria-hidden="true">
+        Loading...
+      </div>
+    );
+  }
+
+  const handleConnect = async () => {
+    try {
+      if (authenticated) {
+        await connectWallet();
+      } else {
+        await login();
+      }
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
+  const handleDisconnect = async () => {
+    try {
+      // Disconnect using Privy
+      await logout();
+      
+      // Disconnect using wagmi
+      wagmiDisconnect();
+      
+      // Update local state
+      setIsWalletConnected(false);
+    } catch (error) {
+      console.error("Failed to disconnect wallet:", error);
+    }
+  };
+
+  if (!isWalletConnected) {
+    return (
+      <button
+        onClick={handleConnect}
+        type="button"
+        className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md"
+      >
+        Connect Wallet
+      </button>
+    );
+  }
+
+  const mainWallet = user?.linkedAccounts?.find(account => account.type === 'wallet');
+
   return (
-    <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openChainModal,
-        openConnectModal,
-        authenticationStatus,
-        mounted,
-      }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
-        const ready = mounted && authenticationStatus !== "loading";
-        const connected =
-          ready &&
-          account &&
-          chain &&
-          (!authenticationStatus || authenticationStatus === "authenticated");
-        return (
-          <div
-            {...(!ready && {
-              "aria-hidden": true,
-              style: {
-                opacity: 0,
-                pointerEvents: "none",
-                userSelect: "none",
-              },
-            })}
-          >
-            {(() => {
-              if (!connected) {
-                return (
-                  <button
-                    onClick={openConnectModal}
-                    type="button"
-                    className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md "
-                  >
-                    Connect Wallet
-                  </button>
-                );
-              }
-              if (chain.unsupported) {
-                return (
-                  <button
-                    onClick={openChainModal}
-                    type="button"
-                    className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 "
-                  >
-                    Wrong network
-                  </button>
-                );
-              }
-              return (
-                <div style={{ display: "flex", gap: 12 }}>
-                  <button
-                    onClick={openChainModal}
-                    className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 sm:hidden lg:flex md:flex hidden"
-                    type="button"
-                  >
-                    {chain.hasIcon && (
-                      <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
-                        }}
-                      >
-                        {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? "Chain icon"}
-                            src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {chain.name}
-                  </button>
-                  <button
-                    onClick={openAccountModal}
-                    type="button"
-                    className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md"
-                  >
-                    {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
-                  </button>
-                </div>
-              );
-            })()}
-          </div>
-        );
-      }}
-    </ConnectButton.Custom>
+    <div style={{ display: "flex", gap: 12 }}>
+      <button
+        onClick={handleDisconnect}
+        type="button"
+        className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md"
+      >
+        {mainWallet ? `${mainWallet.address.slice(0, 6)}...${mainWallet.address.slice(-4)}` : 'Disconnect'}
+      </button>
+    </div>
   );
 };
