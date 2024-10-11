@@ -232,7 +232,7 @@ const SendToken = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newToken),
+        body: JSON.stringify({...newToken, chainId}),
       });
 
       if (response.ok) {
