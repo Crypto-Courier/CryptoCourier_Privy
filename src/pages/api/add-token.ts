@@ -52,5 +52,6 @@ function validateTokenData(token: NewToken): string | null {
   if (!token.symbol) return 'Symbol is required';
   if (!token.name) return 'Name is required';
   if (isNaN(Number(token.decimals))) return 'Decimals must be a valid number';
+  if (!token.chainId) return 'Chain ID is required';
   return null;
 }

@@ -1,4 +1,5 @@
 export interface NewToken {
+    chainId: number;
     contractAddress: string;
     name: string;
     symbol: string;

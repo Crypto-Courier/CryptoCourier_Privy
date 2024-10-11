@@ -111,19 +111,35 @@ const SendToken = () => {
       console.error("No address available");
       return;
     }
-
+  
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/get-tokens?address=${address}`);
+      const response = await fetch(`/api/get-tokens?address=${address}&chainId=${chainId}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const tokenData = await response.json();
-
-      if (Array.isArray(tokenData) && tokenData.length > 0) {
-        setTokens(tokenData);
-        setSelectedToken(tokenData[0].contractAddress);
-        setSelectedTokenSymbol(tokenData[0].symbol);
+      const data = await response.json();
+      console.log('API Response:', data);
+      if (data.tokens && Array.isArray(data.tokens)) {
+        // Create a new array with native currency and ERC20 tokens
+        const allTokens = [
+          {
+            contractAddress: 'native',
+            symbol: data.nativeCurrency.symbol,
+            name: data.nativeCurrency.name,
+            balance: data.nativeCurrency.balance,
+            rawBalance: data.nativeCurrency.rawBalance,
+            decimals: data.nativeCurrency.decimals,
+          },
+          ...data.tokens
+        ];
+  
+        setTokens(allTokens);
+        
+        // Set the native currency as the default selected token
+        setSelectedToken('native');
+        setSelectedTokenSymbol(data.nativeCurrency.symbol);
+        setMaxAmount(data.nativeCurrency.balance);
       } else {
         console.warn("No tokens found or invalid data structure");
         setTokens([]);

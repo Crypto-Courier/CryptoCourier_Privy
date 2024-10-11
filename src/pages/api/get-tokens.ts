@@ -1,79 +1,96 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
 import { ethers } from 'ethers';
+import chainConfig from '../../config/chains';
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const ERC20_ABI = [
+  {
+    constant: true,
+    inputs: [{ name: "_owner", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ name: "balance", type: "uint256" }],
+    type: "function",
+  },
+];
 
-async function fetchWithRetry(url: string, retries = 3, delayMs = 1000) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        return await response.json();
-      }
-      if (response.status === 429) {
-        // console.log(`Rate limited, retrying in ${delayMs}ms...`);
-        await delay(delayMs);
-        continue;
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } catch (error) {
-      if (i === retries - 1) throw error;
-      // console.log(`Error fetching data, retrying in ${delayMs}ms...`);
-      await delay(delayMs);
-    }
-  }
-}
+const NATIVE_CURRENCY_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { address } = req.query;
+  const { address, chainId } = req.query;
 
   if (!address || typeof address !== 'string') {
     return res.status(400).json({ error: 'Valid address is required' });
   }
 
-  const apiKey = process.env.BTTC_API_KEY;
+  if (!chainId || typeof chainId !== 'string') {
+    return res.status(400).json({ error: 'Valid chainId is required' });
+  }
 
-  if (!apiKey) {
-    console.error("BTTC_API_KEY is not set");
-    return res.status(500).json({ error: 'Server configuration error' });
+  const chainIdNumber = parseInt(chainId);
+
+  if (!chainConfig[chainIdNumber]) {
+    return res.status(400).json({ error: 'Unsupported chain ID' });
   }
 
   try {
     const client = await clientPromise;
     const db = client.db('tokenDatabase');
-    const tokens = await db.collection('tokens').find({}).toArray();
+    
+    const tokens = await db.collection('tokens').find({ chainId: chainIdNumber }).toArray();
 
-    // console.log(`Found ${tokens.length} tokens in the database`);
+    const provider = new ethers.JsonRpcProvider(chainConfig[chainIdNumber].rpcUrl);
 
-    const tokenBalances = [];
-
-    for (const token of tokens) {
-      try {
-        const url = `https://api-testnet.bttcscan.com/api?module=account&action=tokenbalance&contractaddress=${token.contractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-        const data = await fetchWithRetry(url);
-
-        if (data.status === '1' && data.message === 'OK') {
-          const rawBalance = data.result;
-          const formattedBalance = ethers.formatUnits(rawBalance, token.decimals);
-          tokenBalances.push({
-            ...token,
-            balance: formattedBalance,
-            rawBalance
-          });
-        } else {
-          console.error(`Error fetching balance for token ${token.contractAddress}:`, data.message);
-        }
-
-        // Add a small delay between requests to avoid rate limiting
-        await delay(200);
-      } catch (error) {
-        console.error(`Error processing token ${token.contractAddress}:`, error);
-      }
+    if (!provider) {
+      return res.status(400).json({ error: 'Unsupported chain ID' });
     }
 
-    // console.log(`Returning ${tokenBalances.length} token balances`);
-    return res.status(200).json(tokenBalances);
+    const tokenBalances = await Promise.all(tokens.map(async (token) => {
+      try {
+        if (token.contractAddress.toLowerCase() === NATIVE_CURRENCY_ADDRESS.toLowerCase()) {
+          const balance = await provider.getBalance(address);
+          const formattedBalance = ethers.formatUnits(balance, chainConfig[chainIdNumber].nativeCurrency.decimals);
+          
+          if (balance > BigInt(0)) { // Using BigInt() constructor instead of literal
+            return {
+              ...token,
+              balance: formattedBalance,
+              rawBalance: balance.toString(),
+            };
+          }
+        } else {
+          const contract = new ethers.Contract(token.contractAddress, ERC20_ABI, provider);
+          const balance = await contract.balanceOf(address);
+          
+          if (balance > BigInt(0)) { // Using BigInt() constructor instead of literal
+            const formattedBalance = ethers.formatUnits(balance, token.decimals);
+            return {
+              ...token,
+              balance: formattedBalance,
+              rawBalance: balance.toString(),
+            };
+          }
+        }
+      } catch (error) {
+        console.error(`Error fetching balance for token ${token.contractAddress}:`, error);
+      }
+      return null;
+    }));
+
+    const filteredTokenBalances = tokenBalances.filter(token => token !== null);
+
+    const nativeBalance = await provider.getBalance(address);
+    const formattedNativeBalance = ethers.formatUnits(nativeBalance, chainConfig[chainIdNumber].nativeCurrency.decimals);
+
+    const responseData = {
+      tokens: filteredTokenBalances,
+      nativeCurrency: {
+        ...chainConfig[chainIdNumber].nativeCurrency,
+        balance: formattedNativeBalance,
+        rawBalance: nativeBalance.toString(),
+      },
+    };
+
+    return res.status(200).json(responseData);
   } catch (error) {
     console.error("Error in token fetching process:", error);
     return res.status(500).json({ error: 'Failed to fetch tokens' });
