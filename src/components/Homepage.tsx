@@ -10,14 +10,14 @@ import "../styles/homepage.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useAccount } from "wagmi";
-import lLogo from "../assets/lLogo.png";
-import dLogo from "../assets/dLogo.png";
+import { usePrivy } from "@privy-io/react-auth";
 import { X } from "lucide-react"; // You can replace this with an actual icon library
 
 function Homepage() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { isConnected } = useAccount();
+  const { isConnected, address: walletAddress } = useAccount();
+  const { user, login, authenticated } = usePrivy();
   const [showHelp, setShowHelp] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
@@ -44,12 +44,23 @@ function Homepage() {
   }, [showHelp]);
 
   const OpenHistory = () => {
-    if (isConnected) {
+    if (isConnected || authenticated) {
       router.push("/transaction-history");
     } else {
       alert("Please connect with Wallet first to send tokens.");
     }
   };
+
+  const getActiveAddress = () => {
+    if (authenticated && user?.email) {
+      return user.email.address;
+    } else if (isConnected && walletAddress) {
+      return walletAddress;
+    }
+    return null;
+  };
+
+  const activeAddress = getActiveAddress();
 
   return (
     <div className="main min-h-screen flex flex-col ">
@@ -99,16 +110,31 @@ function Homepage() {
             <div>Email to anyone</div>
           </div>
         </div>
+        
+        {/* {activeAddress && (
+          <div className="text-center mb-4">
+            <p>Connected as: {activeAddress}</p>
+          </div>
+        )} */}
 
         <div className="sec3Bg relative lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex-grow flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
-              <button
-                className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full  relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
-                onClick={OpenHistory}
-              >
-                Send
-              </button>
+               {activeAddress ? (
+                <button
+                  className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
+                  onClick={OpenHistory}
+                >
+                  Send
+                </button>
+              ) : (
+                <button
+                  className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
+                  onClick={() => login()}
+                >
+                  Connect or Login
+                </button>
+              )}
             </div>
           </div>
         </div>
