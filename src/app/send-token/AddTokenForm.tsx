@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { NewToken, AddTokenFormProps } from "../../types/types"; // Make sure this import path is correct
-
+import { useChainId } from "wagmi";
 
 const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
+  const chainId = useChainId();
   const { theme } = useTheme();
   const [newToken, setNewToken] = useState<Partial<NewToken>>({
     contractAddress: "",
@@ -29,7 +30,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ tokenAddress: newToken.contractAddress }),
+            body: JSON.stringify({ tokenAddress: newToken.contractAddress, chainId }),
           });
 
           const data = await res.json();

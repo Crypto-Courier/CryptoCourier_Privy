@@ -4,7 +4,7 @@ import { renderToString } from "react-dom/server";
 import "../../styles/History.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { useAccount, useSendTransaction } from "wagmi";
+import { useAccount, useSendTransaction, useChainId } from "wagmi";
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import { Copy, CheckCircle } from "lucide-react";
@@ -19,6 +19,7 @@ import { NewToken, TokenWithBalance } from "../../types/types";
 const SendToken = () => {
   const { address, isConnected } = useAccount();
   const [copied, setCopied] = useState(false);
+  const chainId = useChainId();
   const router = useRouter();
   const { data: hash, sendTransaction } = useSendTransaction();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
