@@ -8,7 +8,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import { ThemeProvider } from "next-themes";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { config } from "../../wagmi";
+import { config } from "../config/wagmi";
 
 const myCustomTheme = {
   blurs: {

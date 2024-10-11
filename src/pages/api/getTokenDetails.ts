@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ethers } from 'ethers';
-import chainConfig from '../../../chains';
+import chainConfig from '../../config/chains';
 
 const abi = [
   { constant: true, inputs: [], name: "name", outputs: [{ name: "", type: "string" }], type: "function" },
