@@ -141,33 +141,9 @@ function Homepage() {
       </div>
       <Footer />
 
-      <button
-        className={`showhelp fixed bottom-4 right-4 bg-[#FF3333] text-white font-bold w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-2xl z-50 ${
-          !showHelp ? "animate-pulse" : ""
-        }`}
-        onClick={toggleHelp}
-        onMouseEnter={() => setTooltipVisible(true)} // Show tooltip on hover
-        onMouseLeave={() => setTooltipVisible(false)} // Hide tooltip when not hovering
-      >
-        {showHelp ? (
-          <X className="w-6 h-6" /> // Close icon when popup is open
-        ) : (
-          "?" // Pulsing Question mark icon when popup is closed
-        )}
-      </button>
+  
 
-      {/* Tooltip */}
-      {tooltipVisible && !showHelp && (
-        <div
-          className={`absolute bottom-16 right-1 text-sm rounded-lg px-3 py-1 z-50 shadow-lg mb-2 ${
-            theme === "dark"
-              ? "bg-[#FFFFFF] text-blue-700"
-              : "bg-[#1C1C1C] text-[#FFE500]"
-          }`}
-        >
-          Help Center
-        </div>
-      )}
+      
     </div>
   );
 }

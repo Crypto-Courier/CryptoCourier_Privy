@@ -37,7 +37,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             supportedChains: [mainnet, sepolia]
           }}
         >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" >
             {children}
           </ThemeProvider>
         </PrivyProvider>
