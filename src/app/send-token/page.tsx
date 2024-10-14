@@ -6,7 +6,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useAccount, useSendTransaction, useChainId } from "wagmi";
 import { parseUnits } from "viem";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { Copy, CheckCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";

@@ -1,30 +1,43 @@
 "use client";
-import react, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "../../styles/History.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useTheme } from "next-themes";
 import { useAccount } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import trx from "../../assets/trx.png";
 import { sendEmail } from "../../components/Email/Emailer";
 import { renderEmailToString } from "../../components/Email/renderEmailToString";
 import { Transaction } from "../../types/types";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import loader from "../../assets/loading.gif";
 
 
 const TxHistory: React.FC = () => {
   const router = useRouter();
-  const { address, isConnected } = useAccount();
+  const { address: walletAddress, isConnected: isWalletConnected } = useAccount();
+  const { user, authenticated: isPrivyAuthenticated } = usePrivy();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [showHelp, setShowHelp] = useState(false);
-  const helpRef = useRef<HTMLDivElement | null>(null);
   const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
   const { theme } = useTheme();
+
+  const isConnected = isWalletConnected || isPrivyAuthenticated;
+
+  const getActiveAddress = () => {
+    if (isPrivyAuthenticated && user?.email) {
+      return user.email.address;
+    } else if (isWalletConnected && walletAddress) {
+      return walletAddress;
+    }
+    return null;
+  };
+
+  const activeAddress = getActiveAddress();
 
   // Condition routing to send token page
   const SendToken = () => {
@@ -32,7 +45,7 @@ const TxHistory: React.FC = () => {
       router.push("/send-token");
     } else {
       alert(
-        "It seems you are disconnected from your wallet. Please connect your wallet to send token."
+        "Please connect your wallet or log in to gift tokens to your friend."
       );
     }
   };
@@ -40,12 +53,12 @@ const TxHistory: React.FC = () => {
   // useEffect to fetch the transaction detail from database
   useEffect(() => {
     const fetchTransactions = async () => {
-      if (!address) return;
+      if (!activeAddress) return;
 
       setIsLoading(true);
       try {
         const response = await fetch(
-          `/api/get-transactions?walletAddress=${address}`
+          `/api/get-transactions?walletAddress=${activeAddress}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
@@ -62,7 +75,7 @@ const TxHistory: React.FC = () => {
     };
 
     fetchTransactions();
-  }, [address]);
+  }, [activeAddress]);
 
   const openTransactionReciept = (url: string) => {
     window.open(url, "_blank", "noreferrer");
@@ -115,27 +128,6 @@ const TxHistory: React.FC = () => {
     </div>
   );
 
-  const toggleHelp = () => {
-    setShowHelp(!showHelp);
-  };
-
-  // Close the help popup if clicking outside of it
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (helpRef.current && !helpRef.current.contains(event.target as Node)) {
-        setShowHelp(false); // Close the popup
-      }
-    }
-    if (showHelp) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showHelp]);
-
   return (
     <div className="main">
       <Navbar />
@@ -143,46 +135,43 @@ const TxHistory: React.FC = () => {
       <div className="txbg ">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px] ">
           <div
-            className={`flex justify-between border-black border-b-0 p-[30px] shadow-lg ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
+            className={`flex justify-between border-black border-b-0 p-[30px] shadow-lg ${theme === "dark" ? "bg-black" : "bg-white"
+              } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`flex items-center space-x-3 p-2 rounded-[10px] ${
-                theme === "dark"
+              className={`flex items-center space-x-3 p-2 rounded-[10px] ${theme === "dark"
                   ? "bg-[#1C1C1C] border border-[#A2A2A2]"
                   : "bg-[#F4F3F3] border border-[#C6C6C6]"
-              }`}
+                }`}
             >
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                  theme === "dark"
+                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"
-                }`}
+                  }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    theme === "dark"
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
-                  }`}
+                    }`}
                 ></div>
               </div>
               <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-                {address
-                  ? `${address.slice(0, 6)}...${address.slice(-4)}`
-                  : "Connect Wallet"}
+                {activeAddress
+                  ? isPrivyAuthenticated
+                    ? activeAddress
+                    : `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
+                  : "Connect or Login"}
               </span>
             </div>
             <div className="text-right flex items-end">
               <div></div>
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                  theme === "dark"
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#E265FF] text-white"
-                }`}
+                  }`}
                 onClick={SendToken}
               >
                 GIFT TOKEN
@@ -191,17 +180,15 @@ const TxHistory: React.FC = () => {
           </div>
 
           <div
-            className={`  ${
-              theme === "dark"
+            className={`  ${theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[30px] px-[30px]`}
+              } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[30px] px-[30px]`}
           >
             <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
               <h3
-                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] ${
-                  theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                }`}
+                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                  }`}
               >
                 Transaction history
               </h3>
@@ -219,31 +206,28 @@ const TxHistory: React.FC = () => {
                     transactions.map((tx, index) => (
                       <div
                         key={index}
-                        className={`flex justify-between items-center bg-opacity-50 p-3 rounded-xl mt-2 mx-3 ${
-                          theme === "dark"
+                        className={`flex justify-between items-center bg-opacity-50 p-3 rounded-xl mt-2 mx-3 ${theme === "dark"
                             ? "bg-[#000000]/20 border border-[#5C5C5C]"
                             : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center space-x-3">
                           <span
-                            className={`rounded-[10px] text-[15px] ${
-                              theme === "dark"
+                            className={`rounded-[10px] text-[15px] ${theme === "dark"
                                 ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
                                 : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
-                            }`}
+                              }`}
                           >
                             {tx.tokenAmount} {tx.tokenSymbol}
                           </span>
-                          {tx.senderWallet === address ? (
+                          {tx.senderWallet === activeAddress ? (
                             <>
                               <span className="text-[15px]">to</span>
                               <span
-                                className={`rounded-[10px]text-[15px] ${
-                                  theme === "dark"
+                                className={`rounded-[10px]text-[15px] ${theme === "dark"
                                     ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                     : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                                }`}
+                                  }`}
                               >
                                 {tx.recipientEmail}
                               </span>
@@ -252,11 +236,10 @@ const TxHistory: React.FC = () => {
                             <>
                               <span className="text-[15px]">from</span>
                               <span
-                                className={`rounded-[10px] text-[15px] ${
-                                  theme === "dark"
+                                className={`rounded-[10px] text-[15px] ${theme === "dark"
                                     ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                     : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                                }`}
+                                  }`}
                               >
                                 {`${tx.senderWallet.slice(
                                   0,
@@ -267,7 +250,7 @@ const TxHistory: React.FC = () => {
                           )}
                         </div>
                         <div className="flex gap-3">
-                          {tx.senderWallet === address && (
+                          {tx.senderWallet === activeAddress && (
                             <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2">
                               {loadingTxId === index ? (
                                 <Image
@@ -302,9 +285,8 @@ const TxHistory: React.FC = () => {
                   )
                 ) : (
                   <div
-                    className={`text-center font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
-                      theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                    }`}
+                    className={`text-center font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                      }`}
                   >
                     Connect your wallet to view your transactions.
                   </div>

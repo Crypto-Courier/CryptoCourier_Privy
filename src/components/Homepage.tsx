@@ -99,7 +99,7 @@ function Homepage() {
                   className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
                   onClick={() => login()}
                 >
-                  Connect or Login
+                  Connect Wallet
                 </button>
               )}
             </div>
