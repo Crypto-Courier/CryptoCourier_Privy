@@ -9,10 +9,10 @@ export const Connect = () => {
   const { chains, switchChain } = useSwitchChain();
   const currentChain = chains.find(chain => chain.id === chainId);
 
-  const { 
-    login, 
-    authenticated, 
-    ready, 
+  const {
+    login,
+    authenticated,
+    ready,
     user,
     connectWallet,
   } = usePrivy();
@@ -67,7 +67,7 @@ export const Connect = () => {
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      window.ethereum?.removeListener('accountsChanged', () => {});
+      window.ethereum?.removeListener('accountsChanged', () => { });
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [checkWalletConnection]);
@@ -82,11 +82,7 @@ export const Connect = () => {
 
   const handleConnect = async () => {
     try {
-      if (authenticated) {
-        await connectWallet();
-      } else {
-        await login();
-      }
+      await login();
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       // Handle error (e.g., show error message to user)
@@ -97,10 +93,10 @@ export const Connect = () => {
     try {
       // Disconnect using Privy
       await logout();
-      
+
       // Disconnect using wagmi
       wagmiDisconnect();
-      
+
       // Update local state
       setIsWalletConnected(false);
       setIsWalletDropdownOpen(false);
@@ -148,13 +144,13 @@ export const Connect = () => {
 
   return (
     <div className="flex gap-2">
-      <div className="relative" ref={chainDropdownRef} 
-        onMouseEnter={() => setIsChainDropdownOpen(true)} 
+      <div className="relative" ref={chainDropdownRef}
+        onMouseEnter={() => setIsChainDropdownOpen(true)}
         onMouseLeave={() => setIsChainDropdownOpen(false)}>
         <button
           onClick={toggleChainDropdown}
           className="bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center"
-        >    
+        >
           {currentChain && <span className="mr-2">{currentChain.name}</span>}
           <ChevronDown size={16} />
         </button>
@@ -165,9 +161,8 @@ export const Connect = () => {
                 <button
                   key={chain.id}
                   onClick={() => handleSwitchChain(chain.id)}
-                  className={`block w-full text-left px-4 py-2 text-sm ${
-                    chainId === chain.id ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
+                  className={`block w-full text-left px-4 py-2 text-sm ${chainId === chain.id ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                   role="menuitem"
                 >
                   Switch to {chain.name}
@@ -177,9 +172,9 @@ export const Connect = () => {
           </div>
         )}
       </div>
-      
-      <div className="relative" ref={walletDropdownRef} 
-        onMouseEnter={() => setIsWalletDropdownOpen(true)} 
+
+      <div className="relative" ref={walletDropdownRef}
+        onMouseEnter={() => setIsWalletDropdownOpen(true)}
         onMouseLeave={() => setIsWalletDropdownOpen(false)}>
         <button
           onClick={toggleWalletDropdown}

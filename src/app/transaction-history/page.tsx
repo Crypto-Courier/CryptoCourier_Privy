@@ -29,10 +29,11 @@ const TxHistory: React.FC = () => {
   const isConnected = isWalletConnected || isPrivyAuthenticated;
 
   const getActiveAddress = () => {
-    if (isPrivyAuthenticated && user?.wallet?.address) {
-      return user.wallet.address;
-    } else if (isWalletConnected && walletAddress) {
+
+    if (isWalletConnected && walletAddress) {
       return walletAddress;
+    } else if (user?.wallet?.address) {
+      return user.wallet.address;
     }
     return null;
   };

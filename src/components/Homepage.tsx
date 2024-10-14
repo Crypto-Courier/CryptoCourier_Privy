@@ -27,10 +27,10 @@ function Homepage() {
   };
 
   const getActiveAddress = () => {
-    if (authenticated && user?.email) {
-      return user.email.address;
-    } else if (isConnected && walletAddress) {
+    if (isConnected && walletAddress) {
       return walletAddress;
+    } else if (user?.email) {
+      return user.email.address;
     }
     return null;
   };

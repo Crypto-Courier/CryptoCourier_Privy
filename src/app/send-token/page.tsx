@@ -15,15 +15,16 @@ import Email from "../../components/Email/Email";
 import TxDetails from "../../components/TxDetails";
 import AddTokenForm from "./AddTokenForm";
 import { NewToken, TokenWithBalance } from "../../types/types";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 
 const SendToken = () => {
   const { address: walletAddress, isConnected: isWalletConnected } = useAccount();
-  const { user, authenticated: isPrivyAuthenticated } = usePrivy();
+  const { user, authenticated: isPrivyAuthenticated, sendTransaction: privySendTransaction } = usePrivy();
   const [copied, setCopied] = useState(false);
   const chainId = useChainId();
   const router = useRouter();
-  const { data: hash, sendTransaction } = useSendTransaction();
+  const {wallets} = useWallets();
+  const { data: hash, sendTransaction: wagmiSendTransaction } = useSendTransaction();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
   const [selectedToken, setSelectedToken] = useState<string>("");
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>("");
@@ -45,11 +46,11 @@ const SendToken = () => {
   };
 
   const getActiveAddress = () => {
-    if (isPrivyAuthenticated && user?.wallet?.address) {
-      return user.wallet.address;
-    } else if (isWalletConnected && walletAddress) {
+    if (isWalletConnected && walletAddress) {
       return walletAddress;
-    }
+    } else if ( user?.wallet?.address) {
+      return user.wallet.address;
+    } 
     return null;
   };
 
@@ -241,10 +242,24 @@ const SendToken = () => {
 
       const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
 
-      const tx = await sendTransaction({
-        to: walletAddress as `0x${string}`,
-        value: amountInWei,
-      });
+      // let txHash;
+      if (isPrivyAuthenticated) {
+        // Use Privy's sendTransaction
+        const tx = await privySendTransaction({
+          to: walletAddress,
+          value: amountInWei,
+        });
+        // txHash = tx.hash;
+      } else if (isWalletConnected) {
+        // Use wagmi's sendTransaction
+        const tx = await wagmiSendTransaction({
+          to: walletAddress as `0x${string}`,
+          value: amountInWei,
+        });
+        // txHash = tx.hash;
+      } else {
+        throw new Error("No wallet connected");
+      }
 
       setRecipientWalletAddress(walletAddress);
     } catch (error) {
