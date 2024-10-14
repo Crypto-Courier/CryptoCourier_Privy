@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import send2 from "../assets/Tcircle2.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -11,43 +11,18 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useAccount } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
-import { X } from "lucide-react"; // You can replace this with an actual icon library
 
 function Homepage() {
   const router = useRouter();
   const { theme } = useTheme();
   const { isConnected, address: walletAddress } = useAccount();
   const { user, login, authenticated } = usePrivy();
-  const [showHelp, setShowHelp] = useState(false);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
-  const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
 
-  const toggleHelp = () => {
-    setShowHelp(!showHelp);
-  };
-
-  // Close the help popup if clicking outside of it
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (helpRef.current && !helpRef.current.contains(event.target as Node)) {
-        setShowHelp(false); // Close the popup
-      }
-    }
-    if (showHelp) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showHelp]);
-
-  const OpenHistory = () => {
+  const OpenSendToken = () => {
     if (isConnected || authenticated) {
-      router.push("/transaction-history");
+      router.push("/send-token");
     } else {
-      alert("Please connect with Wallet first to send tokens.");
+      alert("Please connect your wallet or log in to gift tokens to your friend.");
     }
   };
 
@@ -67,15 +42,13 @@ function Homepage() {
       <Navbar />
       <div className="flex-grow flex flex-col justify-between ">
         <div
-          className={`border-y w-full flex justify-center items-center ${
-            theme === "light" ? "border-[#1E1E1E]" : "border-white"
-          }`}
+          className={`border-y w-full flex justify-center items-center ${theme === "light" ? "border-[#1E1E1E]" : "border-white"
+            }`}
         >
           <div className="flex lg:flex-row md:flex-row items-center justify-between w-[90%] mx-auto flex-col lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div
-              className={`sec1 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex items-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-[600] lg:border-r-2 lg:rounded-r-[100px] md:border-r-2 md:rounded-r-[100px] md:pr-8 pb-0 md:pb-0 w-full md:w-[60%] lg:w-[60%] text-center md:text-left lg:justify-start md:justify-start font-[700] sm:justify-center justify-center ${
-                theme === "light" ? "border-[#1E1E1E]" : "border-white"
-              }`}
+              className={`sec1 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex items-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-[600] lg:border-r-2 lg:rounded-r-[100px] md:border-r-2 md:rounded-r-[100px] md:pr-8 pb-0 md:pb-0 w-full md:w-[60%] lg:w-[60%] text-center md:text-left lg:justify-start md:justify-start font-[700] sm:justify-center justify-center ${theme === "light" ? "border-[#1E1E1E]" : "border-white"
+                }`}
             >
               Send your tokens
             </div>
@@ -110,20 +83,14 @@ function Homepage() {
             <div>Email to anyone</div>
           </div>
         </div>
-        
-        {/* {activeAddress && (
-          <div className="text-center mb-4">
-            <p>Connected as: {activeAddress}</p>
-          </div>
-        )} */}
 
         <div className="sec3Bg relative lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex-grow flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
-               {activeAddress ? (
+              {activeAddress ? (
                 <button
                   className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
-                  onClick={OpenHistory}
+                  onClick={OpenSendToken}
                 >
                   Send
                 </button>
@@ -140,10 +107,6 @@ function Homepage() {
         </div>
       </div>
       <Footer />
-
-  
-
-      
     </div>
   );
 }
