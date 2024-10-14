@@ -15,7 +15,13 @@ export const Connect = () => {
   const { chains, switchChain } = useSwitchChain();
   const currentChain = chains.find((chain) => chain.id === chainId);
 
-  const { login, authenticated, ready, user, connectWallet } = usePrivy();
+  const {
+    login,
+    authenticated,
+    ready,
+    user,
+    connectWallet,
+  } = usePrivy();
 
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isChainDropdownOpen, setIsChainDropdownOpen] = useState(false);
@@ -84,8 +90,8 @@ export const Connect = () => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      window.ethereum?.removeListener("accountsChanged", () => {});
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.ethereum?.removeListener('accountsChanged', () => { });
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [checkWalletConnection]);
 
@@ -106,11 +112,7 @@ export const Connect = () => {
 
   const handleConnect = async () => {
     try {
-      if (authenticated) {
-        await connectWallet();
-      } else {
-        await login();
-      }
+      await login();
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       // Handle error (e.g., show error message to user)
