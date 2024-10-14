@@ -15,13 +15,7 @@ export const Connect = () => {
   const { chains, switchChain } = useSwitchChain();
   const currentChain = chains.find((chain) => chain.id === chainId);
 
-  const {
-    login,
-    authenticated,
-    ready,
-    user,
-    connectWallet,
-  } = usePrivy();
+  const { login, authenticated, ready, user, connectWallet } = usePrivy();
 
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isChainDropdownOpen, setIsChainDropdownOpen] = useState(false);
@@ -90,8 +84,8 @@ export const Connect = () => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      window.ethereum?.removeListener('accountsChanged', () => { });
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.ethereum?.removeListener("accountsChanged", () => {});
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [checkWalletConnection]);
 
@@ -184,14 +178,14 @@ export const Connect = () => {
       >
         <button
           onClick={toggleChainDropdown}
-          className="border border-[#FFFFFF] bg-[#FF3333] py-3 px-4 rounded-full w-48 font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
+          className="border border-[#FFFFFF] bg-[#FF3333] py-3 px-4 rounded-full lg:w-48 md:w-48 sm:w-48 w-30 font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
         >
           {currentChain && <span className="mr-2">{currentChain.name}</span>}
           {/* <ChevronDown size={16} /> */}
         </button>
         <div className="mt-2">
           {isChainDropdownOpen && (
-            <div className="absolute left-0 w-48 rounded-[10px] shadow-lg bg-[#131313] ring-1 ring-black ring-opacity-5 flex items-center justify-center border border-[#696969] ">
+            <div className="absolute left-0 lg:w-48 md:w-48 sm:w-48 w-30 rounded-[10px] shadow-lg bg-[#131313] ring-1 ring-black ring-opacity-5 flex items-center justify-center border border-[#696969] ">
               <div
                 className="py-1"
                 role="menu"
@@ -202,7 +196,7 @@ export const Connect = () => {
                   <button
                     key={chain.id}
                     onClick={() => handleSwitchChain(chain.id)}
-                    className={`block w-40 text-center px-3 py-2 text-md rounded-full my-3 ${
+                    className={`block g:w-40 md:w-40 sm:w-40 w-20 text-center px-3 py-2 text-md rounded-full my-3 ${
                       chainId === chain.id
                         ? "transparent text-[#FF3333] border border-[#FF3333] "
                         : "transparent text-[#FF3333]  border border-[#FF3333] "
@@ -230,13 +224,19 @@ export const Connect = () => {
         <button
           onClick={toggleWalletDropdown}
           type="button"
-          className="border border-[#FFFFFF] w-50 bg-[#FF3333] py-3 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
+          className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-3 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
         >
-          {mainWallet
-            ? `${mainWallet.address.slice(0, 6)}...${mainWallet.address.slice(
-                -4
-              )} (${balance?.formatted.slice(0, 4)} ${balance?.symbol})`
-            : "Connected"}
+          {mainWallet ? (
+            <>
+              {mainWallet.address.slice(0, 6)}...{mainWallet.address.slice(-4)}
+              <span className="hidden sm:inline-block">
+                {/* Balance is shown only on screens medium and above */}(
+                {balance?.formatted.slice(0, 4)} {balance?.symbol})
+              </span>
+            </>
+          ) : (
+            "Connected"
+          )}
           {/* <ChevronDown className="ml-2" size={16} /> */}
         </button>
         <div className="mt-2">
