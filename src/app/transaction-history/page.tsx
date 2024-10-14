@@ -29,8 +29,8 @@ const TxHistory: React.FC = () => {
   const isConnected = isWalletConnected || isPrivyAuthenticated;
 
   const getActiveAddress = () => {
-    if (isPrivyAuthenticated && user?.email) {
-      return user.email.address;
+    if (isPrivyAuthenticated && user?.wallet?.address) {
+      return user.wallet.address;
     } else if (isWalletConnected && walletAddress) {
       return walletAddress;
     }
@@ -140,28 +140,26 @@ const TxHistory: React.FC = () => {
           >
             <div
               className={`flex items-center space-x-3 p-2 rounded-[10px] ${theme === "dark"
-                  ? "bg-[#1C1C1C] border border-[#A2A2A2]"
-                  : "bg-[#F4F3F3] border border-[#C6C6C6]"
+                ? "bg-[#1C1C1C] border border-[#A2A2A2]"
+                : "bg-[#F4F3F3] border border-[#C6C6C6]"
                 }`}
             >
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
-                    ? "border-white bg-transparent"
-                    : "border-gray-500 bg-transparent"
+                  ? "border-white bg-transparent"
+                  : "border-gray-500 bg-transparent"
                   }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
-                      ? "bg-[#FFE500] text-[#363535]"
-                      : "bg-[#E265FF] text-white"
+                    ? "bg-[#FFE500] text-[#363535]"
+                    : "bg-[#E265FF] text-white"
                     }`}
                 ></div>
               </div>
               <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
                 {activeAddress
-                  ? isPrivyAuthenticated
-                    ? activeAddress
-                    : `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
+                  ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
                   : "Connect or Login"}
               </span>
             </div>
@@ -169,8 +167,8 @@ const TxHistory: React.FC = () => {
               <div></div>
               <button
                 className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#E265FF] text-white"
+                  ? "bg-[#FFE500] text-[#363535]"
+                  : "bg-[#E265FF] text-white"
                   }`}
                 onClick={SendToken}
               >
@@ -181,8 +179,8 @@ const TxHistory: React.FC = () => {
 
           <div
             className={`  ${theme === "dark"
-                ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
-                : "bg-white/80 backdrop-blur-[80px]"
+              ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
+              : "bg-white/80 backdrop-blur-[80px]"
               } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[30px] px-[30px]`}
           >
             <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
@@ -207,15 +205,15 @@ const TxHistory: React.FC = () => {
                       <div
                         key={index}
                         className={`flex justify-between items-center bg-opacity-50 p-3 rounded-xl mt-2 mx-3 ${theme === "dark"
-                            ? "bg-[#000000]/20 border border-[#5C5C5C]"
-                            : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
+                          ? "bg-[#000000]/20 border border-[#5C5C5C]"
+                          : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
                           }`}
                       >
                         <div className="flex items-center space-x-3">
                           <span
                             className={`rounded-[10px] text-[15px] ${theme === "dark"
-                                ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
-                                : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
+                              ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
+                              : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
                               }`}
                           >
                             {tx.tokenAmount} {tx.tokenSymbol}
@@ -225,8 +223,8 @@ const TxHistory: React.FC = () => {
                               <span className="text-[15px]">to</span>
                               <span
                                 className={`rounded-[10px]text-[15px] ${theme === "dark"
-                                    ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                                    : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                                  ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                                  : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
                                   }`}
                               >
                                 {tx.recipientEmail}
@@ -237,8 +235,8 @@ const TxHistory: React.FC = () => {
                               <span className="text-[15px]">from</span>
                               <span
                                 className={`rounded-[10px] text-[15px] ${theme === "dark"
-                                    ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                                    : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                                  ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                                  : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
                                   }`}
                               >
                                 {`${tx.senderWallet.slice(
