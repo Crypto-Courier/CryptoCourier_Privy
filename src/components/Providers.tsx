@@ -3,7 +3,7 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { PrivyProvider } from '@privy-io/react-auth';
+import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "next-themes";
 import { useTheme } from "next-themes";
 import { sepolia, mainnet } from "viem/chains";
@@ -21,23 +21,48 @@ const queryClient = new QueryClient();
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
 
+  const darkModeConfig = {
+    appearance: {
+      theme: "dark" as `#${string}`,
+      accentColor: "#FFE500" as `#${string}`, // Ensure it conforms to the expected type
+    },
+  };
+
+  const lightModeConfig = {
+    appearance: {
+      theme: "light" as `#${string}`,
+      accentColor: "#E265FF" as `#${string}`, // Ensure it conforms to the expected type
+    },
+  };
+
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <PrivyProvider
           appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
           config={{
-            loginMethods: ['email', 'wallet'],
+            loginMethods: ["email", "wallet"],
             appearance: {
-             theme: theme === "dark" ? "dark" : "light",
-          accentColor: theme === "dark" ? "#FFE500" : "#E265FF",
-              walletList: ['metamask', 'rainbow', 'wallet_connect', 'coinbase_wallet'],
+              theme:
+                theme === "dark"
+                  ? darkModeConfig.appearance.theme
+                  : lightModeConfig.appearance.theme,
+              accentColor:
+                theme === "dark"
+                  ? darkModeConfig.appearance.accentColor
+                  : lightModeConfig.appearance.accentColor,
+              walletList: [
+                "metamask",
+                "rainbow",
+                "wallet_connect",
+                "coinbase_wallet",
+              ],
             },
             defaultChain: sepolia,
-            supportedChains: [mainnet, sepolia]
+            supportedChains: [mainnet, sepolia],
           }}
         >
-          <ThemeProvider attribute="class" defaultTheme="dark" >
+          <ThemeProvider attribute="class" defaultTheme="dark">
             {children}
           </ThemeProvider>
         </PrivyProvider>
