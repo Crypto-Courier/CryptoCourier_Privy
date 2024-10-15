@@ -42,6 +42,10 @@
   flex-direction: column;
   justify-content: center;
 }
+.tooltip {
+  background: #ff336a;
+  color: white;
+}
 .scroll {
   --sb-track-color: linear-gradient(to right, #da619c, #ff844a), #0a11b5;
   --sb-thumb-color: white;
