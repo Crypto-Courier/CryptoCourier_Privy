@@ -7,6 +7,8 @@ import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "next-themes";
 import { useTheme } from "next-themes";
 import { sepolia, mainnet } from "viem/chains";
+import { WalletProvider } from '../context/WalletContext';
+
 
 const wagmiConfig = createConfig({
   chains: [sepolia, mainnet],
@@ -63,7 +65,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           }}
         >
           <ThemeProvider attribute="class" defaultTheme="dark">
-            {children}
+            <WalletProvider>
+              {children}
+            </WalletProvider>
           </ThemeProvider>
         </PrivyProvider>
       </QueryClientProvider>

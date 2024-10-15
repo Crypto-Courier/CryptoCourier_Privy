@@ -16,8 +16,10 @@ import TxDetails from "../../components/TxDetails";
 import AddTokenForm from "./AddTokenForm";
 import { NewToken, TokenWithBalance } from "../../types/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useWallet } from '../../context/WalletContext';
 
 const SendToken = () => {
+  const { walletData } = useWallet();
   const { address: walletAddress, isConnected: isWalletConnected } = useAccount();
   const { user, authenticated: isPrivyAuthenticated, sendTransaction: privySendTransaction } = usePrivy();
   const [copied, setCopied] = useState(false);
@@ -39,16 +41,17 @@ const SendToken = () => {
   const [showHelp, setShowHelp] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
 
-  const isConnected = isWalletConnected || isPrivyAuthenticated;
+  // const isConnected = isWalletConnected || isPrivyAuthenticated;
+  const isConnected = walletData?.authenticated;
 
   const OpenHistory = () => {
     router.push("/transaction-history");
   };
 
   const getActiveAddress = () => {
-    if (isWalletConnected && walletAddress) {
-      return walletAddress;
-    } else if ( user?.wallet?.address) {
+    if (walletData?.address) {
+      return walletData.address;
+    } else if (user?.wallet?.address) {
       return user.wallet.address;
     } 
     return null;
@@ -73,8 +76,38 @@ const SendToken = () => {
   }, [tokens, selectedToken]);
 
   // When hash is available for txn, email should be sent to receiver
+  // useEffect(() => {
+  //   if (hash) {
+  //     const selectedTokenData = tokens.find(
+  //       (t) => t.contractAddress === selectedToken
+  //     );
+  //     if (selectedTokenData) {
+  //       const emailContent = renderToString(
+  //         <Email
+  //           recipientEmail={recipientEmail}
+  //           tokenAmount={tokenAmount}
+  //           tokenSymbol={selectedTokenData.symbol}
+  //         />
+  //       );
+  //       sendEmail({
+  //         recipientEmail,
+  //         subject: "Hooray! You got some crypto coin 🪙",
+  //         htmlContent: emailContent,
+  //         tokenAmount,
+  //         tokenSymbol: selectedTokenData.symbol,
+  //       });
+  //       StoreTransactionData(
+  //         recipientWalletAddress,
+  //         activeAddress as `0x${string}`,
+  //         tokenAmount,
+  //         selectedTokenData.symbol,
+  //         recipientEmail
+  //       );
+  //     }
+  //   }
+  // }, [hash]);
   useEffect(() => {
-    if (hash) {
+    if (walletData?.transactionHash) {
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
       );
@@ -102,7 +135,7 @@ const SendToken = () => {
         );
       }
     }
-  }, [hash]);
+  }, [walletData?.transactionHash]);
 
   // Update the max amount
   useEffect(() => {
@@ -130,14 +163,14 @@ const SendToken = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/get-tokens?address=${activeAddress}&chainId=${chainId}`);
+      const optionChainId = walletData?.chainId || chainId;
+      const response = await fetch(`/api/get-tokens?address=${activeAddress}&chainId=${optionChainId}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
       console.log('API Response:', data);
       if (data.tokens && Array.isArray(data.tokens)) {
-        // Create a new array with native currency and ERC20 tokens
         const allTokens = [
           {
             contractAddress: 'native',
@@ -151,8 +184,6 @@ const SendToken = () => {
         ];
 
         setTokens(allTokens);
-
-        // Set the native currency as the default selected token
         setSelectedToken('native');
         setSelectedTokenSymbol(data.nativeCurrency.symbol);
         setMaxAmount(data.nativeCurrency.balance);
@@ -186,8 +217,8 @@ const SendToken = () => {
 
   // Copy transaction hash for transaction
   const copyToClipboard = () => {
-    if (hash) {
-      navigator.clipboard.writeText(hash);
+    if (walletData?.transactionHash) {
+      navigator.clipboard.writeText(walletData.transactionHash);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast.success("Tx hash copied to clipboard");
@@ -213,7 +244,7 @@ const SendToken = () => {
         tokenAmount,
         tokenSymbol: selectedTokenData,
         recipientEmail,
-        transactionHash: hash,
+        transactionHash: walletData?.transactionHash,
       }),
     });
 
@@ -243,14 +274,14 @@ const SendToken = () => {
       const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
 
       // let txHash;
-      if (isPrivyAuthenticated) {
+      if (user?.email?.address) {
         // Use Privy's sendTransaction
         const tx = await privySendTransaction({
           to: walletAddress,
           value: amountInWei,
         });
         // txHash = tx.hash;
-      } else if (isWalletConnected) {
+      } else if (walletData?.authenticated) {
         // Use wagmi's sendTransaction
         const tx = await wagmiSendTransaction({
           to: walletAddress as `0x${string}`,
@@ -278,7 +309,7 @@ const SendToken = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...newToken, chainId }),
+        body: JSON.stringify({ ...newToken, chainId: walletData?.chainId }),
       });
 
       if (response.ok) {

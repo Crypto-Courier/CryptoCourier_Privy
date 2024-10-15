@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { usePrivy, useLogout } from "@privy-io/react-auth";
+import { usePrivy, useLogout, getAccessToken } from "@privy-io/react-auth";
 import {
   useDisconnect,
   useAccount,
@@ -8,12 +8,14 @@ import {
   useBalance,
 } from "wagmi";
 import { ChevronDown } from "lucide-react";
+import { useWallet } from '../context/WalletContext';
 
 export const Connect = () => {
   const { address } = useAccount();
   const chainId = useChainId();
   const { chains, switchChain } = useSwitchChain();
   const currentChain = chains.find((chain) => chain.id === chainId);
+  const { setWalletData } = useWallet();
 
   const {
     login,
@@ -56,10 +58,74 @@ export const Connect = () => {
       setIsWalletConnected(false);
     }
   }, [authenticated, user]);
-
+  
   useEffect(() => {
     checkWalletConnection();
   }, [checkWalletConnection]);
+
+  // useEffect(() => {
+  //   if (authenticated && user) {
+  //     const connectedWallets =
+  //       user.linkedAccounts?.filter((account) => account.type === "wallet") ||
+  //       [];
+  //     setIsWalletConnected(connectedWallets.length > 0);
+      
+  //     // Update wallet data in context
+  //     setWalletData({
+  //       address: address,
+  //       chainId: chainId,
+  //       authenticated: authenticated,
+  //       user: user,
+  //       balance: balance
+  //     });
+  //   } else {
+  //     setIsWalletConnected(false);
+  //     setWalletData(null);
+  //   }
+  // }, [authenticated, user, address, chainId, setWalletData]);
+
+  useEffect(() => {
+    if (authenticated && user) {
+      const connectedWallets =
+        user.linkedAccounts?.filter((account) => account.type === "wallet") ||
+        [];
+      setIsWalletConnected(connectedWallets.length > 0);
+      
+      // Fetch Privy chain ID
+      const fetchPrivyChainId = async () => {
+        try {
+          const token = await getAccessToken();
+          const response = await fetch('https://auth.privy.io/api/v1/chain_id', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          const data = await response.json();
+          return data.chainId;
+        } catch (error) {
+          console.error("Failed to fetch Privy chain ID:", error);
+          return null;
+        }
+      };
+
+      // Update wallet data in context
+      const updateWalletData = async () => {
+        const privyChainId = await fetchPrivyChainId();
+        setWalletData({
+          address: address,
+          chainId: privyChainId || chainId,
+          authenticated: authenticated,
+          user: user,
+          balance: balance
+        });
+      };
+
+      updateWalletData();
+    } else {
+      setIsWalletConnected(false);
+      setWalletData(null);
+    }
+  }, [authenticated, user, address, chainId, setWalletData, getAccessToken]);
 
   useEffect(() => {
     // Listen for external wallet disconnection

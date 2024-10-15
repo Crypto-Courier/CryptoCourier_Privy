@@ -11,15 +11,17 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useAccount } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
+import { useWallet } from '../context/WalletContext';
 
 function Homepage() {
   const router = useRouter();
   const { theme } = useTheme();
   const { isConnected, address: walletAddress } = useAccount();
   const { user, login, authenticated } = usePrivy();
+  const { walletData } = useWallet();
 
   const OpenSendToken = () => {
-    if (isConnected || authenticated) {
+    if (walletData && walletData.authenticated) {
       router.push("/send-token");
     } else {
       alert("Please connect your wallet or log in to gift tokens to your friend.");
@@ -27,10 +29,10 @@ function Homepage() {
   };
 
   const getActiveAddress = () => {
-    if (isConnected && walletAddress) {
-      return walletAddress;
-    } else if (user?.email) {
-      return user.email.address;
+    if (walletData && walletData.address) {
+      return walletData.address;
+    } else if (walletData && walletData.user?.email) {
+      return walletData.user.email.address;
     }
     return null;
   };
