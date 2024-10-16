@@ -1,18 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import { renderToString } from "react-dom/server";
-import { Tooltip } from "antd";
-import Image from "next/image";
-import base from "../../assets/base.png";
-import derive from "../../assets/derive.jpeg";
-import bitcoin from "../../assets/bitcoin.webp";
-import cyfer from "../../assets/cyfer.webp";
-import fraxtal from "../../assets/fraxtal.webp";
-import kroma from "../../assets/kroma.webp";
-import mode from "../../assets/mode.webp";
-import op from "../../assets/op.png";
-import zora from "../../assets/zora.png";
-import lisk from "../../assets/lisk.webp";
+import SwitchNetwork from "@/components/SwitchNetwork";
 import "../../styles/History.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -421,88 +410,7 @@ const SendToken = () => {
                   : "bg-white/80 backdrop-blur-[80px]"
               } rounded-br-[40px] rounded-bl-[40px] `}
             >
-              <div className="justify-evenly flex gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm bg-[#0A0A0A]/80 backdrop-blur-[80px] w-full basis-full shrink-0 border border-gray-500">
-                <Tooltip
-                  title="Base"
-                  overlayStyle={{
-                    backgroundColor: "#ff336a",
-                    color: "white",
-                    background: "none",
-                    padding: "8px",
-                  }}
-                >
-                  <button className="border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md">
-                    <Image
-                      src={base}
-                      alt=""
-                      className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                    />
-                  </button>
-                </Tooltip>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={bitcoin}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={cyfer}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={zora}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={derive}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={mode}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={lisk}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={kroma}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={op}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-                <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
-                  <Image
-                    src={fraxtal}
-                    alt=""
-                    className="w-[24px] h-[25px] block my-0 mx-auto bg-white p-[1px] rounded-[15px]"
-                  />
-                </button>
-              </div>
+              <SwitchNetwork />
               <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[20px] py-[20px] justify-between items-center gap-[20px]">
                 <div className="w-full md:w-[100%] ">
                   <div className="flex justify-between mx-5 ">

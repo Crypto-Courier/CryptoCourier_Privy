@@ -7,8 +7,7 @@ import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "next-themes";
 import { useTheme } from "next-themes";
 import { sepolia, mainnet } from "viem/chains";
-import { WalletProvider } from '../context/WalletContext';
-
+import { WalletProvider } from "../context/WalletContext";
 
 const wagmiConfig = createConfig({
   chains: [sepolia, mainnet],
@@ -38,39 +37,37 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <PrivyProvider
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      config={{
+        loginMethods: ["email", "wallet"],
+        appearance: {
+          theme:
+            theme === "dark"
+              ? darkModeConfig.appearance.theme
+              : lightModeConfig.appearance.theme,
+          accentColor:
+            theme === "dark"
+              ? darkModeConfig.appearance.accentColor
+              : lightModeConfig.appearance.accentColor,
+          walletList: [
+            "metamask",
+            "rainbow",
+            "wallet_connect",
+            "coinbase_wallet",
+          ],
+        },
+        defaultChain: sepolia,
+        supportedChains: [mainnet, sepolia],
+      }}
+    >
       <QueryClientProvider client={queryClient}>
-        <PrivyProvider
-          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
-          config={{
-            loginMethods: ["email", "wallet"],
-            appearance: {
-              theme:
-                theme === "dark"
-                  ? darkModeConfig.appearance.theme
-                  : lightModeConfig.appearance.theme,
-              accentColor:
-                theme === "dark"
-                  ? darkModeConfig.appearance.accentColor
-                  : lightModeConfig.appearance.accentColor,
-              walletList: [
-                "metamask",
-                "rainbow",
-                "wallet_connect",
-                "coinbase_wallet",
-              ],
-            },
-            defaultChain: sepolia,
-            supportedChains: [mainnet, sepolia],
-          }}
-        >
+        <WagmiProvider config={wagmiConfig}>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            <WalletProvider>
-              {children}
-            </WalletProvider>
+            <WalletProvider>{children}</WalletProvider>
           </ThemeProvider>
-        </PrivyProvider>
+        </WagmiProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </PrivyProvider>
   );
 }
