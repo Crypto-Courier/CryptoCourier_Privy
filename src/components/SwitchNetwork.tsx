@@ -23,10 +23,9 @@ function SwitchNetwork() {
   const wallet = wallets[0];
   const [chainSwitchError, setChainSwitchError] = useState("");
 
-  const handleChainSwitch = async () => {
+  const handleChainSwitch = async (chainId: number) => {
     try {
-      // Switch to chain ID 7777777
-      await wallet.switchChain(11155111);
+      await wallet.switchChain(chainId);
       setChainSwitchError(""); // Clear any previous errors
     } catch (error) {
       console.error("Failed to switch chain:", error);
@@ -40,7 +39,7 @@ function SwitchNetwork() {
       <div className="justify-evenly flex gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm bg-[#0A0A0A]/80 backdrop-blur-[80px] w-full basis-full shrink-0 border border-gray-500">
         <Tooltip title="Base">
           <button
-            onClick={handleChainSwitch}
+            onClick={() => handleChainSwitch(8453)} // Base chain ID
             className="border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md"
           >
             <Image
@@ -51,7 +50,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="bitcoin">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(1)} // Chain ID for Bitcoin (as an example)
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={bitcoin}
               alt=""
@@ -60,7 +62,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Cyber">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(123)} // Cyber chain ID
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={cyfer}
               alt=""
@@ -69,7 +74,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Zora">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(7777777)} // Zora chain ID
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={zora}
               alt=""
@@ -78,7 +86,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Derive">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(5555)} // Derive chain ID
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={derive}
               alt=""
@@ -87,7 +98,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Mode">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(34443)}
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={mode}
               alt=""
@@ -96,7 +110,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Lisk">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(4100)}
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={lisk}
               alt=""
@@ -105,7 +122,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Kroma">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(255)}
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={kroma}
               alt=""
@@ -114,7 +134,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="optimism">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(10)} // Optimism chain ID
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={op}
               alt=""
@@ -123,7 +146,10 @@ function SwitchNetwork() {
           </button>
         </Tooltip>
         <Tooltip title="Fraxtal">
-          <button className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md">
+          <button
+            onClick={() => handleChainSwitch(1)}
+            className="border-0 cursor-pointer p-[6px_0px] relative  bg-transparent shadow-none shrink-0 rounded-md"
+          >
             <Image
               src={fraxtal}
               alt=""

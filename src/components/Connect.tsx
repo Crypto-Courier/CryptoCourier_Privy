@@ -77,6 +77,17 @@ export const Connect = () => {
     }
   };
 
+  const handleChainSwitch = async () => {
+    try {
+      // Switch to chain ID 7777777
+      await wallet.switchChain(1);
+      setChainSwitchError(""); // Clear any previous errors
+    } catch (error) {
+      console.error("Failed to switch chain:", error);
+      setChainSwitchError("Error switching chains. Please try again.");
+    }
+  };
+
   if (!isWalletConnected) {
     return (
       <button
@@ -103,6 +114,7 @@ export const Connect = () => {
 
       <div className="relative" ref={walletDropdownRef}>
         <button
+          onClick={logout}
           type="button"
           className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-3 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
         >
@@ -117,7 +129,6 @@ export const Connect = () => {
             "Connected"
           )}
         </button>
-        <button onClick={logout}>logout</button>
       </div>
     </div>
   );
