@@ -57,13 +57,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             "coinbase_wallet",
           ],
         },
-        defaultChain: sepolia,
+        defaultChain: mainnet,
         supportedChains: [mainnet, sepolia],
       }}
     >
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
-          <ThemeProvider attribute="class" defaultTheme="dark">
+          <ThemeProvider attribute="class" defaultTheme="light">
             <WalletProvider>{children}</WalletProvider>
           </ThemeProvider>
         </WagmiProvider>

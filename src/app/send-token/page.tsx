@@ -588,16 +588,14 @@ const SendToken = () => {
                     <button className="px-10 py-3 rounded-full border border-[#FF336A] text-[#FF336A] font-medium ">
                       CANCEL
                     </button>
-                    <div className="send">
-                      {" "}
-                      <button
-                        onClick={() => setIsPopupOpen(true)}
-                        disabled={isLoading}
-                        className=" hover:scale-110 duration-500 transition 0.3 px-10 py-3 rounded-full border border-red-300 text-white font-medium bg-[#FF336A]"
-                      >
-                        {isLoading ? "SEND" : "SEND"}
-                      </button>
-                    </div>
+
+                    <button
+                      onClick={() => setIsPopupOpen(true)}
+                      disabled={isLoading}
+                      className=" hover:scale-110 duration-500 transition 0.3 px-10 py-3 rounded-full border border-red-300 text-white font-medium bg-[#FF336A]"
+                    >
+                      {isLoading ? "SEND" : "SEND"}
+                    </button>
                   </div>
                   {hash && (
                     <div className="mt-5">
