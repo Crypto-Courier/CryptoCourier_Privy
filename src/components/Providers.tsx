@@ -6,14 +6,44 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "next-themes";
 import { useTheme } from "next-themes";
-import { sepolia, mainnet } from "viem/chains";
+import {
+  base,
+  fraxtal,
+  mode,
+  lisk,
+  optimism,
+  kroma,
+  celo,
+  cyber,
+  zora,
+  orderly,
+} from "viem/chains";
 import { WalletProvider } from "../context/WalletContext";
 
 const wagmiConfig = createConfig({
-  chains: [sepolia, mainnet],
+  chains: [
+    base,
+    fraxtal,
+    mode,
+    lisk,
+    optimism,
+    kroma,
+    celo,
+    cyber,
+    zora,
+    orderly,
+  ],
   transports: {
-    [sepolia.id]: http(),
-    [mainnet.id]: http(),
+    [mode.id]: http(),
+    [lisk.id]: http(),
+    [fraxtal.id]: http(),
+    [base.id]: http(),
+    [optimism.id]: http(),
+    [kroma.id]: http(),
+    [celo.id]: http(),
+    [cyber.id]: http(),
+    [zora.id]: http(),
+    [orderly.id]: http(),
   },
 });
 
@@ -57,8 +87,19 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             "coinbase_wallet",
           ],
         },
-        defaultChain: mainnet,
-        supportedChains: [mainnet, sepolia],
+        defaultChain: mode,
+        supportedChains: [
+          mode,
+          base,
+          fraxtal,
+          lisk,
+          optimism,
+          kroma,
+          celo,
+          cyber,
+          zora,
+          orderly,
+        ],
       }}
     >
       <QueryClientProvider client={queryClient}>

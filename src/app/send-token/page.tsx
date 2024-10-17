@@ -318,7 +318,10 @@ const SendToken = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...newToken, chainId: walletData?.chainId }),
+        body: JSON.stringify({
+          ...newToken,
+          chainId: walletData?.chainId.split(":")[1],
+        }),
       });
 
       if (response.ok) {

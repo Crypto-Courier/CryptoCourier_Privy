@@ -5,17 +5,41 @@ import {
   getAccessToken,
   useWallets,
 } from "@privy-io/react-auth";
-
+import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
 
+// Import the chain images
+import base from "../assets/base.png";
+import celo from "../assets/celo.jpeg";
+import orderly from "../assets/orderly.jpeg";
+import cyfer from "../assets/cyfer.webp";
+import fraxtal from "../assets/fraxtal.webp";
+import kroma from "../assets/kroma.webp";
+import mode from "../assets/mode.webp";
+import op from "../assets/op.png";
+import zora from "../assets/zora.png";
+import lisk from "../assets/lisk.webp";
+
+const chainImages: { [key: number]: any } = {
+  8453: base,
+  291: orderly,
+  7560: cyfer,
+  7777777: zora,
+  42220: celo,
+  34443: mode,
+  1135: lisk,
+  255: kroma,
+  10: op,
+  252: fraxtal,
+};
+
 export const Connect = () => {
-  const { setWalletData } = useWallet();
+  const { setWalletData, selectedChain } = useWallet(); // Get selectedChain from context
   const { wallets } = useWallets();
   const wallet = wallets[0];
+  const { theme } = useTheme();
   const { login, authenticated, ready, user, connectWallet } = usePrivy();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [chainSwitchError, setChainSwitchError] = useState("");
-  const chainDropdownRef = useRef<HTMLDivElement | null>(null);
   const walletDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const { logout } = useLogout({
@@ -42,12 +66,14 @@ export const Connect = () => {
   useEffect(() => {
     if (authenticated && user) {
       const updateWalletData = async () => {
-        setWalletData({
-          address: wallet.address,
-          chainId: wallet.chainId,
-          authenticated: authenticated,
-          user: user,
-        });
+        if (wallet) {
+          setWalletData({
+            address: wallet.address,
+            chainId: wallet.chainId,
+            authenticated: authenticated,
+            user: user,
+          });
+        }
       };
 
       updateWalletData();
@@ -77,17 +103,6 @@ export const Connect = () => {
     }
   };
 
-  const handleChainSwitch = async () => {
-    try {
-      // Switch to chain ID 7777777
-      await wallet.switchChain(1);
-      setChainSwitchError(""); // Clear any previous errors
-    } catch (error) {
-      console.error("Failed to switch chain:", error);
-      setChainSwitchError("Error switching chains. Please try again.");
-    }
-  };
-
   if (!isWalletConnected) {
     return (
       <button
@@ -106,24 +121,26 @@ export const Connect = () => {
 
   return (
     <div className="flex gap-4">
-      <div className="relative">
-        <button className="border border-[#FFFFFF] bg-[#FF3333] py-3 px-4 rounded-full lg:w-48 md:w-48 sm:w-48 w-30 font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center">
-          {wallet.chainId}
-        </button>
-      </div>
-
       <div className="relative" ref={walletDropdownRef}>
         <button
           onClick={logout}
           type="button"
           className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-3 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
         >
+          {selectedChain && chainImages[selectedChain] ? (
+            <img
+              src={chainImages[selectedChain].src} // Use .src if using StaticImageData
+              alt={`Chain ${selectedChain}`}
+              className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                theme === "dark" ? "bg-white" : "bg-black"
+              }`}
+            />
+          ) : (
+            selectedChain
+          )}
           {mainWallet ? (
             <>
               {mainWallet.address.slice(0, 6)}...{mainWallet.address.slice(-4)}
-              {/* <span className="hidden sm:inline-block">
-                ({balance?.formatted.slice(0, 4)} {balance?.symbol})
-              </span> */}
             </>
           ) : (
             "Connected"
