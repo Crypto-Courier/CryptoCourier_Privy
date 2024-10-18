@@ -11,7 +11,8 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useAccount } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
-import { useWallet } from '../context/WalletContext';
+
+import { useWallet } from "../context/WalletContext";
 
 function Homepage() {
   const router = useRouter();
@@ -24,7 +25,9 @@ function Homepage() {
     if (walletData && walletData.authenticated) {
       router.push("/send-token");
     } else {
-      alert("Please connect your wallet or log in to gift tokens to your friend.");
+      alert(
+        "Please connect your wallet or log in to gift tokens to your friend."
+      );
     }
   };
 
@@ -44,13 +47,15 @@ function Homepage() {
       <Navbar />
       <div className="flex-grow flex flex-col justify-between ">
         <div
-          className={`border-y w-full flex justify-center items-center ${theme === "light" ? "border-[#1E1E1E]" : "border-white"
-            }`}
+          className={`border-y w-full flex justify-center items-center ${
+            theme === "light" ? "border-[#1E1E1E]" : "border-white"
+          }`}
         >
           <div className="flex lg:flex-row md:flex-row items-center justify-between w-[90%] mx-auto flex-col lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div
-              className={`sec1 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex items-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-[600] lg:border-r-2 lg:rounded-r-[100px] md:border-r-2 md:rounded-r-[100px] md:pr-8 pb-0 md:pb-0 w-full md:w-[60%] lg:w-[60%] text-center md:text-left lg:justify-start md:justify-start font-[700] sm:justify-center justify-center ${theme === "light" ? "border-[#1E1E1E]" : "border-white"
-                }`}
+              className={`sec1 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex items-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-[600] lg:border-r-2 lg:rounded-r-[100px] md:border-r-2 md:rounded-r-[100px] md:pr-8 pb-0 md:pb-0 w-full md:w-[60%] lg:w-[60%] text-center md:text-left lg:justify-start md:justify-start font-[700] sm:justify-center justify-center ${
+                theme === "light" ? "border-[#1E1E1E]" : "border-white"
+              }`}
             >
               Send your tokens
             </div>
@@ -72,13 +77,13 @@ function Homepage() {
                 <Image
                   src={send2}
                   alt="send email"
-                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-full inline-flex h-auto"
+                  className="w-12 sm:w-16 md:w-20 lg:w-24  inline-flex h-auto"
                 />
               ) : (
                 <Image
                   src={send}
                   alt="send email"
-                  className="w-12 sm:w-16 md:w-20 lg:w-24 h-full inline-flex h-auto"
+                  className="w-12 sm:w-16 md:w-20 lg:w-24 inline-flex h-auto"
                 />
               )}
             </div>

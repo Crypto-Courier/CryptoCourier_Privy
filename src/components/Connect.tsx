@@ -19,6 +19,8 @@ import mode from "../assets/mode.webp";
 import op from "../assets/op.png";
 import zora from "../assets/zora.png";
 import lisk from "../assets/lisk.webp";
+import sepolia from "../assets/sepolia.webp";
+import { Tooltip } from "antd";
 
 const chainImages: { [key: number]: any } = {
   8453: base,
@@ -31,6 +33,20 @@ const chainImages: { [key: number]: any } = {
   255: kroma,
   10: op,
   252: fraxtal,
+  11155111: sepolia,
+};
+const chainNames: { [key: number]: string } = {
+  8453: "Base",
+  291: "Orderly",
+  7560: "Cyber",
+  7777777: "Zora",
+  42220: "Celo",
+  34443: "Mode",
+  1135: "Lisk",
+  255: "Kroma",
+  10: "Optimism",
+  252: "Fraxtal",
+  11155111: "Sepolia",
 };
 
 export const Connect = () => {
@@ -125,26 +141,37 @@ export const Connect = () => {
         <button
           onClick={logout}
           type="button"
-          className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-3 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
+          className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-[12px] flex items-center justify-center gap-2"
         >
-          {selectedChain && chainImages[selectedChain] ? (
-            <img
-              src={chainImages[selectedChain].src} // Use .src if using StaticImageData
-              alt={`Chain ${selectedChain}`}
-              className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                theme === "dark" ? "bg-white" : "bg-black"
-              }`}
-            />
-          ) : (
-            selectedChain
-          )}
-          {mainWallet ? (
-            <>
-              {mainWallet.address.slice(0, 6)}...{mainWallet.address.slice(-4)}
-            </>
-          ) : (
-            "Connected"
-          )}
+          <Tooltip
+            title={
+              selectedChain && chainNames[selectedChain]
+                ? chainNames[selectedChain]
+                : "Chain"
+            }
+          >
+            {selectedChain && chainImages[selectedChain] ? (
+              <img
+                src={chainImages[selectedChain].src} // Use .src if using StaticImageData
+                alt={`Chain ${selectedChain}`}
+                className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                  theme === "dark" ? "bg-white" : "bg-black"
+                }`}
+              />
+            ) : (
+              selectedChain
+            )}
+          </Tooltip>
+          <Tooltip title="Diconncet on click">
+            {mainWallet ? (
+              <>
+                {mainWallet.address.slice(0, 6)}...
+                {mainWallet.address.slice(-4)}
+              </>
+            ) : (
+              "Connected"
+            )}
+          </Tooltip>
         </button>
       </div>
     </div>

@@ -82,3 +82,46 @@ a:focus {
     transform: scale(1);
   }
 }
+@keyframes scroll-x {
+  0% {
+    transform: translateX(100%); /* Start from the right */
+  }
+  100% {
+    transform: translateX(-100%); /* Move to the left */
+  }
+}
+
+:root {
+  --duration: 10s; /* Adjust this duration as needed */
+}
+
+@keyframes scroll-chain {
+  0% {
+    transform: translateX(100%); /* Start from the right */
+  }
+  100% {
+    transform: translateX(-100%); /* Move to the left */
+  }
+}
+
+.marqueAnimation {
+  display: flex;
+  overflow: hidden; /* Hide overflow */
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.chain {
+  animation: scroll-chain 10s linear infinite; /* Duration of animation */
+  display: inline-block; /* Ensure each icon is treated as a block */
+  margin-right: 20px; /* Space between icons */
+}
+
+.chain:nth-child(odd) {
+  animation-delay: -2s; /* Stagger odd items */
+}
+.marqueAnimation {
+ 
+}
+.marqueAnimation:hover {
+  animation-play-state: paused; /* Pause animation on hover */
+}

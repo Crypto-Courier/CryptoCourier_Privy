@@ -17,8 +17,10 @@ import {
   cyber,
   zora,
   orderly,
+  sepolia,
 } from "viem/chains";
 import { WalletProvider } from "../context/WalletContext";
+import { Tooltip } from "antd";
 
 const wagmiConfig = createConfig({
   chains: [
@@ -32,6 +34,7 @@ const wagmiConfig = createConfig({
     cyber,
     zora,
     orderly,
+    sepolia,
   ],
   transports: {
     [mode.id]: http(),
@@ -44,6 +47,7 @@ const wagmiConfig = createConfig({
     [cyber.id]: http(),
     [zora.id]: http(),
     [orderly.id]: http(),
+    [sepolia.id]: http(),
   },
 });
 
@@ -87,7 +91,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             "coinbase_wallet",
           ],
         },
-        defaultChain: mode,
+        defaultChain: sepolia,
         supportedChains: [
           mode,
           base,
@@ -99,6 +103,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           cyber,
           zora,
           orderly,
+          sepolia,
         ],
       }}
     >
