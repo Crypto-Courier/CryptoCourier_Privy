@@ -1,14 +1,10 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import {
-  usePrivy,
-  useLogout,
-  getAccessToken,
-  useWallets,
-} from "@privy-io/react-auth";
+import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
 import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
+import { Tooltip } from "antd";
 
-// Import the chain images
+// Import chain images
 import base from "../assets/base.png";
 import celo from "../assets/celo.jpeg";
 import orderly from "../assets/orderly.jpeg";
@@ -20,7 +16,6 @@ import op from "../assets/op.png";
 import zora from "../assets/zora.png";
 import lisk from "../assets/lisk.webp";
 import sepolia from "../assets/sepolia.webp";
-import { Tooltip } from "antd";
 
 const chainImages: { [key: number]: any } = {
   8453: base,
@@ -35,6 +30,7 @@ const chainImages: { [key: number]: any } = {
   252: fraxtal,
   11155111: sepolia,
 };
+
 const chainNames: { [key: number]: string } = {
   8453: "Base",
   291: "Orderly",
@@ -86,6 +82,7 @@ export const Connect = () => {
           setWalletData({
             address: wallet.address,
             chainId: wallet.chainId,
+
             authenticated: authenticated,
             user: user,
           });
@@ -98,7 +95,7 @@ export const Connect = () => {
       setIsWalletConnected(false);
       setWalletData(null);
     }
-  }, [authenticated, user, setWalletData]);
+  }, [authenticated, user, setWalletData, wallet]);
 
   if (!ready) {
     return (
@@ -143,6 +140,7 @@ export const Connect = () => {
           type="button"
           className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-[12px] flex items-center justify-center gap-2"
         >
+          {/* Chain Image */}
           <Tooltip
             title={
               selectedChain && chainNames[selectedChain]
@@ -162,7 +160,9 @@ export const Connect = () => {
               selectedChain
             )}
           </Tooltip>
-          <Tooltip title="Diconncet on click">
+
+          {/* Wallet Address */}
+          <Tooltip title="Disconnect on click">
             {mainWallet ? (
               <>
                 {mainWallet.address.slice(0, 6)}...

@@ -6,6 +6,8 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { ThemeProvider } from "next-themes";
 import { useTheme } from "next-themes";
+import { metaMask } from "wagmi/connectors";
+
 import {
   base,
   fraxtal,

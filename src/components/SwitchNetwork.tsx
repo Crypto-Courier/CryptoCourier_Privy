@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useWallet } from "../context/WalletContext"; // Import your context
+import { useWallet } from "../context/WalletContext";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { useWallets } from "@privy-io/react-auth";
 import base from "../assets/base.png";
 import celo from "../assets/celo.jpeg";
 import orderly from "../assets/orderly.jpeg";
@@ -13,30 +14,28 @@ import op from "../assets/op.png";
 import zora from "../assets/zora.png";
 import sepolia from "../assets/sepolia.webp";
 import lisk from "../assets/lisk.webp";
-import { useWallets } from "@privy-io/react-auth";
 
 function SwitchNetwork() {
   const { wallets } = useWallets();
   const wallet = wallets[0];
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const [chainSwitchError, setChainSwitchError] = useState("");
   const { theme } = useTheme();
-  const { selectedChain, setSelectedChain } = useWallet(); // Get setSelectedChain from context
+  const { selectedChain, setSelectedChain } = useWallet();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Default chain set to Sepolia (11155111)
+  // Set default chain if none selected
   useEffect(() => {
-    if (!selectedChain) {
-      setSelectedChain(11155111); // Set default to Sepolia if no chain is selected
+    if (!selectedChain && wallet?.chainId) {
+      const chainId = parseInt(wallet.chainId.split(":")[1]);
+      setSelectedChain(chainId);
     }
-  }, [selectedChain, setSelectedChain]);
+  }, [selectedChain, wallet, setSelectedChain]);
 
-  const handleChainSwitch = async (chainId: number) => {
+  const handleChainSwitch = async (chainId: any) => {
     try {
       await wallet.switchChain(chainId);
-      setSelectedChain(chainId); // Update the selected chain in the context
-      setChainSwitchError(""); // Clear any previous errors
-      setDropdownOpen(false); // Close the dropdown after selecting
+      setSelectedChain(chainId);
+      setChainSwitchError("");
     } catch (error) {
       console.error("Failed to switch chain:", error);
       setChainSwitchError("Error switching chains. Please try again.");
@@ -57,6 +56,10 @@ function SwitchNetwork() {
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
 
+  // Convert chainId to number for comparison
+  const currentChain =
+    typeof selectedChain === "string" ? parseInt(selectedChain) : selectedChain;
+
   return (
     <div>
       {/* Responsive layout */}
@@ -71,7 +74,7 @@ function SwitchNetwork() {
               src={chain.img}
               alt={chain.title}
               className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                selectedChain === chain.id ? "opacity-100" : "opacity-40"
+                currentChain === chain.id ? "opacity-100" : "opacity-40"
               } ${theme === "dark" ? "bg-white" : "bg-black"}`}
             />
           </button>
@@ -92,12 +95,12 @@ function SwitchNetwork() {
             {/* Display the currently selected chain */}
             <Image
               src={
-                chains.find((chain) => chain.id === selectedChain)?.img || base
+                chains.find((chain) => chain.id === currentChain)?.img || base
               }
               alt="Selected Chain"
               className="w-6 h-6 mr-2"
             />
-            {chains.find((chain) => chain.id === selectedChain)?.title ||
+            {chains.find((chain) => chain.id === currentChain)?.title ||
               "Select chain"}
           </div>
           <span>{dropdownOpen ? "▲" : "▼"}</span>
@@ -117,14 +120,14 @@ function SwitchNetwork() {
                 key={chain.id}
                 onClick={() => handleChainSwitch(chain.id)}
                 className={`flex  px-6 py-2 cursor-pointer hover:bg-opacity-80 border-b-2 ${
-                  selectedChain === chain.id ? "bg-opacity-20" : ""
+                  currentChain === chain.id ? "bg-opacity-20" : ""
                 }`}
               >
                 <Image
                   src={chain.img}
                   alt={chain.title}
                   className={`w-[24px] h-[25px] block mr-[20px]  p-[1px] rounded-[15px] ${
-                    selectedChain === chain.id ? "opacity-100" : "opacity-40"
+                    currentChain === chain.id ? "opacity-100" : "opacity-40"
                   } ${theme === "dark" ? "bg-white" : "bg-black"}`}
                 />
                 {chain.title}
