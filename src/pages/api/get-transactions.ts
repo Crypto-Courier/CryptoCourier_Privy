@@ -3,10 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { walletAddress } = req.query;
+  const { walletAddress, chainId } = req.query;
+
+  console.log('Received GET request for transactions', { walletAddress, chainId });
 
   if (!walletAddress) {
-    return res.status(400).json({ error: 'Wallet address is required' });
+    console.log('Wallet address and chain ID are required');
+    return res.status(400).json({ error: 'Wallet address and chain ID are required' });
   }
 
   try {
@@ -16,9 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Find transactions where the wallet is either the sender or the recipient
     const transactions = await collection.find({
-      $or: [
-        { senderWallet: walletAddress },
-        { recipientWallet: walletAddress }
+      $and: [
+        { $or: [{ senderWallet: walletAddress }, { recipientWallet: walletAddress }] },
+        { chainId: chainId }
       ]
     }).project({
       senderWallet: 1,
@@ -26,11 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tokenAmount: 1,
       tokenSymbol: 1,
       customizedLink: 1,
-      recipientEmail: 1
+      recipientEmail: 1,
+      chainId: 1
     }).toArray();
 
+    console.log(`Found ${transactions.length} transactions`);
+
     if (transactions.length === 0) {
-      return res.status(404).json({ error: 'No transactions found for this wallet' });
+      console.log('No transactions found for this wallet with connected chain ID');
+      return res.status(404).json({ error: 'No transactions found for this wallet with connected chain ID' });
     }
 
     res.status(200).json(transactions);

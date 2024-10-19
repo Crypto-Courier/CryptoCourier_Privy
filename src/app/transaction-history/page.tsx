@@ -46,7 +46,7 @@ const TxHistory: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `/api/get-transactions?walletAddress=${activeAddress}`
+          `/api/get-transactions?walletAddress=${activeAddress}&chainId=${walletData?.chainId.split(':')[1]}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
