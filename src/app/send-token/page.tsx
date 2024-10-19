@@ -5,10 +5,10 @@ import SwitchNetwork from "@/components/SwitchNetwork";
 import "../../styles/History.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { useAccount, useSendTransaction, useChainId } from "wagmi";
+import { useSendTransaction } from "wagmi";
 import { parseUnits } from "viem";
 import { toast } from "react-hot-toast";
-import { Copy, CheckCircle } from "lucide-react";
+// import { Copy, CheckCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { sendEmail } from "../../components/Email/Emailer";
@@ -16,24 +16,15 @@ import Email from "../../components/Email/Email";
 import TxDetails from "../../components/TxDetails";
 import AddTokenForm from "./AddTokenForm";
 import { NewToken, TokenWithBalance } from "../../types/types";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useWallet } from "../../context/WalletContext";
+import { usePrivy } from "@privy-io/react-auth";
 
 const SendToken = () => {
   const { walletData } = useWallet();
-  const { address: walletAddress, isConnected: isWalletConnected } =
-    useAccount();
-  const {
-    user,
-    authenticated: isPrivyAuthenticated,
-    sendTransaction: privySendTransaction,
-  } = usePrivy();
+  const { data: hash, sendTransaction } = useSendTransaction(); 
+  const { sendTransaction: privySendTransaction } = usePrivy();
   const [copied, setCopied] = useState(false);
-  const chainId = useChainId();
   const router = useRouter();
-  const { wallets } = useWallets();
-  const { data: hash, sendTransaction: wagmiSendTransaction } =
-    useSendTransaction();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
   const [selectedToken, setSelectedToken] = useState<string>("");
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>("");
@@ -48,23 +39,13 @@ const SendToken = () => {
   const [showHelp, setShowHelp] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
 
-  // const isConnected = isWalletConnected || isPrivyAuthenticated;
   const isConnected = walletData?.authenticated;
+  const activeAddress = walletData?.address;
+  const isEmailConnected = walletData?.isEmailConnected;
 
   const OpenHistory = () => {
     router.push("/transaction-history");
   };
-
-  const getActiveAddress = () => {
-    if (walletData?.address) {
-      return walletData.address;
-    } else if (user?.wallet?.address) {
-      return user.wallet.address;
-    }
-    return null;
-  };
-
-  const activeAddress = getActiveAddress();
 
   // Constantly fetching tokens from the database
   useEffect(() => {
@@ -113,6 +94,7 @@ const SendToken = () => {
   //     }
   //   }
   // }, [hash]);
+  
   useEffect(() => {
     if (walletData?.transactionHash) {
       const selectedTokenData = tokens.find(
@@ -170,9 +152,8 @@ const SendToken = () => {
 
     setIsLoading(true);
     try {
-      const optionChainId = walletData?.chainId || chainId;
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${optionChainId}`
+        `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(':')[1]}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -283,16 +264,16 @@ const SendToken = () => {
       const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
 
       // let txHash;
-      if (user?.email?.address) {
-        // Use Privy's sendTransaction
+      if (isEmailConnected) {
+        // Use Privy's sendTransaction for email-connected users
         const tx = await privySendTransaction({
           to: walletAddress,
           value: amountInWei,
         });
         // txHash = tx.hash;
       } else if (walletData?.authenticated) {
-        // Use wagmi's sendTransaction
-        const tx = await wagmiSendTransaction({
+        // Use wagmi's sendTransaction for wallet-connected users
+        const tx = await sendTransaction({
           to: walletAddress as `0x${string}`,
           value: amountInWei,
         });
@@ -600,7 +581,7 @@ const SendToken = () => {
                       {isLoading ? "SEND" : "SEND"}
                     </button>
                   </div>
-                  {hash && (
+                  {/* {hash && (
                     <div className="mt-5">
                       <label
                         className={`block text-lg font-[500]  mb-1 ${
@@ -632,7 +613,7 @@ const SendToken = () => {
                         </button>
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
