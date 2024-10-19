@@ -14,6 +14,7 @@ import op from "../assets/op.png";
 import zora from "../assets/zora.png";
 import sepolia from "../assets/sepolia.webp";
 import lisk from "../assets/lisk.webp";
+import { Tooltip } from "antd";
 
 function SwitchNetwork() {
   const { wallets } = useWallets();
@@ -43,15 +44,15 @@ function SwitchNetwork() {
   };
 
   const chains = [
-    { id: 8453, title: "Base", img: base },
+    { id: 84532, title: "baseSepolia", img: base },
     { id: 291, title: "Orderly", img: orderly },
     { id: 7560, title: "Cyber", img: cyfer },
     { id: 7777777, title: "Zora", img: zora },
     { id: 42220, title: "Celo", img: celo },
-    { id: 34443, title: "Mode", img: mode },
+    { id: 919, title: "modeTestnet", img: mode },
     { id: 1135, title: "Lisk", img: lisk },
     { id: 255, title: "Kroma", img: kroma },
-    { id: 10, title: "Optimism", img: op },
+    { id: 11155420, title: "optimismSepolia", img: op },
     { id: 252, title: "Fraxtal", img: fraxtal },
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
@@ -65,19 +66,23 @@ function SwitchNetwork() {
       {/* Responsive layout */}
       <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
         {chains.map((chain) => (
-          <button
-            key={chain.id}
-            onClick={() => handleChainSwitch(chain.id)}
-            className="border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md"
-          >
-            <Image
-              src={chain.img}
-              alt={chain.title}
-              className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                currentChain === chain.id ? "opacity-100" : "opacity-40"
-              } ${theme === "dark" ? "bg-white" : "bg-black"}`}
-            />
-          </button>
+          <Tooltip title={chain.title} key={chain.id}>
+            {" "}
+            {/* Add Tooltip here */}
+            <button
+              key={chain.id}
+              onClick={() => handleChainSwitch(chain.id)}
+              className="border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md"
+            >
+              <Image
+                src={chain.img}
+                alt={chain.title}
+                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                  currentChain === chain.id ? "opacity-100" : "opacity-40"
+                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
+              />
+            </button>
+          </Tooltip>
         ))}
       </div>
 

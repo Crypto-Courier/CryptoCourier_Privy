@@ -11,7 +11,7 @@ import { metaMask } from "wagmi/connectors";
 import {
   base,
   fraxtal,
-  mode,
+  modeTestnet,
   lisk,
   optimism,
   kroma,
@@ -20,17 +20,19 @@ import {
   zora,
   orderly,
   sepolia,
+  baseSepolia,
+  optimismSepolia,
 } from "viem/chains";
 import { WalletProvider } from "../context/WalletContext";
 import { Tooltip } from "antd";
 
 const wagmiConfig = createConfig({
   chains: [
-    base,
+    baseSepolia,
     fraxtal,
-    mode,
+    modeTestnet,
     lisk,
-    optimism,
+    optimismSepolia,
     kroma,
     celo,
     cyber,
@@ -39,11 +41,11 @@ const wagmiConfig = createConfig({
     sepolia,
   ],
   transports: {
-    [mode.id]: http(),
+    [modeTestnet.id]: http(),
     [lisk.id]: http(),
     [fraxtal.id]: http(),
-    [base.id]: http(),
-    [optimism.id]: http(),
+    [baseSepolia.id]: http(),
+    [optimismSepolia.id]: http(),
     [kroma.id]: http(),
     [celo.id]: http(),
     [cyber.id]: http(),
@@ -95,11 +97,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
         defaultChain: sepolia,
         supportedChains: [
-          mode,
-          base,
+          modeTestnet,
+          baseSepolia,
           fraxtal,
           lisk,
-          optimism,
+          optimismSepolia,
           kroma,
           celo,
           cyber,
