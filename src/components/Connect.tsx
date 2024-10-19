@@ -52,11 +52,14 @@ export const Connect = () => {
   const { theme } = useTheme();
   const { login, authenticated, ready, user, connectWallet } = usePrivy();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [isEmailConnected, setIsEmailConnected] = useState(false);
   const walletDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const { logout } = useLogout({
     onSuccess: () => {
       setIsWalletConnected(false);
+      setIsEmailConnected(false);
+      setWalletData(null);
     },
   });
 
@@ -66,8 +69,10 @@ export const Connect = () => {
         user.linkedAccounts?.filter((account) => account.type === "wallet") ||
         [];
       setIsWalletConnected(connectedWallets.length > 0);
+      setIsEmailConnected(!!user.email?.address);
     } else {
       setIsWalletConnected(false);
+      setIsEmailConnected(false);
     }
   }, [authenticated, user]);
 
@@ -85,6 +90,7 @@ export const Connect = () => {
 
             authenticated: authenticated,
             user: user,
+            isEmailConnected: !!user.email?.address,
           });
         }
       };

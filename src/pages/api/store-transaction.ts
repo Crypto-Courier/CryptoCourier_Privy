@@ -4,9 +4,11 @@ import clientPromise from '../../lib/mongodb';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash } = req.body;
+      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId } = req.body;
+      console.log('Request body:', { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId });
 
-      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !transactionHash) {
+      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !transactionHash || !chainId) {
+        console.log('Missing required fields in request');
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
@@ -22,17 +24,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tokenSymbol,
         recipientEmail,
         transactionHash,
+        chainId,
         createdAt: new Date(),
         customizedLink: `https://testnet.bttcscan.com/tx/${transactionHash}`,
-        authenticated: false
+        authenticated: false 
       });
 
+      console.log('Transaction stored successfully', { transactionId: result.insertedId });
       res.status(200).json({ message: 'Transaction stored successfully', transactionId: result.insertedId });
     } catch (error) {
-      console.error('Error storing transaction:', error);
+      console.error('Failed to store transaction', error);
       res.status(500).json({ error: 'Failed to store transaction' });
     }
   } else {
+    console.error(`Method ${req.method} Not Allowed`);
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }

@@ -8,11 +8,9 @@ import lLogo from "../assets/lLogo.png";
 import Image from "next/image";
 import "../styles/Responsive.css";
 import { Connect } from "./Connect";
-import { useWallet } from '../context/WalletContext';
 
 const Navbar = () => {
   const { theme } = useTheme();
-  const { walletData } = useWallet();
 
   return (
     <div className="w-[90%] mx-auto relative navbar">

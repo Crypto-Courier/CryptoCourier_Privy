@@ -5,8 +5,7 @@ import "../../styles/History.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useTheme } from "next-themes";
-import { useAccount } from "wagmi";
-import { usePrivy } from "@privy-io/react-auth";
+import { useWallet } from "../../context/WalletContext";
 import Image from "next/image";
 import trx from "../../assets/trx.png";
 import { sendEmail } from "../../components/Email/Emailer";
@@ -18,27 +17,15 @@ import loader from "../../assets/loading.gif";
 
 const TxHistory: React.FC = () => {
   const router = useRouter();
-  const { address: walletAddress, isConnected: isWalletConnected } = useAccount();
-  const { user, authenticated: isPrivyAuthenticated } = usePrivy();
+  const { walletData } = useWallet();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
   const { theme } = useTheme();
 
-  const isConnected = isWalletConnected || isPrivyAuthenticated;
-
-  const getActiveAddress = () => {
-
-    if (isWalletConnected && walletAddress) {
-      return walletAddress;
-    } else if (user?.wallet?.address) {
-      return user.wallet.address;
-    }
-    return null;
-  };
-
-  const activeAddress = getActiveAddress();
+  const isConnected = walletData?.authenticated;
+  const activeAddress = walletData?.address;
 
   // Condition routing to send token page
   const SendToken = () => {
@@ -59,7 +46,7 @@ const TxHistory: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `/api/get-transactions?walletAddress=${activeAddress}`
+          `/api/get-transactions?walletAddress=${activeAddress}&chainId=${walletData?.chainId.split(':')[1]}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
