@@ -13,10 +13,12 @@ import { renderEmailToString } from "../../../components/Email/renderEmailToStri
 import { usePrivy, useLogout, PrivyProvider } from "@privy-io/react-auth";
 import toast from "react-hot-toast";
 import { Transaction } from "../../../types/types";
+import { useWallet } from "../../../context/WalletContext";
 
 const WalletAddressPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
+  const { walletData } = useWallet();
   const { ready, authenticated, user, exportWallet } = usePrivy();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,7 +35,6 @@ const WalletAddressPage: React.FC = () => {
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const [bttBalance, setBttBalance] = useState<string>("0");
   const [isWalletReady, setIsWalletReady] = useState(false);
   const { theme } = useTheme();
   const walletAddress = params?.walletAddress as string;
@@ -75,26 +76,6 @@ const WalletAddressPage: React.FC = () => {
 
   const canExportWallet = isAuthenticated && hasEmbeddedWallet && isWalletReady;
 
-  useEffect(() => {
-    if (walletAddress) {
-      fetchBTTBalance(walletAddress);
-    }
-  }, [walletAddress]);
-
-  const fetchBTTBalance = async (address: string) => {
-    try {
-      const response = await fetch(`/api/getBTTbalance?address=${address}`);
-      const data = await response.json();
-      if (response.ok) {
-        setBttBalance(data.balance);
-      } else {
-        console.error("Error fetching BTT balance:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching BTT balance:", error);
-    }
-  };
-
   const handleExportWallet = async () => {
     if (!canExportWallet) {
       toast.error("Please wait for wallet initialization to complete");
@@ -128,7 +109,7 @@ const WalletAddressPage: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `/api/get-transactions?walletAddress=${walletAddress}`
+          `/api/get-dashboard-transaction?walletAddress=${walletAddress}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
@@ -210,9 +191,9 @@ const WalletAddressPage: React.FC = () => {
     setIsDropdownOpen(false);
   };
 
-  const toggleHelp = () => {
-    setShowHelp(!showHelp);
-  };
+  // const toggleHelp = () => {
+  //   setShowHelp(!showHelp);
+  // };
 
   // Close the help popup if clicking outside of it
   useEffect(() => {
@@ -292,7 +273,7 @@ const WalletAddressPage: React.FC = () => {
                         -4
                       )}`
                     : "Connect Wallet"}
-                  <div> ({bttBalance} BTT)</div>
+                  {/* <div> ({bttBalance} BTT)</div> */}
                 </span>
                 <ChevronDown size={20} />
               </div>
@@ -334,18 +315,6 @@ const WalletAddressPage: React.FC = () => {
             </div>
 
             <div className="text-right flex items-end">
-              {/* <div>
-                <div className="text-[18px] text-black-600 py-1 font-[500] text-start">
-                  Your BTT Balance
-                </div>
-                <div
-                  className={`text-[25px] font-bold   py-1 px-3 rounded-[10px] ${
-                    theme === "dark"
-                      ? "text-[#FFE500] border border-[#A2A2A2] bg-[#1C1C1C]"
-                      : "text-[#E265FF] border border-gray"
-                  }`}
-                ></div>
-              </div> */}
               <div className="gap-4 flex">
                 {" "}
                 <button
@@ -481,22 +450,22 @@ const WalletAddressPage: React.FC = () => {
     </div>
   );
 };
-const PrivyWrapper: React.FC = () => {
-  const { theme } = useTheme();
-  return (
-    <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-      config={{
-        loginMethods: ["email"],
-        appearance: {
-          theme: theme === "dark" ? "dark" : "light",
-          accentColor: theme === "dark" ? "#FFE500" : "#E265FF",
-        },
-      }}
-    >
-      <WalletAddressPage />
-    </PrivyProvider>
-  );
-};
+// const PrivyWrapper: React.FC = () => {
+//   const { theme } = useTheme();
+//   return (
+//     <PrivyProvider
+//       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+//       config={{
+//         loginMethods: ["email"],
+//         appearance: {
+//           theme: theme === "dark" ? "dark" : "light",
+//           accentColor: theme === "dark" ? "#FFE500" : "#E265FF",
+//         },
+//       }}
+//     >
+//       <WalletAddressPage />
+//     </PrivyProvider>
+//   );
+// };
 
-export default PrivyWrapper;
+export default WalletAddressPage;

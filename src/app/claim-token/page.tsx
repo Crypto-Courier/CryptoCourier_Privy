@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../../components/Navbar";
+// import Navbar from "../../components/Navbar";
+import NewNavbar from "../dashboard/[walletAddress]/newNavbar";
 import Footer from "../../components/Footer";
 import { useTheme } from "next-themes";
 import { PrivyProvider, usePrivy } from "@privy-io/react-auth";
@@ -15,7 +16,7 @@ function ClaimToken() {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false); // Tooltip visibility state
-  const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
+  // const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -85,7 +86,7 @@ function ClaimToken() {
 
   return (
     <div>
-      <Navbar />
+      <NewNavbar />
       <div className="txbgg flex justify-center items-center ">
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
@@ -155,22 +156,22 @@ function ClaimToken() {
   );
 }
 
-const PrivyWrapper: React.FC = () => {
-  const { theme } = useTheme();
-  return (
-    <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-      config={{
-        loginMethods: ["email"],
-        appearance: {
-          theme: theme === "dark" ? "dark" : "light",
-          accentColor: theme === "dark" ? "#FFE500" : "#E265FF",
-        },
-      }}
-    >
-      <ClaimToken />
-    </PrivyProvider>
-  );
-};
+// const PrivyWrapper: React.FC = () => {
+//   const { theme } = useTheme();
+//   return (
+//     <PrivyProvider
+//       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+//       config={{
+//         loginMethods: ["email"],
+//         appearance: {
+//           theme: theme === "dark" ? "dark" : "light",
+//           accentColor: theme === "dark" ? "#FFE500" : "#E265FF",
+//         },
+//       }}
+//     >
+//       <ClaimToken />
+//     </PrivyProvider>
+//   );
+// };
 
-export default PrivyWrapper;
+export default ClaimToken;
