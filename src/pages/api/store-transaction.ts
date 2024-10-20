@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
+import chainConfig from '../../config/chains';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -12,9 +13,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
+      // Check if the chainId exists in the configuration
+      if (!chainConfig[chainId]) {
+        console.log(`Invalid chainId: ${chainId}`);
+        return res.status(400).json({ error: 'Invalid chainId' });
+      }
+
       const client = await clientPromise;
       const db = client.db('transactionDB');
       const collection = db.collection('transactions');
+
+       // Get the block explorer URL for the given chainId
+       const blockExplorerUrl = chainConfig[chainId].blockexplorer;
 
       // Insert the transaction data
       const result = await collection.insertOne({
@@ -26,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         transactionHash,
         chainId,
         createdAt: new Date(),
-        customizedLink: `https://testnet.bttcscan.com/tx/${transactionHash}`,
+        customizedLink: `${blockExplorerUrl}/${transactionHash}`,
         authenticated: false 
       });
 
