@@ -76,7 +76,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
         </button>
 
         <div
-          className={`flex justify-center items-center p-6 rounded-tr-[10px] rounded-tl-[10px] ${
+          className={`flex justify-center items-center lg:p-6 md:p-6 sm:p-6 p-4 rounded-tr-[10px] rounded-tl-[10px] ${
             theme === "dark"
               ? "bg-[#000000] border-b-2 border-[#FE660A]"
               : "bg-white border-b-2 border-[#FE005B]"
@@ -114,7 +114,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 onClick={handleCreateWallet}
                 className={`${
                   theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
-                } w-[70%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-4`}
+                } w-[70%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-4 text-sm lg:text-md  md:text-md sm:text-md `}
               >
                 Create Wallet
               </button>
@@ -125,7 +125,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 <div className="item-start font-semibold">Send</div>
 
                 <p
-                  className={` text-md rounded-[12px] text-md py-2 px-4 font-bold ${
+                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${
                     theme === "dark"
                       ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
@@ -133,19 +133,19 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 >
                   {tokenAmount} {tokenSymbol} to {recipientEmail}
                 </p>
-                <div className="item-start font-semibold">
+                <div className="item-start font-semibold text-md lg:text-md  md:text-md sm:text-md ">
                   {" "}
                   New Wallet for Recipient
                 </div>
                 <p
-                  className={` text-md rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${
+                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${
                     theme === "dark"
                       ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
                   }`}
                 >
                   {walletAddress
-                    ? `${walletAddress.slice(0, 20)}...${walletAddress.slice(
+                    ? `${walletAddress.slice(0, 10)}...${walletAddress.slice(
                         -7
                       )}`
                     : ""}
@@ -156,13 +156,15 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                     onClick={copyToClipboard}
                   >
                     {copied ? (
-                      <CheckCircle className="w-4 h-4" />
+                      <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4" />
                     ) : (
                       <Copy className="w-4 h-4" />
                     )}
                   </button>
                 </p>
-                <p>You can check out transaction for transparency.</p>
+                <div className="text-md lg:text-md  md:text-md sm:text-md font-semibold ">
+                  You can check out transaction for transparency.
+                </div>
               </div>
 
               <div className="flex gap-5 w-[80%] m-auto">
@@ -172,7 +174,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                     theme === "dark"
                       ? "border border-[#FE660A]"
                       : "border border-[#0052FF] text-[#0052FF]"
-                  } w-full text-white py-3 rounded-[50px] flex items-center justify-center font-semibold `}
+                  } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
                 >
                   Cancel
                 </button>
@@ -180,7 +182,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                   onClick={handleConfirm}
                   className={`${
                     theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                  } w-full text-white py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
+                  } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
                 >
                   Confirm
                 </button>
