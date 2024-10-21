@@ -44,15 +44,15 @@ function SwitchNetwork() {
   };
 
   const chains = [
-    { id: 84532, title: "baseSepolia", img: base },
+    { id: 84532, title: "Base Sepolia", img: base },
     { id: 291, title: "Orderly", img: orderly },
     { id: 7560, title: "Cyber", img: cyfer },
     { id: 7777777, title: "Zora", img: zora },
     { id: 42220, title: "Celo", img: celo },
-    { id: 919, title: "modeTestnet", img: mode },
+    { id: 919, title: "Mode Testnet", img: mode },
     { id: 1135, title: "Lisk", img: lisk },
     { id: 255, title: "Kroma", img: kroma },
-    { id: 11155420, title: "optimismSepolia", img: op },
+    { id: 11155420, title: "Optimism Sepolia", img: op },
     { id: 252, title: "Fraxtal", img: fraxtal },
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];

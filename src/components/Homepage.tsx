@@ -69,7 +69,7 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[90%] mx-auto flex justify-center">
+        <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[90%] mx-auto flex justify-center">
           <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center space-y-4 sm:space-y-0 sm:space-x-4 font-[600]">
             <div>CryptoCourier</div>
             <div>
