@@ -30,7 +30,10 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ tokenAddress: newToken.contractAddress, chainId }),
+            body: JSON.stringify({
+              tokenAddress: newToken.contractAddress,
+              chainId,
+            }),
           });
 
           const data = await res.json();
@@ -103,7 +106,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
     >
       <div
         ref={modalRef}
-        className={`rounded-lg max-w-[40%] w-full relative ${
+        className={`rounded-lg lg:max-w-[30%] md:max-w-[70%] sm:max-w-[80%] max-w-[80%] w-full relative ${
           theme === "dark"
             ? "bg-[#000000]/50 border-red-500 border backdrop-blur-[10px]"
             : "bg-[#FFFCFC] border border-[#FE005B]/60"
@@ -118,7 +121,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
         </button>
 
         <h2
-          className={`text-2xl font-bold mb-4 p-6 rounded-tr-[10px] rounded-tl-[10px] text-center ${
+          className={`lg:text-2xl md:text-2xl sm:text-2xl text-md font-bold mb-4 lg:p-6 md:p-6 sm:p-6 p-4 rounded-tr-[10px] rounded-tl-[10px] text-center ${
             theme === "dark"
               ? "bg-[#171717] border-b-2 border-red-500"
               : "bg-white border-b-2 border-[#FE005B]"
