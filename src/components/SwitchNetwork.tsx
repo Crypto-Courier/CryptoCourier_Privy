@@ -37,6 +37,7 @@ function SwitchNetwork() {
       await wallet.switchChain(chainId);
       setSelectedChain(chainId);
       setChainSwitchError("");
+      setDropdownOpen(false); // Close the dropdown after switching chain
     } catch (error) {
       console.error("Failed to switch chain:", error);
       setChainSwitchError("Error switching chains. Please try again.");
@@ -89,7 +90,7 @@ function SwitchNetwork() {
       {/* Dropdown for small screens */}
       <div className="md:hidden">
         <div
-          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-3 cursor-pointer flex justify-between items-center outline-none ${
+          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
             theme === "dark"
               ? "bg-[#000000]/50 border border-white text-white"
               : "bg-[#FFFCFC] border border-gray-700 text-black"
@@ -103,7 +104,9 @@ function SwitchNetwork() {
                 chains.find((chain) => chain.id === currentChain)?.img || base
               }
               alt="Selected Chain"
-              className="w-6 h-6 mr-2"
+              className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
+                theme === "dark" ? "bg-white" : "bg-black"
+              }`}
             />
             {chains.find((chain) => chain.id === currentChain)?.title ||
               "Select chain"}
@@ -124,7 +127,7 @@ function SwitchNetwork() {
               <div
                 key={chain.id}
                 onClick={() => handleChainSwitch(chain.id)}
-                className={`flex  px-6 py-2 cursor-pointer hover:bg-opacity-80 border-b-2 ${
+                className={`flex  px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 ${
                   currentChain === chain.id ? "bg-opacity-20" : ""
                 }`}
               >

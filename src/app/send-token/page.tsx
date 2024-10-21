@@ -324,17 +324,17 @@ const SendToken = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[4rem] ">
           <div
-            className={`flex justify-between border-black border-b-0 px-[30px] py-[20px] ${
+            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`flex items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
+              className={`hidden lg:flex md:flex sm:hidden  flex items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
                 theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
               }`}
             >
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
                   theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"
@@ -348,15 +348,15 @@ const SendToken = () => {
                   }`}
                 ></div>
               </div>
-              <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+              <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
                 {activeAddress
                   ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
                   : "Connect or Login"}
               </span>
             </div>
-            <div className="text-right flex items-end">
+            <div className="text-right  items-end">
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                   theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#E265FF] text-white"
@@ -376,9 +376,9 @@ const SendToken = () => {
               } rounded-br-[40px] rounded-bl-[40px] `}
             >
               <SwitchNetwork />
-              <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[20px] py-[20px] justify-between items-center gap-[20px]">
+              <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[30px] py-[30px] justify-between items-center lg:gap-[20px] md:gap-[20px] sm:gap-[20px] gap-[30px]">
                 <div className="w-full md:w-[100%] ">
-                  <div className="flex justify-between mx-5 ">
+                  <div className="flex justify-between lg:mx-5 md:mx-5 sm:mx-5  ">
                     {" "}
                     <h3
                       className={`text-[20px] font-medium   ${
@@ -414,7 +414,7 @@ const SendToken = () => {
                             theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC]"
-                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-4`}
+                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
                         >
                           <div className="flex items-center space-x-2">
                             <span
@@ -459,7 +459,7 @@ const SendToken = () => {
                     >
                       Enter token amount to send
                     </label>
-                    <div className="flex space-x-2 justify-end">
+                    <div className="flex lg:space-x-2 md:space-x-2 sm:space-x-2 justify-end flex-col lg:flex-row md:flex-row sm:flex-row">
                       <div
                         className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
                           theme === "dark"
@@ -487,44 +487,43 @@ const SendToken = () => {
                           Max
                         </button>
                       </div>
-                      <div className="relative">
-                        <select
-                          value={selectedToken}
-                          onChange={handleChange}
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none ${
+
+                      <select
+                        value={selectedToken}
+                        onChange={handleChange}
+                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full md:w-[15%] sm:w-[15%] lg:w-[15%] ${
+                          theme === "dark"
+                            ? "bg-[#000000]/50 border border-white"
+                            : " bg-[#FFFCFC] border border-gray-700"
+                        }`}
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                          className={` text-black hover:bg-gray-200 bg-opacity-50 ${
                             theme === "dark"
-                              ? "bg-[#000000]/50 border border-white"
-                              : " bg-[#FFFCFC] border border-gray-700"
+                              ? "bg-[#000000]/100 border border-white text-white"
+                              : " bg-[#FFFCFC] border border-gray-700 text-black "
                           }`}
                         >
-                          <option
-                            value=""
-                            disabled
-                            selected
-                            className={` text-black hover:bg-gray-200 bg-opacity-50 ${
-                              theme === "dark"
-                                ? "bg-[#000000]/100 border border-white text-white"
-                                : " bg-[#FFFCFC] border border-gray-700 text-black "
-                            }`}
-                          >
-                            Select a token
-                          </option>
-                          {Array.isArray(tokens) &&
-                            tokens.map((token) => (
-                              <option
-                                key={token.contractAddress}
-                                value={token.contractAddress}
-                                className={` text-black hover:bg-gray-200 bg-opacity-50 ${
-                                  theme === "dark"
-                                    ? "bg-[#000000]/100 border border-white text-white"
-                                    : "bg-[#FFFCFC] border border-gray-700 text-black "
-                                }`}
-                              >
-                                {token.symbol}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+                          Select a token
+                        </option>
+                        {Array.isArray(tokens) &&
+                          tokens.map((token) => (
+                            <option
+                              key={token.contractAddress}
+                              value={token.contractAddress}
+                              className={` text-black hover:bg-gray-200 bg-opacity-50 ${
+                                theme === "dark"
+                                  ? "bg-[#000000]/100 border border-white text-white"
+                                  : "bg-[#FFFCFC] border border-gray-700 text-black "
+                              }`}
+                            >
+                              {token.symbol}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   </div>
 
@@ -549,15 +548,15 @@ const SendToken = () => {
                     />
                   </div>
 
-                  <div className="flex  pt-3 space-x-7">
-                    <button className="px-10 py-3 rounded-full border border-[#FF336A] text-[#FF336A] font-medium ">
+                  <div className="flex  pt-3 space-x-7 ">
+                    <button className="px-7 py-3 lg:px-10 md:px-10 sm:px-10 rounded-full border border-[#FF336A] text-[#FF336A]  lg:text-md md:text-md text-sm sm:text-md">
                       CANCEL
                     </button>
 
                     <button
                       onClick={() => setIsPopupOpen(true)}
                       disabled={isLoading}
-                      className=" hover:scale-110 duration-500 transition 0.3 px-10 py-3 rounded-full border border-red-300 text-white font-medium bg-[#FF336A]"
+                      className=" hover:scale-110 duration-500 transition 0.3 px-7 py-3 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-md bg-[#FF336A]"
                     >
                       {isLoading ? "SEND" : "SEND"}
                     </button>
