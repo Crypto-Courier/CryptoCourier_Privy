@@ -24,6 +24,7 @@ const SendToken = () => {
   const { data: hash, sendTransaction } = useSendTransaction();
   const { sendTransaction: privySendTransaction } = usePrivy();
   const [copied, setCopied] = useState(false);
+  const [previousChainId, setPreviousChainId] = useState<string>("");
   const router = useRouter();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
   const [selectedToken, setSelectedToken] = useState<string>("");
@@ -91,6 +92,8 @@ const SendToken = () => {
           selectedTokenData.symbol,
           recipientEmail
         );
+        setTokenAmount("");
+        setRecipientEmail("");
       }
     }
   }, [hash || transactionHash]);
@@ -121,7 +124,9 @@ const SendToken = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(':')[1]}`
+        `/api/get-tokens?address=${activeAddress}&chainId=${
+          walletData?.chainId.split(":")[1]
+        }`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -204,7 +209,7 @@ const SendToken = () => {
           tokenSymbol: selectedTokenData,
           recipientEmail,
           transactionHash: hash || transactionHash,
-          chainId: walletData?.chainId.split(':')[1],
+          chainId: walletData?.chainId.split(":")[1],
         }),
       });
 
@@ -219,8 +224,7 @@ const SendToken = () => {
           "Transaction completed but failed to send email to recipient"
         );
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error storing transaction:", error);
       toast.error("Failed to store transaction data");
     }
@@ -245,8 +249,8 @@ const SendToken = () => {
           to: walletAddress,
           value: amountInWei,
         });
-        setTransactionHash(tx.transactionHash)
-        console.log('Transaction hash:', transactionHash);
+        setTransactionHash(tx.transactionHash);
+        console.log("Transaction hash:", transactionHash);
       } else if (walletData?.authenticated) {
         await sendTransaction({
           to: walletAddress as `0x${string}`,
@@ -293,6 +297,9 @@ const SendToken = () => {
       toast.error("An unexpected error occurred");
     }
   };
+  useEffect(() => {
+    fetchTokens();
+  }, [walletData?.chainId, activeAddress]); // Re-fetch tokens when chainId or activeAddress changes
 
   // Close the help popup if clicking outside of it
   useEffect(() => {
@@ -317,24 +324,28 @@ const SendToken = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[4rem] ">
           <div
-            className={`flex justify-between border-black border-b-0 px-[30px] py-[20px] ${theme === "dark" ? "bg-black" : "bg-white"
-              } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
+            className={`flex justify-between border-black border-b-0 px-[30px] py-[20px] ${
+              theme === "dark" ? "bg-black" : "bg-white"
+            } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`flex items-center space-x-3 p-2 rounded-[10px] shadow-lg ${theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
-                }`}
+              className={`flex items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
+                theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
+              }`}
             >
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
-                  ? "border-white bg-transparent"
-                  : "border-gray-500 bg-transparent"
-                  }`}
+                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+                  theme === "dark"
+                    ? "border-white bg-transparent"
+                    : "border-gray-500 bg-transparent"
+                }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#E265FF] text-white"
-                    }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#E265FF] text-white"
+                  }`}
                 ></div>
               </div>
               <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -345,10 +356,11 @@ const SendToken = () => {
             </div>
             <div className="text-right flex items-end">
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
-                  ? "bg-[#FFE500] text-[#363535]"
-                  : "bg-[#E265FF] text-white"
-                  }`}
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
+                  theme === "dark"
+                    ? "bg-[#FFE500] text-[#363535]"
+                    : "bg-[#E265FF] text-white"
+                }`}
                 onClick={OpenHistory}
               >
                 Transaction History
@@ -357,10 +369,11 @@ const SendToken = () => {
           </div>
           <div>
             <div
-              className={`${theme === "dark"
-                ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
-                : "bg-white/80 backdrop-blur-[80px]"
-                } rounded-br-[40px] rounded-bl-[40px] `}
+              className={`${
+                theme === "dark"
+                  ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
+                  : "bg-white/80 backdrop-blur-[80px]"
+              } rounded-br-[40px] rounded-bl-[40px] `}
             >
               <SwitchNetwork />
               <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[20px] py-[20px] justify-between items-center gap-[20px]">
@@ -368,17 +381,19 @@ const SendToken = () => {
                   <div className="flex justify-between mx-5 ">
                     {" "}
                     <h3
-                      className={`text-[20px] font-medium   ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                        }`}
+                      className={`text-[20px] font-medium   ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                      }`}
                     >
                       All assets
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
-                        ? "bg-[#FFE500] text-[#363535]"
-                        : "bg-[#E265FF] text-white"
-                        }  px-4 py-2 rounded-full text-sm`}
+                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
+                        theme === "dark"
+                          ? "bg-[#FFE500] text-[#363535]"
+                          : "bg-[#E265FF] text-white"
+                      }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
                     </button>
@@ -395,15 +410,17 @@ const SendToken = () => {
                       tokens.map((token, index) => (
                         <div
                           key={index}
-                          className={`${theme === "dark"
-                            ? "bg-[#000000]/50 border border-white"
-                            : " bg-[#FFFCFC]"
-                            } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-4`}
+                          className={`${
+                            theme === "dark"
+                              ? "bg-[#000000]/50 border border-white"
+                              : " bg-[#FFFCFC]"
+                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-4`}
                         >
                           <div className="flex items-center space-x-2">
                             <span
-                              className={` font-bold ${theme === "dark" ? "text-white" : "text-black"
-                                }`}
+                              className={` font-bold ${
+                                theme === "dark" ? "text-white" : "text-black"
+                              }`}
                             >
                               {token.symbol}
                             </span>
@@ -419,10 +436,11 @@ const SendToken = () => {
                     ) : (
                       <div className="flex items-center justify-center h-full">
                         <span
-                          className={` ${theme === "dark"
-                            ? "text-[#DEDEDE]"
-                            : "text-[#696969]"
-                            } text-center text-gray-500 text-[18px]`}
+                          className={` ${
+                            theme === "dark"
+                              ? "text-[#DEDEDE]"
+                              : "text-[#696969]"
+                          } text-center text-gray-500 text-[18px]`}
                         >
                           {isConnected
                             ? `No Tokens Found`
@@ -435,32 +453,36 @@ const SendToken = () => {
                 <div className="w-full md:w-[95%] m-auto">
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                        }`}
+                      className={`block text-lg font-[500]  mb-1 ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                      }`}
                     >
                       Enter token amount to send
                     </label>
                     <div className="flex space-x-2 justify-end">
                       <div
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${theme === "dark"
-                          ? "bg-[#000000]/50 border border-white"
-                          : " bg-[#FFFCFC] border border-gray-700"
-                          }`}
+                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
+                          theme === "dark"
+                            ? "bg-[#000000]/50 border border-white"
+                            : " bg-[#FFFCFC] border border-gray-700"
+                        }`}
                       >
                         <input
                           type="text"
                           placeholder=" token amount "
                           value={tokenAmount}
                           onChange={(e) => setTokenAmount(e.target.value)}
-                          className={`w-full bg-transparent outline-none ${theme === "dark" ? "text-white" : "text-gray-800 "
-                            } `}
+                          className={`w-full bg-transparent outline-none ${
+                            theme === "dark" ? "text-white" : "text-gray-800 "
+                          } `}
                         />
                         <button
                           onClick={handleMaxClick}
-                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${theme === "dark"
-                            ? "text-[#E265FF]"
-                            : "text-[#FF336A]"
-                            }`}
+                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${
+                            theme === "dark"
+                              ? "text-[#E265FF]"
+                              : "text-[#FF336A]"
+                          }`}
                         >
                           Max
                         </button>
@@ -469,19 +491,21 @@ const SendToken = () => {
                         <select
                           value={selectedToken}
                           onChange={handleChange}
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none ${theme === "dark"
-                            ? "bg-[#000000]/50 border border-white"
-                            : " bg-[#FFFCFC] border border-gray-700"
-                            }`}
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none ${
+                            theme === "dark"
+                              ? "bg-[#000000]/50 border border-white"
+                              : " bg-[#FFFCFC] border border-gray-700"
+                          }`}
                         >
                           <option
                             value=""
                             disabled
                             selected
-                            className={` text-black hover:bg-gray-200 bg-opacity-50 ${theme === "dark"
-                              ? "bg-[#000000]/100 border border-white text-white"
-                              : " bg-[#FFFCFC] border border-gray-700 text-black "
-                              }`}
+                            className={` text-black hover:bg-gray-200 bg-opacity-50 ${
+                              theme === "dark"
+                                ? "bg-[#000000]/100 border border-white text-white"
+                                : " bg-[#FFFCFC] border border-gray-700 text-black "
+                            }`}
                           >
                             Select a token
                           </option>
@@ -490,10 +514,11 @@ const SendToken = () => {
                               <option
                                 key={token.contractAddress}
                                 value={token.contractAddress}
-                                className={` text-black hover:bg-gray-200 bg-opacity-50 ${theme === "dark"
-                                  ? "bg-[#000000]/100 border border-white text-white"
-                                  : "bg-[#FFFCFC] border border-gray-700 text-black "
-                                  }`}
+                                className={` text-black hover:bg-gray-200 bg-opacity-50 ${
+                                  theme === "dark"
+                                    ? "bg-[#000000]/100 border border-white text-white"
+                                    : "bg-[#FFFCFC] border border-gray-700 text-black "
+                                }`}
                               >
                                 {token.symbol}
                               </option>
@@ -505,8 +530,9 @@ const SendToken = () => {
 
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                        }`}
+                      className={`block text-lg font-[500]  mb-1 ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                      }`}
                     >
                       Enter recipient's email
                     </label>
@@ -515,10 +541,11 @@ const SendToken = () => {
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="recipient's email address"
-                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${theme === "dark"
-                        ? "bg-[#000000]/50 border border-white"
-                        : " bg-[#FFFCFC] border border-gray-700"
-                        }`}
+                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
+                        theme === "dark"
+                          ? "bg-[#000000]/50 border border-white"
+                          : " bg-[#FFFCFC] border border-gray-700"
+                      }`}
                     />
                   </div>
 

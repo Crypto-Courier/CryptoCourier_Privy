@@ -131,7 +131,7 @@ function SwitchNetwork() {
                 <Image
                   src={chain.img}
                   alt={chain.title}
-                  className={`w-[24px] h-[25px] block mr-[20px]  p-[1px] rounded-[15px] ${
+                  className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
                     currentChain === chain.id ? "opacity-100" : "opacity-40"
                   } ${theme === "dark" ? "bg-white" : "bg-black"}`}
                 />

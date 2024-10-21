@@ -4,7 +4,7 @@ import wallet from "../assets/wallet.png";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import trx2 from "../assets/trx2.png";
-import {TxDetailsProps} from "../types/types"
+import { TxDetailsProps } from "../types/types";
 
 const TxDetails: React.FC<TxDetailsProps> = ({
   isOpen,
@@ -72,7 +72,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
           onClick={onClose}
           className="absolute top-2 right-[1rem]  p-1 hover:opacity-[0.6]"
         >
-          <X size={20} className="text-[#FF005C]"/>
+          <X size={20} className="text-[#FF005C]" />
         </button>
 
         <div
