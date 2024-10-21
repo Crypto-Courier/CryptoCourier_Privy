@@ -83,7 +83,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
           }`}
         >
           <div className="flex items-center flex-col">
-            <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mb-2">
+            <div className="lg:w-8 lg:h-8 md:w-8 md:h-8 sm:w-8 sm:h-8 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mb-2">
               {theme === "light" ? (
                 <Image src={wallet} alt="wallet" />
               ) : (
@@ -91,7 +91,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
               )}
             </div>
             <h2
-              className={`text-xl font-bold ${
+              className={`text-md lg:text-xl md:text-xl sm:text-xl font-bold ${
                 theme === "dark" ? "text-white" : "text-black"
               }`}
             >
@@ -114,7 +114,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 onClick={handleCreateWallet}
                 className={`${
                   theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
-                } w-full text-white py-2 rounded-[10px] flex items-center justify-center mb-4`}
+                } w-[70%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-4`}
               >
                 Create Wallet
               </button>
