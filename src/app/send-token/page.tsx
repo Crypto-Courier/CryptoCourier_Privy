@@ -7,7 +7,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useSendTransaction } from "wagmi";
 import { parseUnits } from "viem";
-import { toast } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 // import { Copy, CheckCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -92,6 +92,7 @@ const SendToken = () => {
           selectedTokenData.symbol,
           recipientEmail
         );
+        toast.success("Transaction Successful! Sent");
         setTokenAmount("");
         setRecipientEmail("");
       }
@@ -616,6 +617,17 @@ const SendToken = () => {
         )}
       </div>
       <Footer />
+      <Toaster
+        toastOptions={{
+          style: {
+            border: "1px solid transparent",
+
+            borderImageSlice: 1,
+            background: theme === "dark" ? "white" : "white",
+            color: theme === "dark" ? "black" : "black",
+          },
+        }}
+      />
     </div>
   );
 };

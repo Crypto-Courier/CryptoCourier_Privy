@@ -36,11 +36,9 @@ function SwitchNetwork() {
     try {
       await wallet.switchChain(chainId);
       setSelectedChain(chainId);
-      setChainSwitchError("");
       setDropdownOpen(false); // Close the dropdown after switching chain
     } catch (error) {
       console.error("Failed to switch chain:", error);
-      setChainSwitchError("Error switching chains. Please try again.");
     }
   };
 

@@ -60,19 +60,19 @@ const queryClient = new QueryClient();
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
 
-  const darkModeConfig = {
-    appearance: {
-      theme: "dark" as `#${string}`,
-      accentColor: "#FFE500" as `#${string}`, // Ensure it conforms to the expected type
-    },
-  };
+  // const darkModeConfig = {
+  //   appearance: {
+  //     theme: "dark" as `#${string}`,
+  //     accentColor: "#FFE500" as `#${string}`, // Ensure it conforms to the expected type
+  //   },
+  // };
 
-  const lightModeConfig = {
-    appearance: {
-      theme: "light" as `#${string}`,
-      accentColor: "#E265FF" as `#${string}`, // Ensure it conforms to the expected type
-    },
-  };
+  // const lightModeConfig = {
+  //   appearance: {
+  //     theme: "light" as `#${string}`,
+  //     accentColor: "#E265FF" as `#${string}`, // Ensure it conforms to the expected type
+  //   },
+  // };
 
   return (
     <PrivyProvider
@@ -80,14 +80,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       config={{
         loginMethods: ["email", "wallet"],
         appearance: {
-          theme:
-            theme === "dark"
-              ? darkModeConfig.appearance.theme
-              : lightModeConfig.appearance.theme,
-          accentColor:
-            theme === "dark"
-              ? darkModeConfig.appearance.accentColor
-              : lightModeConfig.appearance.accentColor,
+          theme: theme === "dark" ? "dark" : "light",
+          accentColor: theme === "dark" ? "#000000" : "#E265FF",
+
           walletList: [
             "metamask",
             "rainbow",

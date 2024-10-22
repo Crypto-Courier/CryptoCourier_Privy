@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import trx2 from "../assets/trx2.png";
 import { TxDetailsProps } from "../types/types";
-
+import spinner from "../assets/spinner.gif";
+import toast from "react-hot-toast";
 const TxDetails: React.FC<TxDetailsProps> = ({
   isOpen,
   onClose,
@@ -18,10 +19,12 @@ const TxDetails: React.FC<TxDetailsProps> = ({
   const [walletAddress, setWalletAddress] = useState("");
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false); // Add this state
 
   if (!isOpen) return null;
 
   const handleCreateWallet = async () => {
+    setLoading(true); // Set loading to true when the API call starts
     try {
       const response = await fetch("/api/create-wallet", {
         method: "POST",
@@ -44,11 +47,14 @@ const TxDetails: React.FC<TxDetailsProps> = ({
       }
     } catch (error) {
       console.error("Error creating wallet:", error);
+    } finally {
+      setLoading(false); // Set loading to false after the API call finishes
     }
   };
 
   const handleConfirm = () => {
     onConfirm(walletAddress);
+
     onClose();
   };
 
@@ -103,21 +109,35 @@ const TxDetails: React.FC<TxDetailsProps> = ({
         <div className="p-6">
           {!isWalletCreated ? (
             <div>
-              <p
-                className={`text-center mb-4 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                A new wallet will be created for {recipientEmail}
-              </p>
-              <button
-                onClick={handleCreateWallet}
-                className={`${
-                  theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
-                } w-[70%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-4 text-sm lg:text-md  md:text-md sm:text-md `}
-              >
-                Create Wallet
-              </button>
+              <div className="flex gap-4 mb-2 mt-2 flex-col w-[80%] m-auto">
+                <div
+                  className={`item-start font-semibold  ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  A new wallet will be created as
+                </div>
+                <div
+                  className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${
+                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                  } `}
+                >
+                  {recipientEmail}
+                </div>
+                <button
+                  onClick={handleCreateWallet}
+                  disabled={loading}
+                  className={`${
+                    theme === "dark"
+                      ? "border border-[#FE660A]"
+                      : "border border-[#0052FF] text-[#0052FF]"
+                  } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
+                >
+                  {
+                    loading ? "Creating..." : "Create Wallet" // Show button text when not loading
+                  }
+                </button>
+              </div>
             </div>
           ) : (
             <>

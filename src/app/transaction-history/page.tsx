@@ -11,7 +11,7 @@ import trx from "../../assets/trx.png";
 import { sendEmail } from "../../components/Email/Emailer";
 import { renderEmailToString } from "../../components/Email/renderEmailToString";
 import { Transaction } from "../../types/types";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import loader from "../../assets/loading.gif";
 
 const TxHistory: React.FC = () => {
@@ -247,15 +247,13 @@ const TxHistory: React.FC = () => {
                             </>
                           )}
                         </div>
-                        <div className="flex gap-3">
+                        <div className="justify-end w-[40%] flex gap-3">
                           {tx.senderWallet === activeAddress && (
-                            <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2">
+                            <div className="w-[30%] resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
                               {loadingTxId === index ? (
-                                <Image
-                                  src={loader}
-                                  alt="Loading..."
-                                  className="w-6 h-6"
-                                />
+                                <div className="tracking-wide text-[15px] ">
+                                  Sending...
+                                </div>
                               ) : (
                                 <button
                                   onClick={() => handleResend(tx, index)} // Pass the index to identify transaction
@@ -302,6 +300,17 @@ const TxHistory: React.FC = () => {
       </div>
 
       <Footer />
+      <Toaster
+        toastOptions={{
+          style: {
+            border: "1px solid transparent",
+
+            borderImageSlice: 1,
+            background: theme === "dark" ? "white" : "white",
+            color: theme === "dark" ? "black" : "black",
+          },
+        }}
+      />
     </div>
   );
 };
