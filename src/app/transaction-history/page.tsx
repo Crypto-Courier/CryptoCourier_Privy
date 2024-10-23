@@ -172,7 +172,7 @@ const TxHistory: React.FC = () => {
           </div>
 
           <div
-            className={`  ${
+            className={` pt-6 pb-6 ${
               theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
@@ -180,7 +180,7 @@ const TxHistory: React.FC = () => {
           >
             <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
               <h3
-                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] pt-6 px-3 lg:p-0 md:p-0 sm:p-0 ${
+                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px]  px-3 lg:p-0 md:p-0 sm:p-0 ${
                   theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
                 }`}
               >
@@ -195,7 +195,9 @@ const TxHistory: React.FC = () => {
                       No transactions found for your wallet address.
                     </div>
                   ) : transactions.length === 0 ? (
-                    <p>No transactions found for your wallet address.</p>
+                    <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px]  md:text-[20px] sm:text-[20px] font-semibold">
+                      No transactions found for your wallet address.
+                    </div>
                   ) : (
                     transactions.map((tx, index) => (
                       <div
@@ -208,7 +210,7 @@ const TxHistory: React.FC = () => {
                       >
                         <div className="flex items-center space-x-3">
                           <span
-                            className={`rounded-[10px] text-[15px] ${
+                            className={`rounded-[10px] text-[12px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${
                               theme === "dark"
                                 ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
                                 : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
@@ -220,7 +222,7 @@ const TxHistory: React.FC = () => {
                             <>
                               <span className="text-[15px]">To</span>
                               <span
-                                className={`rounded-[10px] text-[15px] tracking-wide ${
+                                className={`rounded-[10px] text-[13px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${
                                   theme === "dark"
                                     ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                     : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -247,9 +249,9 @@ const TxHistory: React.FC = () => {
                             </>
                           )}
                         </div>
-                        <div className="justify-end w-[40%] flex gap-3">
+                        <div className="justify-end  flex gap-3">
                           {tx.senderWallet === activeAddress && (
-                            <div className="w-[30%] resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
+                            <div className=" resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
                               {loadingTxId === index ? (
                                 <div className="tracking-wide text-[15px] ">
                                   Sending...
@@ -286,7 +288,7 @@ const TxHistory: React.FC = () => {
                   )
                 ) : (
                   <div
-                    className={`text-center font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
+                    className={`text-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
                       theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
                     }`}
                   >

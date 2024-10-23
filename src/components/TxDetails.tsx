@@ -119,7 +119,9 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 </div>
                 <div
                   className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    theme === "dark"
+                      ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
+                      : "text-black border border-[#0052FF]"
                   } `}
                 >
                   {recipientEmail}
@@ -128,9 +130,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                   onClick={handleCreateWallet}
                   disabled={loading}
                   className={`${
-                    theme === "dark"
-                      ? "border border-[#FE660A]"
-                      : "border border-[#0052FF] text-[#0052FF]"
+                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
                   } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
                 >
                   {

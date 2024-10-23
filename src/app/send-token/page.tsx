@@ -92,7 +92,7 @@ const SendToken = () => {
           selectedTokenData.symbol,
           recipientEmail
         );
-        toast.success("Transaction Successful! Sent");
+
         setTokenAmount("");
         setRecipientEmail("");
       }

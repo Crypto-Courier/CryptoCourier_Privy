@@ -235,9 +235,9 @@ const WalletAddressPage: React.FC = () => {
       <div className="txbg ">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px]">
           <div
-            className={`flex justify-between border-black border-b-0 p-[30px] ${
+            className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between border-black border-b-0 p-[30px] items-start gap-[20px] lg:gap-0 md:gap-0 lg:items-center md:items-center sm:items-start ${
               theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] items-center`}
+            } rounded-tl-[40px] rounded-tr-[40px] `}
           >
             <div
               className="relative"
@@ -319,7 +319,7 @@ const WalletAddressPage: React.FC = () => {
                 {" "}
                 <button
                   onClick={leaderboard}
-                  className={`px-[30px] py-[10px] rounded-full  hover:scale-110 duration-500 transition 0.3 ${
+                  className={`lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px]  rounded-full  hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
                     theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
@@ -329,7 +329,7 @@ const WalletAddressPage: React.FC = () => {
                 </button>
                 <button
                   onClick={invite}
-                  className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${
+                  className={`invite lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
                     theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
