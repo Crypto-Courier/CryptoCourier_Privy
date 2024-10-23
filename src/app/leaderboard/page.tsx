@@ -51,19 +51,19 @@ const LeaderBoard: React.FC = () => {
         <div
           className={`${
             theme === "dark"
-              ? "bg-gradient-to-t to-[#0052FF]/[0.23] from-[#FF005C]/[0.23] py-[30px] backdrop-blur-[20px] h-full"
-              : "bg-gradient-to-t to-[#FF005C]/[0.23] from-[#FE660A]/[0.23] py-[30px] backdrop-blur-[20px] h-full"
+              ? "bg-gradient-to-t to-[#0052FF]/[0.23] from-[#FF005C]/[0.23] py-[30px] backdrop-blur-[5px] h-full"
+              : "bg-gradient-to-t to-[#FF005C]/[0.23] from-[#FE660A]/[0.23] py-[30px] backdrop-blur-[5px] h-full"
           }`}
         >
           <div className=" mx-auto my-8 md:my-12 lg:my-16 px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 h-[55vh]">
-              <div className="flex flex-col items-center lg:w-1/3">
+            <div className="flex flex-col lg:flex-row md:flex-row items-center justify-between gap-8 h-[55vh]">
+              <div className="flex flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
                 <Image
                   src={trophy}
                   alt="Trophy"
                   className="w-48 md:w-64 lg:w-80"
                 />
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mt-4 text-white">
+                <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold mt-4 text-white ">
                   Leaderboard
                 </h1>
               </div>
