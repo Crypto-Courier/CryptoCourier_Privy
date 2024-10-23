@@ -210,7 +210,7 @@ const TxHistory: React.FC = () => {
                       >
                         <div className="flex items-center space-x-3">
                           <span
-                            className={`rounded-[10px] text-[12px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${
+                            className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${
                               theme === "dark"
                                 ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
                                 : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
@@ -222,7 +222,7 @@ const TxHistory: React.FC = () => {
                             <>
                               <span className="text-[15px]">To</span>
                               <span
-                                className={`rounded-[10px] text-[13px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${
+                                className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${
                                   theme === "dark"
                                     ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                     : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -254,7 +254,7 @@ const TxHistory: React.FC = () => {
                             <div className=" resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
                               {loadingTxId === index ? (
                                 <div className="tracking-wide text-[15px] ">
-                                  Sending...
+                                  Sending
                                 </div>
                               ) : (
                                 <button

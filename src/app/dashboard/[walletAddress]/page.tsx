@@ -26,6 +26,7 @@ const WalletAddressPage: React.FC = () => {
   const [exportStatus, setExportStatus] = useState<string>("");
   const [showHelp, setShowHelp] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
+  const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
 
   const { logout } = useLogout({
     onSuccess: () => {
@@ -132,7 +133,8 @@ const WalletAddressPage: React.FC = () => {
     window.open(url, "_blank", "noreferrer");
   };
 
-  const handleResend = async (tx: Transaction) => {
+  const handleResend = async (tx: Transaction, index: number) => {
+    setLoadingTxId(index);
     try {
       const subject =
         "Nothing to worry! Your Crypto token is in your inbox again 📩";
@@ -149,11 +151,10 @@ const WalletAddressPage: React.FC = () => {
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
       });
-
-      alert("Email resent successfully!");
     } catch (error) {
       console.error("Error resending email:", error);
-      alert("Failed to resend email. Please try again.");
+    } finally {
+      setLoadingTxId(null); // Reset the loading state once done
     }
   };
 
@@ -348,9 +349,9 @@ const WalletAddressPage: React.FC = () => {
                 : "bg-white/80 backdrop-blur-[80px]"
             } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[30px] px-[30px]`}
           >
-            <div className="space-y-3">
+            <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
               <h3
-                className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] ${
+                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px]  px-3 lg:p-0 md:p-0 sm:p-0 ${
                   theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
                 }`}
               >
@@ -360,16 +361,18 @@ const WalletAddressPage: React.FC = () => {
                 {isLoading ? (
                   <SkeletonLoader />
                 ) : error ? (
-                  <div className="text-red-700 h-[40vh] flex justify-center items-center text-[20px]">
-                    {error}
+                  <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px]  md:text-[20px] sm:text-[20px] font-semibold">
+                    No transactions found for your wallet address.
                   </div>
                 ) : transactions.length === 0 ? (
-                  <p>No transactions found.</p>
+                  <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px]  md:text-[20px] sm:text-[20px] font-semibold">
+                    No transactions found for your wallet address.
+                  </div>
                 ) : (
                   transactions.map((tx, index) => (
                     <div
                       key={index}
-                      className={`flex justify-between items-center bg-opacity-50 p-3 rounded-xl mt-2 mx-3 ${
+                      className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px]  ${
                         theme === "dark"
                           ? "bg-[#000000]/20 border border-[#5C5C5C]"
                           : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
@@ -377,7 +380,7 @@ const WalletAddressPage: React.FC = () => {
                     >
                       <div className="flex items-center space-x-3">
                         <span
-                          className={`rounded-[10px] text-[15px]  ${
+                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${
                             theme === "dark"
                               ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
                               : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
@@ -387,9 +390,9 @@ const WalletAddressPage: React.FC = () => {
                         </span>
                         {tx.senderWallet === walletAddress ? (
                           <>
-                            <span className="text-[15px] ">to</span>
+                            <span className="text-[15px]">To</span>
                             <span
-                              className={`rounded-[10px] text-[15px] ${
+                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${
                                 theme === "dark"
                                   ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                   : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -400,9 +403,9 @@ const WalletAddressPage: React.FC = () => {
                           </>
                         ) : (
                           <>
-                            <span className="text-[15px] ">from</span>
+                            <span className="text-[15px]">From</span>
                             <span
-                              className={`rounded-[10px] text-[15px] ${
+                              className={`rounded-[10px] text-[15px] tracking-wide  ${
                                 theme === "dark"
                                   ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                   : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -416,20 +419,32 @@ const WalletAddressPage: React.FC = () => {
                           </>
                         )}
                       </div>
-                      <div className="flex gap-3">
+                      <div className="justify-end  flex gap-3">
                         {tx.senderWallet === walletAddress && (
-                          <div className="bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex item-center gap-2">
-                            <button
-                              onClick={() => handleResend(tx)}
-                              className=""
-                            >
-                              Resend
-                            </button>
+                          <div className=" resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
+                            {loadingTxId === index ? (
+                              <div className="tracking-wide text-[15px] ">
+                                Sending
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => handleResend(tx, index)} // Pass the index to identify transaction
+                                className="tracking-wide text-[15px] "
+                              >
+                                Resend
+                              </button>
+                            )}
                           </div>
                         )}
-                        <div className="bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex item-center gap-2">
-                          <Image src={trx} alt="" />
+                        <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[12px] flex  gap-2 justify-center  items-center">
+                          <Image
+                            src={trx}
+                            alt=""
+                            gap-2
+                            className="w-4 h-4 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4"
+                          />
                           <button
+                            className="tracking-wide text-[15px] "
                             onClick={() =>
                               openTransactionReciept(tx.customizedLink)
                             }
