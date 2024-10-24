@@ -116,7 +116,7 @@ function ClaimToken() {
 
             <div className="px-6 py-[3rem]">
               <h3
-                className={`text-[18px] mb-4 text-center font-semibold ${
+                className={`text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px] mb-4 text-center font-semibold ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -127,13 +127,13 @@ function ClaimToken() {
                 onClick={handleClaim}
                 className={`${
                   theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
-                } login w-[50%] text-white py-2 rounded-[10px] flex items-center justify-center mb-6 mx-auto relative`}
-                onMouseEnter={() => setShowTooltip(true)} // Show tooltip on hover
-                onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when not hovering
+                } login w-[50%] text-white py-2 rounded-[10px] flex items-center justify-center mb-6 mx-auto relative text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px]`}
+                // onMouseEnter={() => setShowTooltip(true)} // Show tooltip on hover
+                // onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when not hovering
               >
                 {isAuthenticated ? `Go to Dashboard` : `Login to Claim Tokens`}
               </button>
-              {showTooltip && (
+              {/* {showTooltip && (
                 <div
                   className={`z-50 absolute top-[70px] left-1/2  border border-red-300 rounded-lg p-3 w-[50%] m-auto  ${
                     theme === "dark"
@@ -145,7 +145,7 @@ function ClaimToken() {
                   through privy. Make sure to enter the email in which you got
                   tokens.
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

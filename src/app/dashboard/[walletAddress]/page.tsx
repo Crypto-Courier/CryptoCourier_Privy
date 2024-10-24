@@ -347,7 +347,7 @@ const WalletAddressPage: React.FC = () => {
               theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[30px] px-[30px]`}
+            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[10px] px-[10px]`}
           >
             <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
               <h3
@@ -405,7 +405,7 @@ const WalletAddressPage: React.FC = () => {
                           <>
                             <span className="text-[15px]">From</span>
                             <span
-                              className={`rounded-[10px] text-[15px] tracking-wide  ${
+                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide  ${
                                 theme === "dark"
                                   ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                   : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -413,7 +413,7 @@ const WalletAddressPage: React.FC = () => {
                             >
                               {`${tx.senderWallet.slice(
                                 0,
-                                15
+                                10
                               )}...${tx.senderWallet.slice(-4)}`}
                             </span>
                           </>

@@ -141,7 +141,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
             </div>
           ) : (
             <>
-              <div className="flex gap-4 mb-4 flex-col w-[80%] m-auto">
+              <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
                 <div className="item-start font-semibold">Send</div>
 
                 <p

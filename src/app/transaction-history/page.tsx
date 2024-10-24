@@ -235,7 +235,7 @@ const TxHistory: React.FC = () => {
                             <>
                               <span className="text-[15px]">From</span>
                               <span
-                                className={`rounded-[10px] text-[15px] tracking-wide  ${
+                                className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px] ${
                                   theme === "dark"
                                     ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                     : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
@@ -243,7 +243,7 @@ const TxHistory: React.FC = () => {
                               >
                                 {`${tx.senderWallet.slice(
                                   0,
-                                  15
+                                  6
                                 )}...${tx.senderWallet.slice(-4)}`}
                               </span>
                             </>
@@ -251,7 +251,7 @@ const TxHistory: React.FC = () => {
                         </div>
                         <div className="justify-end  flex gap-3">
                           {tx.senderWallet === activeAddress && (
-                            <div className=" resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[12px] flex items-center gap-2 justify-center">
+                            <div className=" resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-fulltext-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                               {loadingTxId === index ? (
                                 <div className="tracking-wide text-[15px] ">
                                   Sending
@@ -266,7 +266,7 @@ const TxHistory: React.FC = () => {
                               )}
                             </div>
                           )}
-                          <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[12px] flex  gap-2 justify-center  items-center">
+                          <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex  gap-2 justify-center  items-center">
                             <Image
                               src={trx}
                               alt=""
