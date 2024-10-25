@@ -8,7 +8,7 @@ import Footer from "../../components/Footer";
 import { useSendTransaction } from "wagmi";
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
-// import { Copy, CheckCircle } from "lucide-react";
+import notoken from "../../assets/Not-token.gif";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { sendEmail } from "../../components/Email/Emailer";
@@ -18,6 +18,7 @@ import AddTokenForm from "./AddTokenForm";
 import { NewToken, TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
+import Image from "next/image";
 
 const SendToken = () => {
   const { walletData } = useWallet();
@@ -444,7 +445,7 @@ const SendToken = () => {
                           } text-center text-gray-500 text-[18px]`}
                         >
                           {isConnected
-                            ? `No Tokens Found`
+                            ? `No token found`
                             : `Connect wallet first`}
                         </span>
                       </div>

@@ -129,14 +129,14 @@ const TxHistory: React.FC = () => {
             } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`hidden lg:flex md:flex sm:hidden flex items-center space-x-3 p-2 rounded-[10px] ${
+              className={`hidden lg:flex md:flex sm:hidden  items-center space-x-3 p-2 rounded-[10px] ${
                 theme === "dark"
                   ? "bg-[#1C1C1C] border border-[#A2A2A2]"
                   : "bg-[#F4F3F3] border border-[#C6C6C6]"
               }`}
             >
               <div
-                className={`hidden lg:flex md:flex sm:hidden  w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+                className={`hidden lg:flex md:flex sm:hidden  w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
                   theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"

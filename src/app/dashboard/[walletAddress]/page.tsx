@@ -270,7 +270,7 @@ const WalletAddressPage: React.FC = () => {
                 </div>
                 <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
                   {walletAddress
-                    ? `${walletAddress.slice(0, 10)}...${walletAddress.slice(
+                    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(
                         -4
                       )}`
                     : "Connect Wallet"}

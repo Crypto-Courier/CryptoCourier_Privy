@@ -99,7 +99,8 @@ function SwitchNetwork() {
             {/* Display the currently selected chain */}
             <Image
               src={
-                chains.find((chain) => chain.id === currentChain)?.img || base
+                chains.find((chain) => chain.id === currentChain)?.img ||
+                sepolia
               }
               alt="Selected Chain"
               className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${

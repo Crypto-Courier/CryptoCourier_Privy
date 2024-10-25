@@ -73,6 +73,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   //     accentColor: "#E265FF" as `#${string}`, // Ensure it conforms to the expected type
   //   },
   // };
+  const isDarkMode = theme === "dark";
 
   return (
     <PrivyProvider
@@ -81,7 +82,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         loginMethods: ["email", "wallet"],
         appearance: {
           theme: theme === "dark" ? "dark" : "light",
-          accentColor: theme === "dark" ? "#000000" : "#E265FF",
 
           walletList: [
             "metamask",
