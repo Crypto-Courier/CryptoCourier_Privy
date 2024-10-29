@@ -98,6 +98,10 @@ const TxHistory: React.FC = () => {
     }
   };
 
+  const leaderboard = async () => {
+    router.push("/leaderboard");
+  };
+
   // Skeleton Laoding
   const SkeletonLoader = () => (
     <div className="space-y-3 animate-pulse">
@@ -157,8 +161,18 @@ const TxHistory: React.FC = () => {
               </span>
             </div>
             <div className="text-right flex items-end">
-              <div></div>
-              <button
+            <div className="gap-4 flex">
+            {" "}
+            <button
+                  onClick={leaderboard}
+                  className={`lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px]  rounded-full  hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                    theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#E265FF] text-white"
+                  }`}
+                >
+                  Leaderboard
+                </button>              <button
                 className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                   theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
@@ -168,6 +182,7 @@ const TxHistory: React.FC = () => {
               >
                 GIFT TOKEN
               </button>
+              </div>
             </div>
           </div>
 

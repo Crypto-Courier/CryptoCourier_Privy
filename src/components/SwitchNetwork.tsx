@@ -15,6 +15,14 @@ import zora from "../assets/zora.png";
 import sepolia from "../assets/sepolia.webp";
 import lisk from "../assets/lisk.webp";
 import { Tooltip } from "antd";
+import worldChain from "../assets/worldChain.webp";
+import boba from "../assets/boba.webp";
+import mint from "../assets/mint.png";
+import redstone from "../assets/redstone.webp";
+import ancient from "../assets/ancient.webp";
+import shape from "../assets/shape.jpeg";
+import swan from "../assets/swan.webp";
+import superlumio from "../assets/superlumio.jpeg"
 
 function SwitchNetwork() {
   const { wallets } = useWallets();
@@ -43,16 +51,24 @@ function SwitchNetwork() {
   };
 
   const chains = [
-    { id: 84532, title: "Base Sepolia", img: base },
+    { id: 8453, title: "Base", img: base },
     { id: 291, title: "Orderly", img: orderly },
     { id: 7560, title: "Cyber", img: cyfer },
     { id: 7777777, title: "Zora", img: zora },
     { id: 42220, title: "Celo", img: celo },
-    { id: 919, title: "Mode Testnet", img: mode },
+    { id: 34443, title: "Mode", img: mode },
     { id: 1135, title: "Lisk", img: lisk },
     { id: 255, title: "Kroma", img: kroma },
-    { id: 11155420, title: "Optimism Sepolia", img: op },
+    { id: 10, title: "Optimism", img: op },
     { id: 252, title: "Fraxtal", img: fraxtal },
+    { id: 480, title: "worldchain", img: worldChain},
+    { id: 288, title: "Boba Network", img: boba },
+    { id: 185, title: "Mint", img: mint},
+    { id: 690, title: "Redstone", img: redstone},
+    { id: 360, title: "Shape", img: shape},
+    { id: 254, title: "Swan", img: swan},
+    { id: 8866, title: "Superlumio", img: superlumio},
+    { id: 888888888, title: "Ancient 8", img: ancient},
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
 
