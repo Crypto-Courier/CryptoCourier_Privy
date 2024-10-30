@@ -29,6 +29,9 @@ import {
   shape,
   swan,
   superlumio,
+  metalL2,
+  ham,
+  snax,
   // baseSepolia,
   // optimismSepolia,
 } from "viem/chains";
@@ -55,7 +58,10 @@ const wagmiConfig = createConfig({
     ancient8,
     shape,
     swan,
-    superlumio
+    superlumio,
+    metalL2,
+    ham,
+    snax
   ],
   transports: {
     [mode.id]: http(),
@@ -77,7 +83,9 @@ const wagmiConfig = createConfig({
     [shape.id]: http(),
     [swan.id]: http(),
     [superlumio.id]: http(),
-
+    [metalL2.id]: http(),
+    [ham.id]: http(),
+    [snax.id]: http(),
 
   },
 });
@@ -137,7 +145,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           ancient8,
           shape,
           swan,
-          superlumio
+          superlumio,
+          metalL2,
+          ham,
+          snax
         ],
       }}
     >

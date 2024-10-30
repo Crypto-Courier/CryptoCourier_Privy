@@ -22,7 +22,10 @@ import redstone from "../assets/redstone.webp";
 import ancient from "../assets/ancient.webp";
 import shape from "../assets/shape.jpeg";
 import swan from "../assets/swan.webp";
-import superlumio from "../assets/superlumio.jpeg"
+import superlumio from "../assets/superlumio.jpeg";
+import  metalL2 from "../assets/metalL2.webp";
+import hamchain from "../assets/hamChain.jpeg"
+import snaxChain from "../assets/snax.png"
 
 function SwitchNetwork() {
   const { wallets } = useWallets();
@@ -61,13 +64,16 @@ function SwitchNetwork() {
     { id: 255, title: "Kroma", img: kroma },
     { id: 10, title: "Optimism", img: op },
     { id: 252, title: "Fraxtal", img: fraxtal },
-    { id: 480, title: "worldchain", img: worldChain},
+    { id: 480, title: "World Chain", img: worldChain},
     { id: 288, title: "Boba Network", img: boba },
-    { id: 185, title: "Mint", img: mint},
+    { id: 185, title: "Mint Blockchain", img: mint},
     { id: 690, title: "Redstone", img: redstone},
     { id: 360, title: "Shape", img: shape},
-    { id: 254, title: "Swan", img: swan},
+    { id: 254, title: "Swan Chain", img: swan},
     { id: 8866, title: "Superlumio", img: superlumio},
+    { id: 1750, title: "MetalL2", img: metalL2},
+    { id: 5112, title: "Ham Chain", img: hamchain},
+    { id: 5112, title: "SNAX Chain", img: snaxChain},
     { id: 888888888, title: "Ancient 8", img: ancient},
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
