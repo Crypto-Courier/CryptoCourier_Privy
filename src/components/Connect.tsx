@@ -16,6 +16,17 @@ import optimismSepolia from "../assets/op.png";
 import zora from "../assets/zora.png";
 import lisk from "../assets/lisk.webp";
 import sepolia from "../assets/sepolia.webp";
+import worldChain from "../assets/worldChain.webp";
+import boba from "../assets/boba.webp";
+import mint from "../assets/mint.png";
+import redstone from "../assets/redstone.webp";
+import ancient from "../assets/ancient.webp";
+import shape from "../assets/shape.jpeg";
+import swan from "../assets/swan.webp";
+import superlumio from "../assets/superlumio.jpeg";
+import  metalL2 from "../assets/metalL2.webp";
+import hamchain from "../assets/hamChain.jpeg"
+import snaxChain from "../assets/snax.png"
 
 const chainImages: { [key: number]: any } = {
   84532: baseSepolia,
@@ -29,7 +40,20 @@ const chainImages: { [key: number]: any } = {
   11155420: optimismSepolia,
   252: fraxtal,
   11155111: sepolia,
+  480:worldChain,
+  288:boba,
+  185:mint,
+  690:redstone,
+  360:shape,
+  254:swan,
+  8866:superlumio,
+  1750:metalL2,
+5112:hamchain,
+2192:snaxChain,
+888888888:ancient
+
 };
+
 
 const chainNames: { [key: number]: string } = {
   84532: "Base Sepolia",
@@ -43,6 +67,17 @@ const chainNames: { [key: number]: string } = {
   11155420: "Optimism Sepolia",
   252: "Fraxtal",
   11155111: "Ethereum Sepolia",
+  480:"World Chain",
+  288:"Boba Network",
+  185:"Mint Blockchain",
+  690:"Redstone",
+  360:"Shape",
+  254:"Swan Chain",
+  8866:"Superlumio",
+  1750:"MetalL2",
+5112:"Ham Chain",
+2192:"SNAX Chain",
+888888888:"Ancient 8"
 };
 
 export const Connect = () => {
