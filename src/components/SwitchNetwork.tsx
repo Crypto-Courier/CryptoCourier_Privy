@@ -73,7 +73,7 @@ function SwitchNetwork() {
     { id: 8866, title: "Superlumio", img: superlumio},
     { id: 1750, title: "MetalL2", img: metalL2},
     { id: 5112, title: "Ham Chain", img: hamchain},
-    { id: 5112, title: "SNAX Chain", img: snaxChain},
+    { id: 2192, title: "SNAX Chain", img: snaxChain},
     { id: 888888888, title: "Ancient 8", img: ancient},
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
@@ -138,7 +138,7 @@ function SwitchNetwork() {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-full rounded-xl overflow-hidden mt-1 backdrop-blur-[10px] ${
+            className={`absolute z-10 w-full rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
               theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
