@@ -58,7 +58,7 @@ function SwitchNetwork() {
     { id: 291, title: "Orderly", img: orderly },
     { id: 7560, title: "Cyber", img: cyfer },
     { id: 7777777, title: "Zora", img: zora },
-    { id: 42220, title: "Celo", img: celo },
+    // { id: 42220, title: "Celo", img: celo },
     { id: 34443, title: "Mode", img: mode },
     { id: 1135, title: "Lisk", img: lisk },
     { id: 255, title: "Kroma", img: kroma },
