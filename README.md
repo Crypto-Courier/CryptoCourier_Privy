@@ -1,6 +1,5 @@
 
 # CryptoCourier
-![CryptoCourier Thumbnail](./src/assets//crypto-courier.png)
 
 ## Index
 - [Overview](#overview)
@@ -12,8 +11,6 @@
   - [Gas Fee Subsidization](#gas-fee-subsidization)
 - [Benefits](#benefits)
 - [Challenges Faced](#challenges-faced)
-- [Privy Flow](#privy-flow)
-- [Demo Video and Pitch Deck](#demo-video-and-pitch-deck)
 - [Setup Instructions](#setup-instructions)
 - [Conclusion](#conclusion)
 
@@ -47,16 +44,6 @@ The platform helps reduce financial burdens for first-time users by subsidizing 
 - **Technical Integration:** Implementing and integrating multiple technologies, such as Privy and RainbowKit, into the platform. 
 
 Despite the challenges, CryptoCourier has proven to be a feasible solution for onboarding new users into the crypto ecosystem, validating its benefits through user testing and feedback. 🚀
-
-## Privy Flow
-![CryptoCourier Privy Flow](./src/assets/privy_lifecycle.png)
-
-## Demo Video and Pitch Deck
-Watch our demo video on YouTube to see CryptoCourier in action: [CryptoCourier Demo Video](https://www.youtube.com/watch?v=MmHiKaBAjc0)
-
-Live Demo: [Live Demo Link](https://courier-by-crypto-courier.vercel.app/)
-
-Pitchdeck: [Pitchdeck](./src/assets/pitchdeck.pdf)
 
 ## Setup Instructions
 To set up and run the CryptoCourier project locally, follow these steps:
