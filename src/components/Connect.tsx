@@ -5,14 +5,14 @@ import { useWallet } from "../context/WalletContext";
 import { Tooltip } from "antd";
 
 // Import chain images
-import baseSepolia from "../assets/base.png";
+import base from "../assets/base.png";
 import celo from "../assets/celo.jpeg";
 import orderly from "../assets/orderly.jpeg";
 import cyfer from "../assets/cyfer.webp";
 import fraxtal from "../assets/fraxtal.webp";
 import kroma from "../assets/kroma.webp";
-import modeTestnet from "../assets/mode.webp";
-import optimismSepolia from "../assets/op.png";
+import mode from "../assets/mode.webp";
+import optimism from "../assets/op.png";
 import zora from "../assets/zora.png";
 import lisk from "../assets/lisk.webp";
 import sepolia from "../assets/sepolia.webp";
@@ -24,60 +24,60 @@ import ancient from "../assets/ancient.webp";
 import shape from "../assets/shape.jpeg";
 import swan from "../assets/swan.webp";
 import superlumio from "../assets/superlumio.jpeg";
-import  metalL2 from "../assets/metalL2.webp";
+import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg"
 import snaxChain from "../assets/snax.png"
+// import { base, mode, optimism } from "viem/chains";
 
 const chainImages: { [key: number]: any } = {
-  84532: baseSepolia,
+  8453: base,
   291: orderly,
   7560: cyfer,
   7777777: zora,
   42220: celo,
-  919: modeTestnet,
+  34443: mode,
   1135: lisk,
   255: kroma,
-  11155420: optimismSepolia,
+  10: optimism,
   252: fraxtal,
   11155111: sepolia,
-  480:worldChain,
-  288:boba,
-  185:mint,
-  690:redstone,
-  360:shape,
-  254:swan,
-  8866:superlumio,
-  1750:metalL2,
-5112:hamchain,
-2192:snaxChain,
-888888888:ancient
-
+  480: worldChain,
+  288: boba,
+  185: mint,
+  690: redstone,
+  360: shape,
+  254: swan,
+  8866: superlumio,
+  1750: metalL2,
+  5112: hamchain,
+  2192: snaxChain,
+  888888888: ancient
 };
 
 
 const chainNames: { [key: number]: string } = {
-  84532: "Base Sepolia",
+  8453: "Base",
   291: "Orderly",
   7560: "Cyber",
   7777777: "Zora",
   42220: "Celo",
-  919: "Mode Testnet",
+  34443: "Mode",
   1135: "Lisk",
   255: "Kroma",
-  11155420: "Optimism Sepolia",
+  10: "Optimism",
   252: "Fraxtal",
   11155111: "Ethereum Sepolia",
-  480:"World Chain",
-  288:"Boba Network",
-  185:"Mint Blockchain",
-  690:"Redstone",
-  360:"Shape",
-  254:"Swan Chain",
-  8866:"Superlumio",
-  1750:"MetalL2",
-5112:"Ham Chain",
-2192:"SNAX Chain",
-888888888:"Ancient 8"
+  480: "World Chain",
+  288: "Boba Network",
+  185: "Mint",
+  690: "Redstone",
+  360: "Shape",
+  254: "Swan",
+  8866: "Superlumio",
+  1750: "MetalL2",
+  5112: "Ham Chain",
+  2192: "Snax Chain",
+  888888888: "Ancient 8"
 };
 
 export const Connect = () => {
@@ -193,9 +193,8 @@ export const Connect = () => {
               <img
                 src={chainImages[selectedChain].src} // Use .src if using StaticImageData
                 alt={`Chain ${selectedChain}`}
-                className={`w-[24px] h-[24px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                  theme === "dark" ? "bg-white" : "bg-black"
-                }`}
+                className={`w-[24px] h-[24px] block my-0 mx-auto p-[1px] rounded-[15px] ${theme === "dark" ? "bg-white" : "bg-black"
+                  }`}
               />
             ) : (
               selectedChain
