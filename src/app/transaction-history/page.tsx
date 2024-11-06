@@ -11,7 +11,7 @@ function TransactionHistory() {
   const router = useRouter();
   const { walletData } = useWallet();
   const isConnected = walletData?.authenticated;
-  const activeAddress = walletData?.address;
+  const walletAddress = walletData?.address;
 
   // Explicitly typing the state to accept specific strings or null
   const [showComponent, setShowComponent] = useState<
@@ -32,7 +32,7 @@ function TransactionHistory() {
     <div>
       {showComponent === "txHistory" && <TxHistory />}
       {showComponent === "dashboard" && (
-        <WalletAddressPage activeAddress={activeAddress} />
+        <WalletAddressPage walletAddress={walletAddress} />
       )}
     </div>
   );

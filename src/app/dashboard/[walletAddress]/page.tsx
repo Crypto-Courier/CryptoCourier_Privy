@@ -15,7 +15,12 @@ import toast from "react-hot-toast";
 import { Transaction } from "../../../types/types";
 import { useWallet } from "../../../context/WalletContext";
 
-const WalletAddressPage: React.FC = () => {
+interface WalletAddressPageProps {
+  walletAddress: any;
+}
+const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
+  walletAddress,
+}) => {
   const router = useRouter();
   const params = useParams();
   const { walletData } = useWallet();
@@ -38,7 +43,7 @@ const WalletAddressPage: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isWalletReady, setIsWalletReady] = useState(false);
   const { theme } = useTheme();
-  const walletAddress = params?.walletAddress as string;
+  // const walletAddress = params?.walletAddress as string;
 
   useEffect(() => {
     let mounted = true;
