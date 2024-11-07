@@ -13,10 +13,8 @@ function TransactionHistory() {
   const isConnected = walletData?.authenticated;
   const walletAddress = walletData?.address;
 
-  // Explicitly typing the state to accept specific strings or null
-  const [showComponent, setShowComponent] = useState<
-    "dashboard" | "txHistory" | "sendToken" | null
-  >(null);
+  type ComponentType = "txHistory" | "sendToken" | null;
+  const [showComponent, setShowComponent] = useState<ComponentType>(null);
 
   useEffect(() => {
     if (isConnected && walletAddress) {
@@ -34,9 +32,9 @@ function TransactionHistory() {
   return (
     <div>
       {showComponent === "txHistory" && <TxHistory />}
-      {showComponent === "dashboard" && (
+      {/* {showComponent === "dashboard" && (
         <WalletAddressPage walletAddress={walletAddress} />
-      )}
+      )} */}
     </div>
   );
 }
