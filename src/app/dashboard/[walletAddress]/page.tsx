@@ -16,13 +16,13 @@ import { Transaction } from "../../../types/types";
 import { useWallet } from "../../../context/WalletContext";
 
 interface WalletAddressPageProps {
-  walletAddress: any;
+  params: {
+    walletAddress: string;
+  };
 }
-const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
-  walletAddress,
-}) => {
+const WalletAddressPage: React.FC<WalletAddressPageProps> = ({ params }) => {
   const router = useRouter();
-  const params = useParams();
+  const { walletAddress } = params;
   const { walletData } = useWallet();
   const { ready, authenticated, user, exportWallet } = usePrivy();
   const [transactions, setTransactions] = useState<Transaction[]>([]);

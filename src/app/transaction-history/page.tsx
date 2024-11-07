@@ -11,7 +11,6 @@ function TransactionHistory() {
   const router = useRouter();
   const { walletData } = useWallet();
   const isConnected = walletData?.authenticated;
-  const activeAddress = walletData?.address;
   const walletAddress = walletData?.address;
 
   const [showComponent, setShowComponent] = useState<
@@ -19,20 +18,20 @@ function TransactionHistory() {
   >(null);
 
   useEffect(() => {
-    if (isConnected) {
-      // If wallet is connected and address is available, show the Dashboard page
+    if (isConnected && walletAddress) {
+      // Wallet is connected with an address, show Transaction History
       setShowComponent("txHistory");
-    } else {
-      // If wallet is connected but no address, show transaction history
+    } else if (isConnected && !walletAddress) {
+      // Wallet is connected but no address, show Dashboard
       setShowComponent("dashboard");
     }
-  }, [isConnected]);
+  }, [isConnected, walletAddress]);
 
   return (
     <div>
       {showComponent === "txHistory" && <TxHistory />}
       {showComponent === "dashboard" && (
-        <WalletAddressPage walletAddress={walletAddress} />
+        <WalletAddressPage params={walletAddress} />
       )}
     </div>
   );
