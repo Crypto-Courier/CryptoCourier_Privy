@@ -57,7 +57,7 @@ function ClaimToken() {
           console.error("Error updating authentication status:", error);
         }
 
-        router.push(`/transaction-history/${user.wallet.address}`);
+        router.push(`/transaction-history`);
       }
     };
 
