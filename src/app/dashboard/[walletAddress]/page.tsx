@@ -15,14 +15,20 @@ import toast from "react-hot-toast";
 import { Transaction } from "../../../types/types";
 import { useWallet } from "../../../context/WalletContext";
 
-interface WalletAddressPageProps {
-  walletAddress: any;
-}
-const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
-  walletAddress,
-}) => {
+type PageProps = {
+  params: { walletAddress: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+// interface WalletAddressPageProps {
+//   walletAddress: any;
+// }
+// const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
+//   walletAddress,
+// }) => {
+export default function WalletAddressPage({ params, searchParams }: PageProps) {
   const router = useRouter();
-  const params = useParams();
+  const urlparams = useParams();
   const { walletData } = useWallet();
   const { ready, authenticated, user, exportWallet } = usePrivy();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -107,6 +113,8 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
   //     router.push('/');
   //   }
   // }, [user, walletAddress, router]);
+
+  const walletAddress = params.walletAddress;
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -241,9 +249,8 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
       <div className="txbg ">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px]">
           <div
-            className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between border-black border-b-0 p-[30px] items-start gap-[20px] lg:gap-0 md:gap-0 lg:items-center md:items-center sm:items-start ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] `}
+            className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between border-black border-b-0 p-[30px] items-start gap-[20px] lg:gap-0 md:gap-0 lg:items-center md:items-center sm:items-start ${theme === "dark" ? "bg-black" : "bg-white"
+              } rounded-tl-[40px] rounded-tr-[40px] `}
           >
             <div
               className="relative"
@@ -252,32 +259,29 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
               ref={dropdownRef}
             >
               <div
-                className={`flex items-center space-x-3 p-2 rounded-[10px] ${
-                  theme === "dark"
+                className={`flex items-center space-x-3 p-2 rounded-[10px] ${theme === "dark"
                     ? "bg-[#1C1C1C] border border-[#A2A2A2]"
                     : "bg-[#F4F3F3] border border-[#C6C6C6]"
-                }`}
+                  }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                    theme === "dark"
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
                       ? "border-white bg-transparent"
                       : "border-gray-500 bg-transparent"
-                  }`}
+                    }`}
                 >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      theme === "dark"
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
                         ? "bg-[#FFE500] text-[#363535]"
                         : "bg-[#E265FF] text-white"
-                    }`}
+                      }`}
                   ></div>
                 </div>
                 <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
                   {walletAddress
                     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(
-                        -4
-                      )}`
+                      -4
+                    )}`
                     : "Connect Wallet"}
                   {/* <div> ({bttBalance} BTT)</div> */}
                 </span>
@@ -287,20 +291,18 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 w-full rounded-md shadow-lg z-10">
                   <div
-                    className={` mt-1  rounded-md ${
-                      theme === "dark"
+                    className={` mt-1  rounded-md ${theme === "dark"
                         ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
                         : "bg-white text-black border border-[#C6C6C6]"
-                    }`}
+                      }`}
                   >
                     <div className="p-2">
                       <button
                         onClick={handleExportWallet}
-                        className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
-                          canExportWallet
+                        className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${canExportWallet
                             ? "hover:bg-gray-100 hover:text-gray-900"
                             : "opacity-50 cursor-not-allowed"
-                        }`}
+                          }`}
                       >
                         <ExternalLink size={16} className="mr-2" />
                         Export Wallet
@@ -325,21 +327,19 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
                 {" "}
                 <button
                   onClick={leaderboard}
-                  className={`lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px]  rounded-full  hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
-                    theme === "dark"
+                  className={`lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px]  rounded-full  hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
-                  }`}
+                    }`}
                 >
                   Leaderboard
                 </button>
                 <button
                   onClick={invite}
-                  className={`invite lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
-                    theme === "dark"
+                  className={`invite lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
-                  }`}
+                    }`}
                 >
                   Invite Your Friends
                 </button>
@@ -348,17 +348,15 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
           </div>
 
           <div
-            className={`${
-              theme === "dark"
+            className={`${theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[10px] px-[10px]`}
+              } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start py-[10px] px-[10px]`}
           >
             <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
               <h3
-                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px]  px-3 lg:p-0 md:p-0 sm:p-0 ${
-                  theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                }`}
+                className={` font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px]  px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                  }`}
               >
                 Transaction history
               </h3>
@@ -377,19 +375,17 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
                   transactions.map((tx, index) => (
                     <div
                       key={index}
-                      className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px]  ${
-                        theme === "dark"
+                      className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px]  ${theme === "dark"
                           ? "bg-[#000000]/20 border border-[#5C5C5C]"
                           : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center space-x-3">
                         <span
-                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${
-                            theme === "dark"
+                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  ${theme === "dark"
                               ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
                               : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
-                          }`}
+                            }`}
                         >
                           {tx.tokenAmount} {tx.tokenSymbol}
                         </span>
@@ -397,11 +393,10 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
                           <>
                             <span className="text-[15px]">To</span>
                             <span
-                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${
-                                theme === "dark"
+                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide ${theme === "dark"
                                   ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                   : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                              }`}
+                                }`}
                             >
                               {tx.recipientEmail}
                             </span>
@@ -410,11 +405,10 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
                           <>
                             <span className="text-[15px]">From</span>
                             <span
-                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide  ${
-                                theme === "dark"
+                              className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px]  sm:text-[13px]  tracking-wide  ${theme === "dark"
                                   ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
                                   : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                              }`}
+                                }`}
                             >
                               {`${tx.senderWallet.slice(
                                 0,
@@ -488,4 +482,4 @@ const WalletAddressPage: React.FC<WalletAddressPageProps> = ({
 //   );
 // };
 
-export default WalletAddressPage;
+// export default WalletAddressPage;

@@ -13,27 +13,37 @@ function TransactionHistory() {
   const isConnected = walletData?.authenticated;
   const walletAddress = walletData?.address;
 
-  // Explicitly typing the state to accept specific strings or null
-  const [showComponent, setShowComponent] = useState<
-    "dashboard" | "txHistory" | "sendToken" | null
-  >(null);
+  type ComponentType = "txHistory" | "sendToken" | null;
+  const [showComponent, setShowComponent] = useState<ComponentType>(null);
 
   useEffect(() => {
-    if (isConnected) {
-      // If wallet is connected and address is available, show the Dashboard page
+    if (isConnected && walletAddress) {
       setShowComponent("txHistory");
-    } else {
-      // If wallet is connected but no address, show transaction history
-      setShowComponent("dashboard");
+      router.push(`/dashboard/${walletAddress}`);
     }
-  }, [isConnected]);
+  }, [isConnected, walletAddress, router]);
+
+  // Explicitly typing the state to accept specific strings or null
+  // const [showComponent, setShowComponent] = useState<
+  //   "dashboard" | "txHistory" | "sendToken" | null
+  // >(null);
+
+  // useEffect(() => {
+  //   if (isConnected) {
+  //     // If wallet is connected and address is available, show the Dashboard page
+  //     setShowComponent("txHistory");
+  //   } else {
+  //     // If wallet is connected but no address, show transaction history
+  //     setShowComponent("dashboard");
+  //   }
+  // }, [isConnected]);
 
   return (
     <div>
       {showComponent === "txHistory" && <TxHistory />}
-      {showComponent === "dashboard" && (
+      {/* {showComponent === "dashboard" && (
         <WalletAddressPage walletAddress={walletAddress} />
-      )}
+      )} */}
     </div>
   );
 }
