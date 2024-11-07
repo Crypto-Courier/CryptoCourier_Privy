@@ -19,14 +19,17 @@ function TransactionHistory() {
   >(null);
 
   useEffect(() => {
-    if (isConnected) {
-      // If wallet is connected and address is available, show the Dashboard page
+    if (isConnected && walletAddress) {
+      // If wallet is connected and address is available, show the Transaction History page
       setShowComponent("txHistory");
-    } else {
-      // If wallet is connected but no address, show transaction history
+    } else if (!walletAddress) {
+      // If wallet is connected but no address, show Dashboard page
       setShowComponent("dashboard");
+    } else {
+      // Handle the case where user is not connected
+      setShowComponent("txHistory");
     }
-  }, [isConnected]);
+  }, [isConnected, walletAddress]);
 
   return (
     <div>
