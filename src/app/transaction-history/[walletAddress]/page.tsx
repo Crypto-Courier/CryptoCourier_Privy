@@ -18,12 +18,21 @@ function TransactionHistory() {
   >(null);
 
   useEffect(() => {
-    if (isConnected && walletAddress) {
-      // Wallet is connected with an address, show Transaction History
-      setShowComponent("txHistory");
-    } else if (walletAddress) {
-      // Wallet is connected but no address, show Dashboard
+    const source = new URLSearchParams(window.location.search).get("source");
+
+    if (source === "email") {
+      // Redirect to Dashboard if the source is 'email'
       setShowComponent("dashboard");
+    } else if (source === "wallet" && walletAddress) {
+      // Redirect to Transaction History if the source is 'wallet'
+      setShowComponent("txHistory");
+    } else {
+      // Default behavior based on wallet connection status
+      if (isConnected && walletAddress) {
+        setShowComponent("txHistory");
+      } else if (!isConnected && walletAddress) {
+        setShowComponent("dashboard");
+      }
     }
   }, [isConnected, walletAddress]);
 

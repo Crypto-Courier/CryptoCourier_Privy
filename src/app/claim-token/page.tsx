@@ -8,6 +8,7 @@ import { PrivyProvider, usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import spin from "../../assets/spinner.gif";
 import Image from "next/image";
+import { Wallet } from "ethers";
 
 function ClaimToken() {
   const { theme } = useTheme();
