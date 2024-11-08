@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import TxHistory from "../history/page";
-import WalletAddressPage from "../dashboard/[walletAddress]/page";
-import { useWallet } from "../../context/WalletContext";
+import TxHistory from "../../history/page";
+import WalletAddressPage from "../../dashboard/page";
+import { useWallet } from "../../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth"; // Assuming Privy for email login
-import SendToken from "../send-token/page";
+import SendToken from "../../send-token/page";
 
 function TransactionHistory() {
   const router = useRouter();
@@ -21,7 +21,7 @@ function TransactionHistory() {
     if (isConnected && walletAddress) {
       // Wallet is connected with an address, show Transaction History
       setShowComponent("txHistory");
-    } else if (isConnected && !walletAddress) {
+    } else if (walletAddress) {
       // Wallet is connected but no address, show Dashboard
       setShowComponent("dashboard");
     }
@@ -30,8 +30,8 @@ function TransactionHistory() {
   return (
     <div>
       {showComponent === "txHistory" && <TxHistory />}
-      {showComponent === "dashboard" && (
-        <WalletAddressPage params={walletAddress} />
+      {showComponent === "dashboard" && walletAddress && (
+        <WalletAddressPage params={{ walletAddress }} />
       )}
     </div>
   );

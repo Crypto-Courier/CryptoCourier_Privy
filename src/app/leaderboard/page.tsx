@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "../../styles/History.css";
-import Navbar from "../dashboard/[walletAddress]/newNavbar";
+import Navbar from "../dashboard/newNavbar";
 import Footer from "../../components/Footer";
 import { useTheme } from "next-themes";
 import Image from "next/image";
