@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import "react-toggle/style.css";
-import { ThemeToggle } from "../../components/ThemeToggle";
+import { ThemeToggle } from "../../../components/ThemeToggle";
 import { useTheme } from "next-themes";
-import dLogo from "../../assets/dLogo.png";
-import lLogo from "../../assets/lLogo.png";
+import dLogo from "../../../assets/dLogo.png";
+import lLogo from "../../../assets/lLogo.png";
 import Image from "next/image";
-import "../../styles/Responsive.css";
+import "../../../styles/Responsive.css";
 
 const NewNavbar = () => {
   const { theme } = useTheme();

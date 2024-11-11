@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TxHistory from "../../history/page";
-import WalletAddressPage from "../../dashboard/page";
+import WalletAddressPage from "../../dashboard/[walletAddress]/page";
 import { useWallet } from "../../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth"; // Assuming Privy for email login
 import SendToken from "../../send-token/page";
@@ -18,21 +18,11 @@ function TransactionHistory() {
   >(null);
 
   useEffect(() => {
-    const source = new URLSearchParams(window.location.search).get("source");
-
-    if (source === "email") {
-      // Redirect to Dashboard if the source is 'email'
-      setShowComponent("dashboard");
-    } else if (source === "wallet" && walletAddress) {
-      // Redirect to Transaction History if the source is 'wallet'
+    if (isConnected) {
       setShowComponent("txHistory");
-    } else {
-      // Default behavior based on wallet connection status
-      if (isConnected && walletAddress) {
-        setShowComponent("txHistory");
-      } else if (!isConnected && walletAddress) {
-        setShowComponent("dashboard");
-      }
+    } else if (!walletAddress) {
+      // Wallet is connected but no address, show Dashboard
+      setShowComponent("dashboard");
     }
   }, [isConnected, walletAddress]);
 
