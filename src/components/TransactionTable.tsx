@@ -8,6 +8,7 @@ import { sendEmail } from "./Email/Emailer";
 import { renderEmailToString } from "./Email/renderEmailToString";
 import { Transaction } from "../types/types";
 import toast from "react-hot-toast";
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 
 interface TransactionTableProps {
     viewMode: string;
@@ -15,14 +16,16 @@ interface TransactionTableProps {
 
 const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
     const { walletData } = useWallet();
+    const searchParams = useSearchParams() as ReadonlyURLSearchParams;
     const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const { theme } = useTheme();
 
-    const isConnected = walletData?.authenticated;
-    const activeAddress = walletData?.address;
+    const isConnected = viewMode === 'dashboard' ? true : walletData?.authenticated;
+    const dashboardAddress = searchParams.get('address');
+    const activeAddress = viewMode === 'dashboard' ? dashboardAddress : walletData?.address;
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -77,7 +80,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         }
     };
 
-    // Skeleton Laoding
+    // Skeleton Loading
     const SkeletonLoader = () => (
         <div className="space-y-3 animate-pulse">
             {[...Array(3)].map((_, index) => (
@@ -96,7 +99,6 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         </div>
     );
 
-    // Will open transaction detail in the explorer
     const openTransactionReciept = (url: string) => {
         window.open(url, "_blank", "noreferrer");
     };
@@ -104,8 +106,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
     return (
         <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
             <h3
-                className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                    }`}
+                className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${
+                    theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                }`}
             >
                 Transaction history
             </h3>
@@ -199,8 +202,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
                     )
                 ) : (
                     <div
-                        className={`text-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                            }`}
+                        className={`text-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
+                            theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                        }`}
                     >
                         Connect your wallet to view your transactions.
                     </div>
