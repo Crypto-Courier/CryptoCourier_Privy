@@ -47,7 +47,7 @@ const SendToken = () => {
   const isEmailConnected = walletData?.isEmailConnected;
 
   const OpenHistory = () => {
-    router.push(`/transaction-history/${activeAddress}`);
+    router.push("/history?mode=default");
   };
 
   useEffect(() => {

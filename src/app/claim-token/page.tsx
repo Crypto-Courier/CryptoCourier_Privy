@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 // import Navbar from "../../components/Navbar";
-import NewNavbar from "../dashboard/[walletAddress]/newNavbar";
+import NewNavbar from "../../components/newNavbar";
 import Footer from "../../components/Footer";
 import { useTheme } from "next-themes";
 import { PrivyProvider, usePrivy } from "@privy-io/react-auth";
@@ -58,7 +58,7 @@ function ClaimToken() {
           console.error("Error updating authentication status:", error);
         }
 
-        router.push(`transaction-history/dashboard/${user.wallet.address}`);
+        router.push(`/history?mode=dashboard&address=${user.wallet.address}`);
       }
     };
 
