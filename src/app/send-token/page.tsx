@@ -389,7 +389,7 @@ const SendToken = () => {
                     >
                       All assets
                     </h3>
-                    <button
+                    {/* <button
                       onClick={() => setShowAddTokenForm(true)}
                       className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
                         theme === "dark"
@@ -398,7 +398,7 @@ const SendToken = () => {
                       }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
-                    </button>
+                    </button> */}
                   </div>
 
                   <div className="h-[30vh] overflow-y-auto scroll mt-[15px]">
