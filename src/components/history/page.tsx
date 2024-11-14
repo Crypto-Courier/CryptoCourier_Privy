@@ -15,6 +15,8 @@ import TransactionTable from "../TransactionTable";
 import toast, { Toaster } from "react-hot-toast";
 import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
+import Image from "next/image";
+import board from "../../assets/leaderboard.png";
 
 const History: React.FC = () => {
   const router = useRouter();
@@ -263,24 +265,24 @@ const History: React.FC = () => {
               <div className="gap-4 flex">
                 <button
                   onClick={leaderboard}
-                  className={`lg:px-[30px] lg:py-[10px] md:px-[30px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
                     theme === "dark"
-                      ? "bg-[#FFE500] text-[#363535]"
+                      ? " text-[#363535] border border-[#FFE500] "
                       : "bg-[#E265FF] text-white"
                   }`}
                 >
-                  Leaderboard
+                  <Image src={board} width={20} alt="" />
                 </button>
                 {viewMode === "default" && (
                   <button
-                    className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
+                    className={`px-[30px] py-[10px] rounded-full lg:mx-5 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                       theme === "dark"
                         ? "bg-[#FFE500] text-[#363535]"
                         : "bg-[#E265FF] text-white"
                     }`}
                     onClick={SendToken}
                   >
-                    GIFT TOKEN
+                    Gift Token
                   </button>
                 )}
                 {viewMode === "dashboard" && (

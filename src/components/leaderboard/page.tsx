@@ -40,7 +40,7 @@ const LeaderBoard: React.FC = () => {
   }, []);
 
   const invite = async () => {
-    router.push("/sent-token");
+    router.push("/send-token");
   };
 
   return (
@@ -88,7 +88,7 @@ const LeaderBoard: React.FC = () => {
                             : "bg-[#FFFFFF] text-black"
                         }`}
                       >
-                        GIFT TOKEN
+                        Invite Your Friends
                       </button>
                     </div>
                     <div className="w-full max-w-4xl mx-auto  rounded-3xl">
