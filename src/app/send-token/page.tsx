@@ -2,7 +2,7 @@ import SentToken from "../../components/sendToken/page";
 import Image from "next/image";
 import img from "../assets/darkbg.png";
 
-export default function sendTo() {
+export default function SendToken() {
   return (
     <div>
       <div className="">
