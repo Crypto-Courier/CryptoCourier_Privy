@@ -17,7 +17,7 @@ export const metadata = {
   openGraph: {
     title: "Send-Token",
     description: "Gift token as easy as sending email",
-    url: "https://hello-crypto.vercel.app/",
+    url: "https://courierbycryptocoutrier.vercel.app/",
     siteName: "CryptoCourier",
     images: [
       {
