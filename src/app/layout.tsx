@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "../components/Providers";
 import { ThemeProvider } from "next-themes";
+import ImageClickEffect from "../app/Effect.js";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -17,8 +18,7 @@ import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Crypto-Courier",
-  description:
-    "Gift token as easy as sending email",
+  description: "Gift token as easy as sending email",
 };
 
 export default function RootLayout({
@@ -32,8 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased main`}
       > */}
       <body>
-        
-        <Providers>{children}</Providers>
+        <Providers>
+          <ImageClickEffect />
+          {children}
+        </Providers>
       </body>
     </html>
   );
