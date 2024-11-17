@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "../components/Providers";
 import { ThemeProvider } from "next-themes";
 import ImageClickEffect from "../app/Effect.js";
+import CatEmojiAnimation from "@/components/CatEmojiAnimation";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,7 @@ export default function RootLayout({
       > */}
       <body>
         <Providers>
-          <ImageClickEffect />
+          <CatEmojiAnimation />
           {children}
         </Providers>
       </body>

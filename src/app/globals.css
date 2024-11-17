@@ -136,3 +136,22 @@ a:focus {
     transform: translateX(-50%); /* Move left by 50% */
   }
 }
+.cat-emoji {
+  position: absolute;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: float-away 2.5s ease-out forwards;
+  transform: translate(calc(var(--tx, 0) * 1px), calc(var(--ty, 0) * 1px));
+}
+
+@keyframes float-away {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty));
+  }
+}
+
