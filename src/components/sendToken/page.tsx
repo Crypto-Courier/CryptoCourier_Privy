@@ -50,6 +50,37 @@ const SendToken = () => {
     router.push("/history?mode=default");
   };
 
+  // Add a function to validate if input is an email
+  const isValidEmail = (input: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(input);
+  };
+
+  // Add a function to validate if input is a wallet address
+  const isValidWalletAddress = (input: string): boolean => {
+    // Basic Ethereum address validation (0x followed by 40 hex characters)
+    const addressRegex = /^0x[a-fA-F0-9]{40}$/;
+    return addressRegex.test(input);
+  };
+
+  // Modify the button click handler
+  const handleButtonClick = async () => {
+    if (!tokenAmount || !recipientEmail || !selectedToken) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (isValidEmail(recipientEmail)) {
+      // If it's an email, show the popup
+      setIsPopupOpen(true);
+    } else if (isValidWalletAddress(recipientEmail)) {
+      // If it's a wallet address, directly call handleSend
+      await handleSend(recipientEmail);
+    } else {
+      toast.error("Please enter a valid email or wallet address");
+    }
+  };
+
   useEffect(() => {
     if (activeAddress) {
       fetchTokens();
@@ -556,11 +587,11 @@ const SendToken = () => {
                     </button>
 
                     <button
-                      onClick={() => setIsPopupOpen(true)}
+                      onClick={handleButtonClick}
                       disabled={isLoading}
-                      className=" hover:scale-110 duration-500 transition 0.3 px-7 py-3 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-md bg-[#FF336A]"
+                      className="hover:scale-110 duration-500 transition 0.3 px-7 py-3 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-md bg-[#FF336A]"
                     >
-                      {isLoading ? "SEND" : "SEND"}
+                      {isLoading ? "SENDING..." : "SEND"}
                     </button>
                   </div>
                   {/* {hash && (
