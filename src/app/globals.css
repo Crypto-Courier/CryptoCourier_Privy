@@ -136,7 +136,7 @@ a:focus {
     transform: translateX(-50%); /* Move left by 50% */
   }
 }
-.cat-emoji {
+/* .cat-emoji {
   position: absolute;
   font-size: 2rem;
   pointer-events: none;
@@ -153,5 +153,26 @@ a:focus {
     opacity: 0;
     transform: translate(var(--tx), var(--ty));
   }
+} */
+.cat-emoji {
+  position: fixed;
+  font-size: 2rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: catBounce 2s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
 }
 
+@keyframes catBounce {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)))
+      scale(var(--scale)) rotate(var(--rotation));
+    opacity: 0;
+  }
+}

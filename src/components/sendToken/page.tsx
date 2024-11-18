@@ -535,13 +535,13 @@ const SendToken = () => {
                         theme === "dark" ? "text-[#DEDEDE]" : "text-black"
                       }`}
                     >
-                      Enter recipient's email
+                      Enter recipient's email or address
                     </label>
                     <input
                       type="email"
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
-                      placeholder="recipient's email address"
+                      placeholder="recipient's email or address"
                       className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
                         theme === "dark"
                           ? "bg-[#000000]/50 border border-white"

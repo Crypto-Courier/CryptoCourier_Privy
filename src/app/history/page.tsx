@@ -21,12 +21,12 @@ export const metadata = {
     siteName: "CryptoCourier",
     images: [
       {
-        url: "/transaction-history.png",
+        url: "https://ipfs.io/ipfs/QmdWkLMj6KjPPs5dRc3Y8eC4phLnWeVufQMacoTJ1Bg5kZ",
         width: 800,
         height: 600,
       },
       {
-        url: "/transaction-history.png",
+        url: "https://ipfs.io/ipfs/QmdWkLMj6KjPPs5dRc3Y8eC4phLnWeVufQMacoTJ1Bg5kZ",
         width: 1800,
         height: 1600,
         alt: "My custom alt",

@@ -1,0 +1,94 @@
+/* Cat Animation Styles */
+.cat-emoji {
+  position: fixed;
+  font-size: 2.5rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: orbitAnimation 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.5));
+}
+
+.cat-trail {
+  position: fixed;
+  pointer-events: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 182, 193, 0.8) 0%,
+    rgba(255, 182, 193, 0) 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: trailAnimation 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.center-emoji {
+  position: fixed;
+  font-size: 3rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: pulseAnimation 2.5s ease-out forwards;
+}
+
+@keyframes orbitAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg)
+      translate(calc(var(--orbit-radius) * 0.2), 0) scale(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-50%, -50%)
+      rotate(calc(360deg * var(--rotation-speed)))
+      translate(var(--orbit-radius)) scale(var(--scale))
+      rotate(calc(360deg * var(--rotation-speed) * -1));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%)
+      rotate(calc(720deg * var(--rotation-speed)))
+      translate(calc(var(--orbit-radius) * 2)) scale(0)
+      rotate(calc(720deg * var(--rotation-speed) * -1));
+  }
+}
+
+@keyframes trailAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg)
+      translate(calc(var(--orbit-radius) * 0.2)) scale(0);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(720deg)
+      translate(calc(var(--orbit-radius) * 2)) scale(2);
+  }
+}
+
+@keyframes pulseAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+}

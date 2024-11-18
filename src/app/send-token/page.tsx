@@ -21,12 +21,12 @@ export const metadata = {
     siteName: "CryptoCourier",
     images: [
       {
-        url: "/sent-token.png", // Must be an absolute URL
+        url: "https://ipfs.io/ipfs/Qmdq376VFRDXyAMRti7ZrrfNQiRHKeTmPBy1S11tiPkoi2", // Must be an absolute URL
         width: 800,
         height: 600,
       },
       {
-        url: "/send-token.png", // Must be an absolute URL
+        url: "https://ipfs.io/ipfs/Qmdq376VFRDXyAMRti7ZrrfNQiRHKeTmPBy1S11tiPkoi2", // Must be an absolute URL
         width: 1800,
         height: 1600,
         alt: "My custom alt",
