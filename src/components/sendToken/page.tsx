@@ -19,7 +19,12 @@ import { NewToken, TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
+import { QrReader } from "react-qr-reader";
+import QRScanner from "../QRScanner";
 
+interface QRScannerState {
+  showQRScanner: boolean;
+}
 const SendToken = () => {
   const { walletData } = useWallet();
   const { data: hash, sendTransaction } = useSendTransaction();
@@ -41,11 +46,17 @@ const SendToken = () => {
   const [showHelp, setShowHelp] = useState(false);
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
   const [transactionHash, setTransactionHash] = useState<string>("");
+  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
 
   const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
   const isEmailConnected = walletData?.isEmailConnected;
 
+  // Add this handler function
+  const handleQRScan = (address: string): void => {
+    setRecipientEmail(address);
+    setShowQRScanner(false);
+  };
   const OpenHistory = () => {
     router.push("/history?mode=default");
   };
@@ -579,6 +590,18 @@ const SendToken = () => {
                           : " bg-[#FFFCFC] border border-gray-700"
                       }`}
                     />
+                    <button
+                      onClick={() => setShowQRScanner(true)}
+                      className={`px-4 mb-3 rounded-xl ${
+                        theme === "dark"
+                          ? "bg-[#000000]/50 border border-white text-white"
+                          : "bg-[#FFFCFC] border border-gray-700 text-black"
+                      }`}
+                      type="button"
+                      aria-label="Scan QR Code"
+                    >
+                      Scan
+                    </button>
                   </div>
 
                   <div className="flex  pt-3 space-x-7 ">
@@ -630,6 +653,12 @@ const SendToken = () => {
                 </div>
               </div>
             </div>
+            {showQRScanner && (
+              <QRScanner
+                onScan={handleQRScan}
+                onClose={() => setShowQRScanner(false)}
+              />
+            )}
           </div>
           <TxDetails
             isOpen={isPopupOpen}
