@@ -87,9 +87,10 @@ export const Connect = () => {
   const { wallets } = useWallets();
   const wallet = wallets[0];
   const { theme } = useTheme();
-  const { login, authenticated, ready, user, connectWallet } = usePrivy();
+  const { login, authenticated, ready, user, connectWallet, createWallet } = usePrivy();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isEmailConnected, setIsEmailConnected] = useState(false);
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false);
   const walletDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const { logout } = useLogout({
@@ -115,6 +116,41 @@ export const Connect = () => {
       setIsEmailConnected(false);
     }
   }, [authenticated, user]);
+
+  useEffect(() => {
+    const createEmbeddedWallet = async () => {
+      if (!ready || !authenticated || isCreatingWallet || !user) return;
+      
+      // Check if user logged in with email and doesn't have an embedded wallet
+      const hasEmbeddedWallet = wallets.some(wallet => wallet.walletClientType === 'privy');
+      const isEmailUser = user.linkedAccounts.some(account => account.type === 'email');
+
+      if (isEmailUser && !hasEmbeddedWallet) {
+        try {
+          setIsCreatingWallet(true);
+          const newWallet = await createWallet();
+          console.log('Created new embedded wallet:', newWallet);
+          
+          // Update wallet data with the new embedded wallet
+          if (newWallet) {
+            setWalletData({
+              address: newWallet.address,
+              chainId: newWallet.chainId,
+              authenticated: authenticated,
+              user: user,
+              isEmailConnected: true,
+            });
+          }
+        } catch (error) {
+          console.error('Error creating embedded wallet:', error);
+        } finally {
+          setIsCreatingWallet(false);
+        }
+      }
+    };
+
+    createEmbeddedWallet();
+  }, [ready, authenticated, user, wallets, createWallet, isCreatingWallet, setWalletData]);
 
   useEffect(() => {
     checkWalletConnection();
@@ -169,7 +205,7 @@ export const Connect = () => {
         type="button"
         className="border border-[#FFFFFF] w-50 bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
       >
-        Connect Wallet
+        {isCreatingWallet ? 'Creating Wallet...' : 'Connect Wallet'}
       </button>
     );
   }
