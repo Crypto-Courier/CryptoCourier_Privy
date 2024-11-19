@@ -362,6 +362,12 @@ const SendToken = () => {
     };
   }, [showHelp]);
 
+  const handleQRAddressFound = (address: string) => {
+    console.log('QR code scanned address:', address);
+    setRecipientEmail(address);
+    toast.success('Address set from QR code');
+  };
+
   return (
     <div className="main">
       <Navbar />
@@ -573,7 +579,7 @@ const SendToken = () => {
 
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${
+                      className={`block text-lg font-[500] mb-1 ${
                         theme === "dark" ? "text-[#DEDEDE]" : "text-black"
                       }`}
                     >
