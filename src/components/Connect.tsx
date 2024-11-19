@@ -25,8 +25,10 @@ import shape from "../assets/shape.jpeg";
 import swan from "../assets/swan.webp";
 import superlumio from "../assets/superlumio.jpeg";
 import metalL2 from "../assets/metalL2.webp";
-import hamchain from "../assets/hamChain.jpeg"
-import snaxChain from "../assets/snax.png"
+import hamchain from "../assets/hamChain.jpeg";
+import snaxChain from "../assets/snax.png";
+import { useRouter } from "next/navigation"; // Use this for Next.js 13+ with App Router
+
 // import { base, mode, optimism } from "viem/chains";
 
 const chainImages: { [key: number]: any } = {
@@ -51,9 +53,8 @@ const chainImages: { [key: number]: any } = {
   1750: metalL2,
   5112: hamchain,
   2192: snaxChain,
-  888888888: ancient
+  888888888: ancient,
 };
-
 
 const chainNames: { [key: number]: string } = {
   8453: "Base",
@@ -77,11 +78,12 @@ const chainNames: { [key: number]: string } = {
   1750: "MetalL2",
   5112: "Ham Chain",
   2192: "Snax Chain",
-  888888888: "Ancient 8"
+  888888888: "Ancient 8",
 };
 
 export const Connect = () => {
   const { setWalletData, selectedChain } = useWallet(); // Get selectedChain from context
+  const router = useRouter(); // Initialize the router
   const { wallets } = useWallets();
   const wallet = wallets[0];
   const { theme } = useTheme();
@@ -95,6 +97,9 @@ export const Connect = () => {
       setIsWalletConnected(false);
       setIsEmailConnected(false);
       setWalletData(null);
+
+      // Redirect to homepage after disconnect
+      router.push("/");
     },
   });
 
@@ -193,8 +198,9 @@ export const Connect = () => {
               <img
                 src={chainImages[selectedChain].src} // Use .src if using StaticImageData
                 alt={`Chain ${selectedChain}`}
-                className={`w-[24px] h-[24px] block my-0 mx-auto p-[1px] rounded-[15px] ${theme === "dark" ? "bg-white" : "bg-black"
-                  }`}
+                className={`w-[24px] h-[24px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                  theme === "dark" ? "bg-white" : "bg-black"
+                }`}
               />
             ) : (
               selectedChain
