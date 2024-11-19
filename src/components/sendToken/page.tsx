@@ -19,6 +19,7 @@ import { NewToken, TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
+import QRScanner from '../QRScanner/QRScanner';
 
 const SendToken = () => {
   const { walletData } = useWallet();
@@ -351,6 +352,12 @@ const SendToken = () => {
     };
   }, [showHelp]);
 
+  const handleQRAddressFound = (address: string) => {
+    console.log('QR code scanned address:', address);
+    setRecipientEmail(address);
+    toast.success('Address set from QR code');
+  };
+
   return (
     <div className="main">
       <Navbar />
@@ -568,17 +575,20 @@ const SendToken = () => {
                     >
                       Enter recipient's email or address
                     </label>
-                    <input
-                      type="email"
-                      value={recipientEmail}
-                      onChange={(e) => setRecipientEmail(e.target.value)}
-                      placeholder="recipient's email or address"
-                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
-                        theme === "dark"
-                          ? "bg-[#000000]/50 border border-white"
-                          : " bg-[#FFFCFC] border border-gray-700"
-                      }`}
-                    />
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="email"
+                        value={recipientEmail}
+                        onChange={(e) => setRecipientEmail(e.target.value)}
+                        placeholder="recipient's email or address"
+                        className={`flex-1 bg-opacity-50 rounded-xl p-3 outline-none ${
+                          theme === "dark"
+                            ? "bg-[#000000]/50 border border-white"
+                            : "bg-[#FFFCFC] border border-gray-700"
+                        }`}
+                      />
+                      <QRScanner onAddressFound={handleQRAddressFound} />
+                    </div>
                   </div>
 
                   <div className="flex  pt-3 space-x-7 ">
