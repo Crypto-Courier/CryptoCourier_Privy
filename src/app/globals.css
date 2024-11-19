@@ -176,3 +176,42 @@ a:focus {
     opacity: 0;
   }
 }
+
+#qr-reader {
+  width: 100% !important;
+  border: none !important;
+}
+
+#qr-reader__scan_region {
+  min-height: 300px !important;
+}
+
+#qr-reader__dashboard {
+  padding: 10px !important;
+  background: transparent !important;
+}
+
+#qr-reader__header_message {
+  display: none !important;
+}
+
+#qr-reader__status_span {
+  display: none !important;
+}
+
+#qr-reader select {
+  background: white !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  margin-bottom: 10px !important;
+}
+
+#qr-reader button {
+  padding: 8px 16px !important;
+  border-radius: 4px !important;
+  background: #FF336A !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 5px !important;
+}

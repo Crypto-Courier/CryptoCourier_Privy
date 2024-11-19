@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import QrScanner from 'qr-scanner';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import { toast } from 'react-hot-toast';
 
 interface QRScannerProps {
@@ -7,54 +7,42 @@ interface QRScannerProps {
 }
 
 const QRScanner: React.FC<QRScannerProps> = ({ onAddressFound }) => {
-  const [error, setError] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const scannerRef = useRef<QrScanner | null>(null);
+  const [scannerInitialized, setScannerInitialized] = useState(false);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+
+  const initializeScanner = () => {
+    if (!scannerInitialized) {
+      const scanner = new Html5QrcodeScanner(
+        "qr-reader",
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1,
+          showTorchButtonIfSupported: true,
+        },
+        false
+      );
+      scannerRef.current = scanner;
+      setScannerInitialized(true);
+    }
+  };
 
   const startScanning = () => {
     setIsScanning(true);
-    if (videoRef.current) {
-      scannerRef.current = new QrScanner(
-        videoRef.current,
-        (result) => {
-          handleScanResult(result.data);
-        },
-        {
-          highlightScanRegion: true,
-          highlightCodeOutline: true,
-        }
-      );
-
-      scannerRef.current.start()
-        .then(() => {
-          console.log('Scanner started');
-          toast.success('Camera started. Please show QR code.');
-        })
-        .catch((err) => {
-          console.error('Failed to start scanner:', err);
-          toast.error('Failed to start camera');
-          setError('Failed to start camera');
-        });
-    }
-  };
-
-  const stopScanning = () => {
     if (scannerRef.current) {
-      scannerRef.current.stop();
-      scannerRef.current.destroy();
-      scannerRef.current = null;
+      scannerRef.current.render(onScanSuccess, onScanError);
+      console.log("Scanner started");
     }
-    setIsScanning(false);
   };
 
-  const handleScanResult = (result: string) => {
-    console.log('Raw scan result:', result);
-    let address = result;
+  const onScanSuccess = (decodedText: string) => {
+    console.log('Raw scan result:', decodedText);
+    let address = decodedText;
 
     // Handle ethereum: prefix if present
-    if (result.toLowerCase().startsWith('ethereum:')) {
-      address = result.split('ethereum:')[1];
+    if (decodedText.toLowerCase().startsWith('ethereum:')) {
+      address = decodedText.split('ethereum:')[1];
     }
 
     // Validate Ethereum address
@@ -69,37 +57,52 @@ const QRScanner: React.FC<QRScannerProps> = ({ onAddressFound }) => {
     }
   };
 
-  // Cleanup on unmount
+  const onScanError = (error: any) => {
+    console.warn(`QR Scan error: ${error}`);
+  };
+
+  const stopScanning = () => {
+    if (scannerRef.current) {
+      scannerRef.current.clear().catch(console.error);
+      setIsScanning(false);
+    }
+  };
+
   useEffect(() => {
+    initializeScanner();
+    
     return () => {
-      stopScanning();
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(console.error);
+      }
     };
   }, []);
 
+  useEffect(() => {
+    if (isScanning) {
+      startScanning();
+    }
+  }, [isScanning]);
+
   return (
-    <div className="qr-scanner-container">
+    <div className="qr-scanner-container relative">
+      <div id="qr-reader" className={`${!isScanning ? 'hidden' : ''}`} />
+      
       {isScanning ? (
-        <div className="relative">
-          <video 
-            ref={videoRef} 
-            className="w-[300px] h-[300px] object-cover"
-          />
-          <button
-            onClick={stopScanning}
-            className="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white rounded-md"
-          >
-            Close
-          </button>
-        </div>
+        <button
+          onClick={stopScanning}
+          className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 absolute top-2 right-2"
+        >
+          ✕
+        </button>
       ) : (
         <button
-          onClick={startScanning}
+          onClick={() => setIsScanning(true)}
           className="px-4 py-2 rounded-md hover:opacity-80 transition-colors bg-[#FF336A] text-white"
         >
           Scan QR
         </button>
       )}
-      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 };

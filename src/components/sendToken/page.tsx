@@ -569,13 +569,13 @@ const SendToken = () => {
 
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${
+                      className={`block text-lg font-[500] mb-1 ${
                         theme === "dark" ? "text-[#DEDEDE]" : "text-black"
                       }`}
                     >
                       Enter recipient's email or address
                     </label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 relative">
                       <input
                         type="email"
                         value={recipientEmail}
