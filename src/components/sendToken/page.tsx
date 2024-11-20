@@ -20,7 +20,7 @@ import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { QrReader } from "react-qr-reader";
-import QRScanner from "../QRScanner";
+import QRScanner from "../QRScanner/QRScanner";
 
 interface QRScannerState {
   showQRScanner: boolean;
@@ -585,6 +585,7 @@ const SendToken = () => {
                     >
                       Enter recipient's email or address
                     </label>
+                    <div className="flex gap-2">
                     <input
                       type="email"
                       value={recipientEmail}
@@ -596,18 +597,20 @@ const SendToken = () => {
                           : " bg-[#FFFCFC] border border-gray-700"
                       }`}
                     />
-                    <button
+                    {/* <button
                       onClick={() => setShowQRScanner(true)}
                       className={`px-4 mb-3 rounded-xl ${
                         theme === "dark"
-                          ? "bg-[#000000]/50 border border-white text-white"
-                          : "bg-[#FFFCFC] border border-gray-700 text-black"
-                      }`}
-                      type="button"
-                      aria-label="Scan QR Code"
-                    >
-                      Scan
-                    </button>
+                        ? "bg-[#000000]/50 border border-white text-white"
+                        : "bg-[#FFFCFC] border border-gray-700 text-black"
+                        }`}
+                        type="button"
+                        aria-label="Scan QR Code"
+                        >
+                        Scan
+                        </button> */}
+                    </div>
+                        <QRScanner onAddressFound={handleQRAddressFound} />
                   </div>
 
                   <div className="flex  pt-3 space-x-7 ">
@@ -659,12 +662,12 @@ const SendToken = () => {
                 </div>
               </div>
             </div>
-            {showQRScanner && (
+            {/* {showQRScanner && (
               <QRScanner
                 onScan={handleQRScan}
                 onClose={() => setShowQRScanner(false)}
               />
-            )}
+            )} */}
           </div>
           <TxDetails
             isOpen={isPopupOpen}
