@@ -16,9 +16,11 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
   const handleScan = (result: QRResult | null): void => {
     if (result) {
       // Validate if the scanned result is an Ethereum address
+      const address = result.text.split('ethereum:')[1];
       const addressRegex = /^0x[a-fA-F0-9]{40}$/;
-      if (addressRegex.test(result.text)) {
-        onScan(result.text);
+
+      if (address && addressRegex.test(address)) {
+        onScan(address); // Pass only the Ethereum address
         onClose();
       } else {
         setError("Invalid wallet address QR code");
