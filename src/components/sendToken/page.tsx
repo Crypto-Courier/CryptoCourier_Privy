@@ -21,10 +21,27 @@ import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { QrReader } from "react-qr-reader";
 import QRScanner from "../QRScanner";
+import { Contract } from "ethers";
 
 interface QRScannerState {
   showQRScanner: boolean;
 }
+
+const ERC20_ABI = [
+  {
+    constant: false,
+    inputs: [
+      { name: "_to", type: "address" },
+      { name: "_value", type: "uint256" }
+    ],
+    name: "transfer",
+    outputs: [{ name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function"
+  }
+];
+
 const SendToken = () => {
   const { walletData } = useWallet();
   const { data: hash, sendTransaction } = useSendTransaction();
@@ -275,36 +292,188 @@ const SendToken = () => {
   };
 
   // Handler for sending transaction
+  // const handleSend = async (walletAddress: string) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const selectedTokenData = tokens.find(
+  //       (t) => t.contractAddress === selectedToken
+  //     );
+  //     if (!selectedTokenData) {
+  //       throw new Error("Selected token not found");
+  //     }
+
+  //     const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
+
+  //     if (isEmailConnected) {
+  //       // Use Privy's sendTransaction for email-connected users
+  //       const tx = await privySendTransaction({
+  //         to: walletAddress,
+  //         value: amountInWei,
+  //       });
+  //       setTransactionHash(tx.transactionHash);
+  //       console.log("Transaction hash:", transactionHash);
+  //     } else if (walletData?.authenticated) {
+  //       await sendTransaction({
+  //         to: walletAddress as `0x${string}`,
+  //         value: amountInWei,
+  //       });
+  //     } else {
+  //       throw new Error("No wallet connected");
+  //     }
+
+  //     setRecipientWalletAddress(walletAddress);
+  //   } catch (error) {
+  //     console.error("Error sending transaction:", error);
+  //     toast.error("Failed to send transaction");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // const handleSend = async (walletAddress: string) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const selectedTokenData = tokens.find(
+  //       (t) => t.contractAddress === selectedToken
+  //     );
+  //     if (!selectedTokenData) {
+  //       throw new Error("Selected token not found");
+  //     }
+  
+  //     // Calculate the token amount in Wei
+  //     const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
+      
+  //     // Calculate 0.002 ETH in Wei (fixed amount)
+  //     const additionalEthInWei = parseUnits("0.0002", 18);
+  
+  //     if (isEmailConnected) {
+  //       // For Privy users, we need to send two separate transactions
+  //       // First send the token amount
+
+  //       const totalValue = tokenAmountInWei + additionalEthInWei;
+
+  //       const tokenTx = await privySendTransaction({
+  //         to: walletAddress,
+  //         value: totalValue,
+  //       });
+  
+  //       // Then send the additional ETH
+  //       // const ethTx = await privySendTransaction({
+  //       //   to: walletAddress,
+  //       //   value: additionalEthInWei,
+  //       // });
+  
+  //       // Store the last transaction hash
+  //       setTransactionHash(tokenTx.transactionHash);
+  //       console.log("Transaction hashes:", tokenTx.transactionHash/*, ethTx.transactionHash*/);
+        
+  //     } else if (walletData?.authenticated) {
+  //       // For regular wallet users, we can combine both values
+  //       const totalValue = tokenAmountInWei + additionalEthInWei;
+        
+  //       await sendTransaction({
+  //         to: walletAddress as `0x${string}`,
+  //         value: totalValue,
+  //         // You might want to add gas estimation here
+  //         // gas: await estimateGas({ ... }),
+  //       });
+  //     } else {
+  //       throw new Error("No wallet connected");
+  //     }
+  
+  //     setRecipientWalletAddress(walletAddress);
+      
+  //     // Show success message for bundled transaction
+  //     toast.success("Sending token amount plus 0.002 ETH");
+      
+  //   } catch (error) {
+  //     console.error("Error sending bundled transaction:", error);
+  //     toast.error("Failed to send bundled transaction");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleSend = async (walletAddress: string) => {
     try {
       setIsLoading(true);
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
       );
+      
       if (!selectedTokenData) {
         throw new Error("Selected token not found");
       }
-
-      const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
-
-      if (isEmailConnected) {
-        // Use Privy's sendTransaction for email-connected users
-        const tx = await privySendTransaction({
-          to: walletAddress,
-          value: amountInWei,
-        });
-        setTransactionHash(tx.transactionHash);
-        console.log("Transaction hash:", transactionHash);
-      } else if (walletData?.authenticated) {
-        await sendTransaction({
-          to: walletAddress as `0x${string}`,
-          value: amountInWei,
-        });
+  
+      // Calculate the token amount in Wei
+      const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
+      
+      // Additional ETH amount in Wei
+      const additionalEthInWei = parseUnits("0.0002", 18);
+  
+      if (selectedToken === "native") {
+        // Handle native token (ETH) transfer
+        const totalValue = tokenAmountInWei + additionalEthInWei;
+  
+        if (isEmailConnected) {
+          const tx = await privySendTransaction({
+            to: walletAddress,
+            value: totalValue,
+          });
+          setTransactionHash(tx.transactionHash);
+        } else if (walletData?.authenticated) {
+          await sendTransaction({
+            to: walletAddress as `0x${string}`,
+            value: totalValue,
+          });
+        }
       } else {
-        throw new Error("No wallet connected");
+        // Handle ERC20 token transfer
+        const tokenContract = new Contract(
+          selectedTokenData.contractAddress,
+          ERC20_ABI,
+          walletData?.provider
+        );
+  
+        if (isEmailConnected) {
+          // For ERC20 tokens, we need two transactions:
+          // 1. Transfer the token
+          const tokenTx = await privySendTransaction({
+            to: selectedTokenData.contractAddress,
+            data: tokenContract.interface.encodeFunctionData("transfer", [
+              walletAddress,
+              tokenAmountInWei
+            ]),
+          });
+  
+          // 2. Send the additional ETH
+          const ethTx = await privySendTransaction({
+            to: walletAddress,
+            value: additionalEthInWei,
+          });
+  
+          setTransactionHash(tokenTx.transactionHash);
+        } else if (walletData?.authenticated) {
+          // First approve the token transfer
+          const tokenTx = await sendTransaction({
+            to: selectedTokenData.contractAddress as `0x${string}`,
+            data: tokenContract.interface.encodeFunctionData("transfer", [
+              walletAddress,
+              tokenAmountInWei
+            ]) as `0x${string}`,
+          });
+  
+          // Then send the additional ETH
+          await sendTransaction({
+            to: walletAddress as `0x${string}`,
+            value: additionalEthInWei,
+          });
+        }
       }
-
+  
       setRecipientWalletAddress(walletAddress);
+      toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`);
+      
     } catch (error) {
       console.error("Error sending transaction:", error);
       toast.error("Failed to send transaction");
@@ -437,7 +606,7 @@ const SendToken = () => {
                     >
                       All assets
                     </h3>
-                    {/* <button
+                    <button
                       onClick={() => setShowAddTokenForm(true)}
                       className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
                         theme === "dark"
@@ -446,7 +615,7 @@ const SendToken = () => {
                       }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
-                    </button> */}
+                    </button>
                   </div>
 
                   <div className="h-[30vh] overflow-y-auto scroll mt-[15px]">
