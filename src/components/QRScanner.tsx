@@ -16,7 +16,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
   const handleScan = (result: QRResult | null): void => {
     if (result) {
       // Validate if the scanned result is an Ethereum address
-      const address = result.text.split('ethereum:')[1];
+      const address = result.text.split("ethereum:")[1];
       const addressRegex = /^0x[a-fA-F0-9]{40}$/;
 
       if (address && addressRegex.test(address)) {
@@ -35,12 +35,12 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg w-full max-w-sm mx-4">
+      <div className="bg-black dark:bg-white p-4 rounded-lg w-full max-w-sm mx-4 ">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-black dark:text-white">
             Scan QR Code
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-black dark:text-white">
             Position the QR code within the frame
           </p>
         </div>

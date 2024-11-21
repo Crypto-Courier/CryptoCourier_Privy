@@ -37,7 +37,7 @@ const CatEmojiAnimationy: React.FC = () => {
         z-index: 9999;
         width: 32px;
         height: 32px;
-        animation: logoFloat 1.5s ease-out forwards;
+        animation: logoFloat 2s ease-out forwards;
       `;
 
       logoContainer.style.setProperty("--tx", `${tx}px`);

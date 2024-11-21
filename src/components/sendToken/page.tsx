@@ -21,6 +21,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import { QrReader } from "react-qr-reader";
 import QRScanner from "../QRScanner";
+import QR from "../../assets/QR.svg";
 
 interface QRScannerState {
   showQRScanner: boolean;
@@ -363,9 +364,9 @@ const SendToken = () => {
   }, [showHelp]);
 
   const handleQRAddressFound = (address: string) => {
-    console.log('QR code scanned address:', address);
+    console.log("QR code scanned address:", address);
     setRecipientEmail(address);
-    toast.success('Address set from QR code');
+    toast.success("Address set from QR code");
   };
 
   return (
@@ -598,7 +599,7 @@ const SendToken = () => {
                     />
                     <button
                       onClick={() => setShowQRScanner(true)}
-                      className={`px-4 mb-3 rounded-xl ${
+                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${
                         theme === "dark"
                           ? "bg-[#000000]/50 border border-white text-white"
                           : "bg-[#FFFCFC] border border-gray-700 text-black"
@@ -606,7 +607,7 @@ const SendToken = () => {
                       type="button"
                       aria-label="Scan QR Code"
                     >
-                      Scan
+                      <Image src={QR} alt="" width={20} />
                     </button>
                   </div>
 
