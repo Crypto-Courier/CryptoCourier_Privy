@@ -373,16 +373,6 @@ const SendToken = () => {
     setTokenAmount(maxAmount);
   };
 
-  // Copy transaction hash for transaction
-  // const copyToClipboard = () => {
-  //   if (walletData?.transactionHash) {
-  //     navigator.clipboard.writeText(walletData.transactionHash);
-  //     setCopied(true);
-  //     setTimeout(() => setCopied(false), 2000);
-  //     toast.success("Tx hash copied to clipboard");
-  //   }
-  // };
-
   // Store txn data to show txn history
   const StoreTransactionData = async (
     walletAddress: string,
