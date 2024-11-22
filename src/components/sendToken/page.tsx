@@ -22,25 +22,11 @@ import Image from "next/image";
 import { QrReader } from "react-qr-reader";
 import QRScanner from "../QRScanner";
 import { Contract } from "ethers";
+import ERC20_ABI from '../../abis/ERC-20.json'
 
 interface QRScannerState {
   showQRScanner: boolean;
 }
-
-const ERC20_ABI = [
-  {
-    constant: false,
-    inputs: [
-      { name: "_to", type: "address" },
-      { name: "_value", type: "uint256" }
-    ],
-    name: "transfer",
-    outputs: [{ name: "", type: "bool" }],
-    payable: false,
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
 
 const SendToken = () => {
   const { walletData } = useWallet();
