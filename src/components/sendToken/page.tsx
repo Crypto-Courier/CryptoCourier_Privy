@@ -161,7 +161,12 @@ const SendToken = () => {
 
   useEffect(() => {
     if (selectedToken) {
-      updateMaxAmount();
+      const selectedTokenData = tokens.find(
+        (t) => t.contractAddress === selectedToken
+      );
+      if (selectedTokenData) {
+        setMaxAmount(selectedTokenData.balance);
+      }
     }
   }, [selectedToken, tokens]);
 
@@ -232,6 +237,7 @@ const SendToken = () => {
     if (selectedTokenData) {
       setTokenAmount(selectedTokenData.balance);
       setSelectedTokenSymbol(selectedTokenData.symbol);
+      setTokenAmount("");
     }
   };
 
