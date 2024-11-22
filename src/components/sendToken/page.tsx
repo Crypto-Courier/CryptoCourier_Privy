@@ -310,7 +310,12 @@ const SendToken = () => {
 
   useEffect(() => {
     if (selectedToken) {
-      updateMaxAmount();
+      const selectedTokenData = tokens.find(
+        (t) => t.contractAddress === selectedToken
+      );
+      if (selectedTokenData) {
+        setMaxAmount(selectedTokenData.balance);
+      }
     }
   }, [selectedToken, tokens]);
 
@@ -378,8 +383,11 @@ const SendToken = () => {
       (t) => t.contractAddress === newSelectedToken
     );
     if (selectedTokenData) {
-      setTokenAmount(selectedTokenData.balance);
       setSelectedTokenSymbol(selectedTokenData.symbol);
+    // Update maxAmount but don't set it as the token amount
+    setMaxAmount(selectedTokenData.balance);
+    // Clear the current token amount when switching tokens
+    setTokenAmount("");
     }
   };
 
