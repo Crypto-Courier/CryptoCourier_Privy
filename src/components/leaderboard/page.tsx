@@ -9,6 +9,7 @@ import Image from "next/image";
 import trophy from "../../assets/trophy.png";
 import rankImage from "../../assets/rank.png";
 import { LeaderboardEntry } from "../../types/types";
+import QuizGamePopup from "../Game";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
@@ -90,6 +91,7 @@ const LeaderBoard: React.FC = () => {
                       >
                         Invite Your Friends
                       </button>
+                      <QuizGamePopup />
                     </div>
                     <div className="w-full max-w-4xl mx-auto  rounded-3xl">
                       <div className="overflow-y-auto h-[60vh]">
