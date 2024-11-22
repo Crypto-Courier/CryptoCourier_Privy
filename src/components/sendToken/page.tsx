@@ -5,7 +5,17 @@ import SwitchNetwork from "@/components/SwitchNetwork";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import { useSendTransaction } from "wagmi";
+import {
+  useSendTransaction,
+} from "wagmi";
+import { 
+  useAccount,
+  useSimulateContract,
+  useWriteContract,
+  useWalletClient,
+  usePublicClient
+} from 'wagmi'
+import { waitForTransaction } from '@wagmi/core'
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import notoken from "../../assets/Not-token.gif";
@@ -22,6 +32,7 @@ import Image from "next/image";
 import { QrReader } from "react-qr-reader";
 import QRScanner from "../QRScanner";
 import { Contract, ethers } from "ethers";
+import { sign } from "crypto";
 
 interface QRScannerState {
   showQRScanner: boolean;
@@ -30,6 +41,11 @@ const SendToken = () => {
   const { walletData } = useWallet();
   const { data: hash, sendTransaction } = useSendTransaction();
   const { sendTransaction: privySendTransaction } = usePrivy();
+
+  const { data: walletClient } = useWalletClient()
+  const publicClient = usePublicClient()
+  const { writeContractAsync: approveAsync } = useWriteContract()
+
   const [previousChainId, setPreviousChainId] = useState<string>("");
   const router = useRouter();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
@@ -414,183 +430,532 @@ const SendToken = () => {
   };
 
   // Handler for sending transaction
-  const handleSend = async (
-    walletAddress: string,
-  ) => {
+  // const handleSend = async (
+  //   walletAddress: string,
+  // ) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const selectedTokenData = tokens.find(
+  //       (t) => t.contractAddress === selectedToken
+  //     );
+
+  //     if (!selectedTokenData) {
+  //       throw new Error("Selected token not found");
+  //     }
+
+  //     console.log("Selected token data in HandleSend Function", selectedTokenData);
+
+  //     // Calculate the token amount in Wei
+  //     const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
+  //     console.log("Token Amount in WEI for HandleSend Function: ", tokenAmountInWei);
+
+  //     // Fixed ETH amount (matching contract's MINIMUM_ETH_AMOUNT)
+  //     const additionalEthInWei = parseUnits("0.0002", 18);
+  //     console.log("Additional amount of ether to be send in HandleSend Function: ", additionalEthInWei);
+
+  //     let loadingToastId = toast.loading("Transaction in progress...");
+
+  //     if (selectedToken === "native") {
+  //       console.log("Native Token Selected in HandleSend Function")
+  //       // Existing native token (ETH) transfer logic remains the same
+  //       const totalValue = tokenAmountInWei + additionalEthInWei;
+  //       console.log("Total value to send when selected token is native: ", totalValue);
+
+  //       if (isEmailConnected) {
+  //         console.log("Connected through Email or Embedded Account");
+
+  //         const privyTx = await privySendTransaction({
+  //           to: walletAddress,
+  //           value: totalValue,
+  //         });
+
+  //         if (privyTx.transactionHash) {
+  //           toast.success("Transaction completed successfully!", {
+  //             id: loadingToastId,
+  //           });
+  //           console.log("Transaction done for native token using embedded account");
+  //         }
+
+  //         setTransactionHash(privyTx.transactionHash);
+  //       } else if (walletData?.authenticated) {
+  //         console.log("Connected through external wallet");
+
+  //         const wagmiTx = await sendTransaction({
+  //           to: walletAddress as `0x${string}`,
+  //           value: totalValue,
+  //         });
+
+  //         if (hash) {
+  //           toast.success("Transaction completed successfully!", {
+  //             id: loadingToastId,
+  //           });
+  //           console.log("Transaction done for native token using external account");
+  //         }
+
+  //         setTransactionHash(hash as '0x${string}');
+  //       }
+  //       console.log("Done transaction part for the native token");
+  //     } else {
+  //       console.log("Non-Native Token Selected in HandleSend Function")
+
+  //       const transactionsContract = new Contract(
+  //         TRANSACTIONS_CONTRACT_ADDRESS,
+  //         TRANSACTIONS_CONTRACT_ABI,
+  //         walletData?.provider
+  //       );
+
+  //       console.log("Creating contract instance for the transactions contract.");
+
+  //       const tokenContract = new Contract(
+  //         selectedTokenData.contractAddress,
+  //         ERC20_ABI,
+  //         walletData?.provider
+  //       );
+
+  //       console.log("Creating transaction contract for approve token using ABI");
+
+  //       if (isEmailConnected) {
+  //         console.log("For Privy email-connected users specially non-native token");
+  //         // First, approve the Transactions contract to spend tokens
+  //         console.log("Starting transaction for email connected user using privy to approve tokens");
+  //         const approveTx = await privySendTransaction({
+  //           to: selectedTokenData.contractAddress,
+  //           data: tokenContract.interface.encodeFunctionData("approve", [
+  //             TRANSACTIONS_CONTRACT_ADDRESS,
+  //             tokenAmountInWei
+  //           ]),
+  //         });
+  //         if (approveTx.transactionHash) {
+  //           console.log("Approve non-native token is done");
+  //         }
+
+  //         console.log("Starting with the function call for sending approved token and eth amount for gas fees");
+  //         // Then call transferWithEth
+  //         const tx = await privySendTransaction({
+  //           to: TRANSACTIONS_CONTRACT_ADDRESS,
+  //           value: additionalEthInWei,
+  //           data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
+  //             selectedTokenData.contractAddress,
+  //             walletAddress,
+  //             tokenAmountInWei
+  //           ]),
+  //         });
+
+  //         if (tx.transactionHash) {
+  //           toast.success("Transaction completed successfully!", {
+  //             id: loadingToastId,
+  //           });
+  //           console.log("Transaction done and token with gas fee send to receiver using privy connected mail account");
+  //         };
+
+  //         setTransactionHash(tx.transactionHash);
+  //       } else if (walletData?.authenticated) {
+
+  //         console.log("For directly connected wallets");
+
+  //         console.log("Starting approving token using external wallet");
+  //         // First approve tokens
+
+  //         const approveTx = await sendTransaction({
+  //           to: selectedTokenData.contractAddress as `0x${string}`,
+  //           data: tokenContract.interface.encodeFunctionData("approve", [
+  //             TRANSACTIONS_CONTRACT_ADDRESS,
+  //             tokenAmountInWei
+  //           ]) as `0x${string}`,
+  //         });
+
+  //         if (hash) {
+  //           console.log("Token Approvation is done");
+  //           const transferTx = await sendTransaction({
+  //             to: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
+  //             value: additionalEthInWei,
+  //             data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
+  //               selectedTokenData.contractAddress,
+  //               walletAddress,
+  //               tokenAmountInWei
+  //             ]) as `0x${string}`,
+  //           });
+
+  //           if (hash) {
+  //             {
+  //               console.log("Token transfer is confirmed");
+  //               toast.success("Transaction completed successfully!", {
+  //                 id: loadingToastId,
+  //               })
+  //             }
+  //             setTransactionHash(hash as `0x${string}`);
+  //           }
+  //         }
+  //       }
+  //     }
+
+  //     setRecipientWalletAddress(walletAddress);
+  //     toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`);
+
+  //   } catch (error) {
+  //     toast.dismiss();
+  //     console.error("Error sending transaction:", error);
+
+  //     // More detailed error handling
+  //     if (error instanceof Error) {
+  //       // Check for specific er  ror types
+  //       if (error.message.includes("user rejected")) {
+  //         toast.error("Transaction was rejected by user");
+  //       } else if (error.message.includes("insufficient funds")) {
+  //         toast.error("Insufficient funds for transaction");
+  //       } else {
+  //         toast.error(`Failed to send transaction: ${error.message}`);
+  //       }
+  //     } else {
+  //       toast.error("Failed to send transaction");
+  //     }
+  //   } finally {
+  //     toast.dismiss();
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // const handleSend = async (walletAddress: string) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const { data: walletClient } = useWalletClient()
+  //     const publicClient = usePublicClient()
+      
+  //     const selectedTokenData = tokens.find(
+  //       (t) => t.contractAddress === selectedToken
+  //     );
+  
+  //     if (!selectedTokenData) {
+  //       throw new Error("Selected token not found");
+  //     }
+  
+  //     const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
+  //     const additionalEthInWei = parseUnits("0.0002", 18);
+  //     let loadingToastId = toast.loading("Transaction in progress...");
+  
+  //     if (selectedToken === "native") {
+  //       console.log("Native Token Selected in HandleSend Function")
+  //       const totalValue = tokenAmountInWei + additionalEthInWei;
+  
+  //       if (isEmailConnected) {
+  //         console.log("Connected through Email or Embedded Account");
+  //         const privyTx = await privySendTransaction({
+  //           to: walletAddress,
+  //           value: totalValue,
+  //         });
+  
+  //         if (privyTx.transactionHash) {
+  //           toast.success("Transaction completed successfully!", {
+  //             id: loadingToastId,
+  //           });
+  //           setTransactionHash(privyTx.transactionHash);
+  //         }
+  //       } else if (walletData?.authenticated && walletClient) {
+  //         console.log("Connected through external wallet");
+          
+  //         const hash = await walletClient.sendTransaction({
+  //           to: walletAddress as `0x${string}`,
+  //           value: totalValue,
+  //         })
+  
+  //         if (hash) {
+  //           const receipt = await publicClient?.waitForTransactionReceipt({
+  //             hash,
+  //             confirmations: 1
+  //           })
+  
+  //           if (receipt?.status === 'success') {
+  //             toast.success("Transaction completed successfully!", {
+  //               id: loadingToastId,
+  //             });
+  //             setTransactionHash(hash);
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       console.log("Non-Native Token Selected in HandleSend Function")
+  
+  //       const transactionsContract = new Contract(
+  //         TRANSACTIONS_CONTRACT_ADDRESS,
+  //         TRANSACTIONS_CONTRACT_ABI,
+  //         walletData?.provider
+  //       );
+  
+  //       const tokenContract = new Contract(
+  //         selectedTokenData.contractAddress,
+  //         ERC20_ABI,
+  //         walletData?.provider
+  //       );
+  
+  //       if (isEmailConnected) {
+  //         // Privy email connected flow remains the same
+  //         const approveTx = await privySendTransaction({
+  //           to: selectedTokenData.contractAddress,
+  //           data: tokenContract.interface.encodeFunctionData("approve", [
+  //             TRANSACTIONS_CONTRACT_ADDRESS,
+  //             tokenAmountInWei
+  //           ]),
+  //         });
+  
+  //         if (approveTx.transactionHash) {
+  //           const tx = await privySendTransaction({
+  //             to: TRANSACTIONS_CONTRACT_ADDRESS,
+  //             value: additionalEthInWei,
+  //             data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
+  //               selectedTokenData.contractAddress,
+  //               walletAddress,
+  //               tokenAmountInWei
+  //             ]),
+  //           });
+  
+  //           if (tx.transactionHash) {
+  //             toast.success("Transaction completed successfully!", {
+  //               id: loadingToastId,
+  //             });
+  //             setTransactionHash(tx.transactionHash);
+  //           }
+  //         }
+  //       } else if (walletData?.authenticated && walletClient) {
+  //         // Handle ERC20 approval
+  //         const { data: simulateApprove } = useSimulateContract({
+  //           address: selectedTokenData.contractAddress as `0x${string}`,
+  //           abi: ERC20_ABI,
+  //           functionName: 'approve',
+  //           args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei]
+  //         })
+  
+  //         const { writeContractAsync: approveAsync } = useWriteContract()
+  
+  //         if (approveAsync && simulateApprove?.request) {
+  //           const approveTxHash = await approveAsync(simulateApprove.request)
+            
+  //           const approveReceipt = await publicClient?.waitForTransactionReceipt({
+  //             hash: approveTxHash,
+  //             confirmations: 1
+  //           })
+  
+  //           if (approveReceipt?.status === 'success') {
+  //             // Handle token transfer
+  //             const { data: simulateTransfer } = useSimulateContract({
+  //               address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
+  //               abi: TRANSACTIONS_CONTRACT_ABI,
+  //               functionName: 'transferWithEth',
+  //               args: [
+  //                 selectedTokenData.contractAddress,
+  //                 walletAddress,
+  //                 tokenAmountInWei
+  //               ],
+  //               value: additionalEthInWei
+  //             })
+  
+  //             if (simulateTransfer?.request) {
+  //               const transferTxHash = await approveAsync(simulateTransfer.request)
+                
+  //               const transferReceipt = await publicClient?.waitForTransactionReceipt({
+  //                 hash: transferTxHash,
+  //                 confirmations: 1
+  //               })
+  
+  //               if (transferReceipt?.status === 'success') {
+  //                 toast.success("Transaction completed successfully!", {
+  //                   id: loadingToastId,
+  //                 });
+  //                 setTransactionHash(transferTxHash);
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  
+  //     setRecipientWalletAddress(walletAddress);
+  //     toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`);
+  
+  //   } catch (error) {
+  //     toast.dismiss();
+  //     console.error("Error sending transaction:", error);
+  
+  //     if (error instanceof Error) {
+  //       if (error.message.includes("user rejected")) {
+  //         toast.error("Transaction was rejected by user");
+  //       } else if (error.message.includes("insufficient funds")) {
+  //         toast.error("Insufficient funds for transaction");
+  //       } else {
+  //         toast.error(`Failed to send transaction: ${error.message}`);
+  //       }
+  //     } else {
+  //       toast.error("Failed to send transaction");
+  //     }
+  //   } finally {
+  //     toast.dismiss();
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handleSend = async (walletAddress: string) => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
-      );
+      )
 
       if (!selectedTokenData) {
-        throw new Error("Selected token not found");
+        throw new Error("Selected token not found")
       }
 
-      console.log("Selected token data in HandleSend Function", selectedTokenData);
-
-      // Calculate the token amount in Wei
-      const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
-      console.log("Token Amount in WEI for HandleSend Function: ", tokenAmountInWei);
-
-      // Fixed ETH amount (matching contract's MINIMUM_ETH_AMOUNT)
-      const additionalEthInWei = parseUnits("0.0002", 18);
-      console.log("Additional amount of ether to be send in HandleSend Function: ", additionalEthInWei);
+      const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals)
+      const additionalEthInWei = parseUnits("0.0002", 18)
+      let loadingToastId = toast.loading("Transaction in progress...")
 
       if (selectedToken === "native") {
         console.log("Native Token Selected in HandleSend Function")
-        // Existing native token (ETH) transfer logic remains the same
-        const totalValue = tokenAmountInWei + additionalEthInWei;
-        console.log("Total value to send when selected token is native: ", totalValue);
+        const totalValue = tokenAmountInWei + additionalEthInWei
 
         if (isEmailConnected) {
-          console.log("Connected through Email or Embedded Account");
-
-          const tx = await privySendTransaction({
+          console.log("Connected through Email or Embedded Account")
+          const privyTx = await privySendTransaction({
             to: walletAddress,
             value: totalValue,
-          });
+          })
 
-          if (tx.transactionHash) {
-            console.log("Transaction done for native token using embedded account");
+          if (privyTx.transactionHash) {
+            toast.success("Transaction completed successfully!", {
+              id: loadingToastId,
+            })
+            setTransactionHash(privyTx.transactionHash)
           }
+        } else if (walletData?.authenticated && walletClient) {
+          console.log("Connected through external wallet")
+          
+          const hash = await walletClient.sendTransaction({
+            to: walletAddress as `0x${string}`,
+            value: totalValue,
+          })
 
-          setTransactionHash(tx.transactionHash);
-        } else if (walletData?.authenticated) {
-          console.log("Connected through external wallet");
+          if (hash) {
+            const receipt = await publicClient?.waitForTransactionReceipt({
+              hash,
+              confirmations: 1
+            })
 
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const signer = await provider.getSigner();
-
-          console.log("Provider and Signer are ready to proceed transaction");
-
-          const tx = await signer.sendTransaction({
-            to: walletAddress,
-            value: totalValue
-          });
-
-          // Wait for the transaction to be mined
-          const receipt = await tx.wait();
-
-          if ((receipt as ethers.TransactionReceipt).blockHash) {
-            console.log("Transaction done for native token using external wallet account");
+            if (receipt?.status === 'success') {
+              toast.success("Transaction completed successfully!", {
+                id: loadingToastId,
+              })
+              setTransactionHash(hash)
+            }
           }
-          setTransactionHash((receipt as ethers.TransactionReceipt).blockHash);
         }
-        console.log("Done transaction part for the native token");
       } else {
         console.log("Non-Native Token Selected in HandleSend Function")
 
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-
-        console.log("Provider and Signer are ready to proceed transaction");
-
-        // New token transfer logic using Transactions contract
         const transactionsContract = new Contract(
           TRANSACTIONS_CONTRACT_ADDRESS,
           TRANSACTIONS_CONTRACT_ABI,
-          signer
-        );
-
-        console.log("Creating contract instance for the transactions contract.");
+          walletData?.provider
+        )
 
         const tokenContract = new Contract(
           selectedTokenData.contractAddress,
           ERC20_ABI,
-          signer
-        );
-
-        console.log("Creating transaction contract for approve token using ABI");
+          walletData?.provider
+        )
 
         if (isEmailConnected) {
-          console.log("For Privy email-connected users specially non-native token");
-          // First, approve the Transactions contract to spend tokens
-          console.log("Starting transaction for email connected user using privy to approve tokens");
           const approveTx = await privySendTransaction({
             to: selectedTokenData.contractAddress,
             data: tokenContract.interface.encodeFunctionData("approve", [
               TRANSACTIONS_CONTRACT_ADDRESS,
               tokenAmountInWei
             ]),
-          });
+          })
+
           if (approveTx.transactionHash) {
-            console.log("Approve non-native token is done");
+            const tx = await privySendTransaction({
+              to: TRANSACTIONS_CONTRACT_ADDRESS,
+              value: additionalEthInWei,
+              data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
+                selectedTokenData.contractAddress,
+                walletAddress,
+                tokenAmountInWei
+              ]),
+            })
+
+            if (tx.transactionHash) {
+              toast.success("Transaction completed successfully!", {
+                id: loadingToastId,
+              })
+              setTransactionHash(tx.transactionHash)
+            }
           }
+        } else if (walletData?.authenticated && walletClient) {
+          // Move the simulate hooks outside the handler
+          if (approveAsync) {
+            const approveTxHash = await approveAsync({
+              address: selectedTokenData.contractAddress as `0x${string}`,
+              abi: ERC20_ABI,
+              functionName: 'approve',
+              args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei]
+            })
+            
+            const approveReceipt = await publicClient?.waitForTransactionReceipt({
+              hash: approveTxHash,
+              confirmations: 1
+            })
 
-          console.log("Starting with the function call for sending approved token and eth amount for gas fees");
-          // Then call transferWithEth
-          const tx = await privySendTransaction({
-            to: TRANSACTIONS_CONTRACT_ADDRESS,
-            value: additionalEthInWei,
-            data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
-              selectedTokenData.contractAddress,
-              walletAddress,
-              tokenAmountInWei
-            ]),
-          });
+            if (approveReceipt?.status === 'success') {
+              const transferTxHash = await approveAsync({
+                address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
+                abi: TRANSACTIONS_CONTRACT_ABI,
+                functionName: 'transferWithEth',
+                args: [
+                  selectedTokenData.contractAddress,
+                  walletAddress,
+                  tokenAmountInWei
+                ],
+                value: additionalEthInWei
+              })
+              
+              const transferReceipt = await publicClient?.waitForTransactionReceipt({
+                hash: transferTxHash,
+                confirmations: 1
+              })
 
-          if (tx.transactionHash) { console.log("Transaction done and token with gas fee send to receiver using privy connected mail account"); };
-
-          setTransactionHash(tx.transactionHash);
-        } else if (walletData?.authenticated) {
-
-          console.log("For directly connected wallets");
-
-          console.log("Starting approving token using external wallet");
-          // First approve tokens
-          const approvalTx = await tokenContract.approve(
-            TRANSACTIONS_CONTRACT_ADDRESS,
-            tokenAmountInWei
-          );
-          await approvalTx.wait();
-
-          if (approvalTx.transactionHash) {
-            console.log("Token approval is done and move forward with the send token with gas amount");
-          };
-
-          // Then call transferWithEth
-          const transferTx = await transactionsContract.transferWithEth(
-            selectedTokenData.contractAddress,
-            walletAddress,
-            tokenAmountInWei,
-            { value: additionalEthInWei }
-          );
-
-          if(transferTx.transactionHash){
-            console.log("Transaction done for the external wallet");
-          };
-          
-          // Wait for the transaction to be mined and get the receipt
-          const receipt = await transferTx.wait();
-          setTransactionHash(receipt.hash);
+              if (transferReceipt?.status === 'success') {
+                toast.success("Transaction completed successfully!", {
+                  id: loadingToastId,
+                })
+                setTransactionHash(transferTxHash)
+              }
+            }
+          }
         }
       }
 
-      setRecipientWalletAddress(walletAddress);
-      toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`);
+      setRecipientWalletAddress(walletAddress)
+      toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`)
 
     } catch (error) {
-      console.error("Error sending transaction:", error);
+      toast.dismiss()
+      console.error("Error sending transaction:", error)
 
-      // More detailed error handling
       if (error instanceof Error) {
-        // Check for specific er  ror types
         if (error.message.includes("user rejected")) {
-          toast.error("Transaction was rejected by user");
+          toast.error("Transaction was rejected by user")
         } else if (error.message.includes("insufficient funds")) {
-          toast.error("Insufficient funds for transaction");
+          toast.error("Insufficient funds for transaction")
         } else {
-          toast.error(`Failed to send transaction: ${error.message}`);
+          toast.error(`Failed to send transaction: ${error.message}`)
         }
       } else {
-        toast.error("Failed to send transaction");
+        toast.error("Failed to send transaction")
       }
     } finally {
-      setIsLoading(false);
+      toast.dismiss()
+      setIsLoading(false)
     }
-  };
-
+  }
+  
   // Handler for adding token into database
   const handleAddToken = async (newToken: NewToken) => {
     try {
@@ -687,11 +1052,10 @@ const SendToken = () => {
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
-                        theme === "dark"
-                          ? "bg-[#FFE500] text-[#363535]"
-                          : "bg-[#E265FF] text-white"
-                      }  px-4 py-2 rounded-full text-sm`}
+                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
+                        ? "bg-[#FFE500] text-[#363535]"
+                        : "bg-[#E265FF] text-white"
+                        }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
                     </button>
