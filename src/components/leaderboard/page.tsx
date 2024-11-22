@@ -91,7 +91,7 @@ const LeaderBoard: React.FC = () => {
                       >
                         Invite Your Friends
                       </button>
-                      <QuizGamePopup />
+                      {/* <QuizGamePopup /> */}
                     </div>
                     <div className="w-full max-w-4xl mx-auto  rounded-3xl">
                       <div className="overflow-y-auto h-[60vh]">

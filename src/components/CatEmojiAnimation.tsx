@@ -23,7 +23,7 @@ const CatEmojiAnimationy: React.FC = () => {
       logoContainer.className = "logo-icon";
 
       const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 200 + 100;
+      const distance = Math.random() * 700 + 100;
       const tx = Math.cos(angle) * distance;
       const ty = Math.sin(angle) * distance;
 
@@ -35,8 +35,8 @@ const CatEmojiAnimationy: React.FC = () => {
         top: ${y}px;
         transform-origin: center;
         z-index: 9999;
-        width: 32px;
-        height: 32px;
+        width: 25px;
+        height: 25px;
         animation: logoFloat 5s ease-out forwards;
       `;
 
@@ -60,7 +60,7 @@ const CatEmojiAnimationy: React.FC = () => {
       ) {
         return; // Do nothing if clicked inside input or select
       }
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 4; i++) {
         spawnLogo(e.pageX, e.pageY);
       }
     };
