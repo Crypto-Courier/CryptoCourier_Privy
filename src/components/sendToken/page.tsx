@@ -24,6 +24,7 @@ import QRScanner from "../QRScanner";
 import QR from "../../assets/QR.svg";
 import { Contract } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
+import TransactionPopup from "../TransactionPopup";
 
 interface QRScannerState {
   showQRScanner: boolean;
@@ -51,6 +52,8 @@ const SendToken = () => {
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
+  const [txStatus, setTxStatus] = useState('pending');
+const [showTxPopup, setShowTxPopup] = useState(false);  
 
   const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
@@ -209,7 +212,6 @@ const SendToken = () => {
       }
     } catch (error) {
       console.error("Error fetching tokens:", error);
-      toast.error("Failed to fetch tokens");
     } finally {
       setIsLoading(false);
     }
@@ -389,6 +391,8 @@ const SendToken = () => {
 
   const handleSend = async (walletAddress: string) => {
     try {
+      setTxStatus('pending');
+      setShowTxPopup(true);
       setIsLoading(true);
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
@@ -754,7 +758,7 @@ const SendToken = () => {
                     <input
                       type="email"
                       value={recipientEmail}
-                      onChange={(e) => setRecipientEmail(e.target.value)}
+                      onChange={(e) => setRecipientEmail(e.target.value)} 
                       placeholder="recipient's email or address"
                       className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
                         theme === "dark"
@@ -840,6 +844,13 @@ const SendToken = () => {
             recipientEmail={recipientEmail}
             onConfirm={handleSend}
           />
+          <TransactionPopup
+            isOpen={showTxPopup}
+            onClose={() => setShowTxPopup(false)}
+            tokenAmount={tokenAmount}
+            tokenSymbol={selectedTokenSymbol}
+            status={txStatus}
+            txHash={hash || transactionHash} senderWallet={""} recipientWallet={""} customizedLink={""} recipientEmail={""}/>
         </div>
 
         {showAddTokenForm && (

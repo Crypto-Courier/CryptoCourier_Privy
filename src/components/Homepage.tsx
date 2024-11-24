@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import React from "react";
+import React,{useEffect} from "react";
 import send2 from "../assets/Tcircle2.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -21,15 +21,15 @@ function Homepage() {
   const { user, login, authenticated } = usePrivy();
   const { walletData } = useWallet();
 
-  const OpenSendToken = () => {
-    if (walletData && walletData.authenticated) {
-      router.push("/send-token");
-    } else {
-      alert(
-        "Please connect your wallet or log in to gift tokens to your friend."
-      );
-    }
-  };
+  // const OpenSendToken = () => {
+  //   if (walletData && walletData.authenticated) {
+  //     router.push("/send-token");
+  //   } else {
+  //     alert(
+  //       "Please connect your wallet or log in to gift tokens to your friend."
+  //     );
+  //   }
+  // };
 
   const getActiveAddress = () => {
     if (walletData && walletData.address) {
@@ -41,6 +41,13 @@ function Homepage() {
   };
 
   const activeAddress = getActiveAddress();
+
+  // Redirect to /send-token if activeAddress is available
+  useEffect(() => {
+    if (activeAddress) {
+      router.push("/send-token");
+    }
+  }, [activeAddress, router]);
 
   return (
     <div className="main min-h-screen flex flex-col ">
@@ -94,14 +101,7 @@ function Homepage() {
         <div className="sec3Bg relative lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex-grow flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
-              {activeAddress ? (
-                <button
-                  className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
-                  onClick={OpenSendToken}
-                >
-                  Send
-                </button>
-              ) : (
+            {!activeAddress && (
                 <button
                   className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
                   onClick={() => login()}

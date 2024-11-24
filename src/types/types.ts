@@ -39,6 +39,18 @@ export interface TxDetailsProps {
     onConfirm: (walletAddress: string) => void;
 }
 
+export interface Transaction {
+    isOpen: boolean;
+    onClose: () => void;
+    tokenAmount: string;
+    tokenSymbol: string;
+    status :any;
+  txHash:any
+
+    
+ 
+}
+
 export interface WalletProps {
     isOpen: boolean;
     onClose: () => void;
