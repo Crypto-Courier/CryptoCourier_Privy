@@ -17,6 +17,7 @@ import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
+import ChainDropdown from "../ChainDropdown";
 
 const History: React.FC = () => {
   const router = useRouter();
@@ -227,7 +228,7 @@ const History: React.FC = () => {
         }`}
       >
         <div
-          className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+          className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
             theme === "dark"
               ? "border-white bg-transparent"
               : "border-gray-500 bg-transparent"
@@ -260,7 +261,8 @@ const History: React.FC = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
-            {renderWalletAddress()}
+            {/* {renderWalletAddress()} */}
+            <ChainDropdown />
             <div className="text-right flex items-end">
               <div className="gap-4 flex">
                 <button

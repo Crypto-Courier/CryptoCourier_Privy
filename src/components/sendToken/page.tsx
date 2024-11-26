@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { renderToString } from "react-dom/server";
 import SwitchNetwork from "@/components/SwitchNetwork";
+import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -52,12 +53,32 @@ const SendToken = () => {
   const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState('pending');
-const [showTxPopup, setShowTxPopup] = useState(false);  
+  const [txStatus, setTxStatus] = useState("pending");
+  const [showTxPopup, setShowTxPopup] = useState(false);
 
   const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
   const isEmailConnected = walletData?.isEmailConnected;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Add this handler function
   const handleQRScan = (address: string): void => {
@@ -391,7 +412,7 @@ const [showTxPopup, setShowTxPopup] = useState(false);
 
   const handleSend = async (walletAddress: string) => {
     try {
-      setTxStatus('pending');
+      setTxStatus("pending");
       setShowTxPopup(true);
       setIsLoading(true);
       const selectedTokenData = tokens.find(
@@ -549,12 +570,12 @@ const [showTxPopup, setShowTxPopup] = useState(false);
             } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`hidden lg:flex md:flex sm:hidden  flex items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
+              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
                 theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
               }`}
             >
               <div
-                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
                   theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"
@@ -707,8 +728,48 @@ const [showTxPopup, setShowTxPopup] = useState(false);
                           Max
                         </button>
                       </div>
+                      <div className="relative">
+                        <div
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full md:w-[15%] sm:w-[15%] lg:w-[15%] ${
+                            theme === "dark"
+                              ? "bg-[#000000]/50 border border-white"
+                              : " bg-[#FFFCFC] border border-gray-700"
+                          }`}
+                          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                          <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+                            Select Chain
+                          </span>
+                          <ChevronDown size={20} color="#FFE500" />
+                        </div>
 
-                      <select
+                        {isDropdownOpen && (
+                          <div
+                            ref={dropdownRef}
+                            className={`absolute top-12 left-0 w-[200px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
+                              theme === "dark"
+                                ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
+                                : "bg-white text-black border border-[#C6C6C6]"
+                            }`}
+                          >
+                            {Array.isArray(tokens) &&
+                              tokens.map((token) => (
+                                <option
+                                  key={token.contractAddress}
+                                  value={token.contractAddress}
+                                  className={` text-black hover:bg-gray-200 bg-opacity-50 ${
+                                    theme === "dark"
+                                      ? "bg-[#000000]/100 border border-white text-white"
+                                      : "bg-[#FFFCFC] border border-gray-700 text-black "
+                                  }`}
+                                >
+                                  {token.symbol}
+                                </option>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* <select
                         value={selectedToken}
                         onChange={handleChange}
                         className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full md:w-[15%] sm:w-[15%] lg:w-[15%] ${
@@ -743,7 +804,7 @@ const [showTxPopup, setShowTxPopup] = useState(false);
                               {token.symbol}
                             </option>
                           ))}
-                      </select>
+                      </select> */}
                     </div>
                   </div>
 
@@ -758,7 +819,7 @@ const [showTxPopup, setShowTxPopup] = useState(false);
                     <input
                       type="email"
                       value={recipientEmail}
-                      onChange={(e) => setRecipientEmail(e.target.value)} 
+                      onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="recipient's email or address"
                       className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
                         theme === "dark"
@@ -850,7 +911,12 @@ const [showTxPopup, setShowTxPopup] = useState(false);
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenSymbol}
             status={txStatus}
-            txHash={hash || transactionHash} senderWallet={""} recipientWallet={""} customizedLink={""} recipientEmail={""}/>
+            txHash={hash || transactionHash}
+            senderWallet={""}
+            recipientWallet={""}
+            customizedLink={""}
+            recipientEmail={""}
+          />
         </div>
 
         {showAddTokenForm && (

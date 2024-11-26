@@ -56,7 +56,6 @@ body {
   --sb-track-color: linear-gradient(to right, #da619c, #ff844a), #0a11b5;
   --sb-thumb-color: white;
   --sb-size: 2px;
-
   scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
 }
 body::-webkit-scrollbar {
