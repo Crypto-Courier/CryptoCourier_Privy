@@ -52,6 +52,11 @@ const chains = [
 const ChainDropdown: React.FC = () => {
   const { theme } = useTheme();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedChain, setSelectedChain] = useState<{
+    id: number;
+    title: string;
+    img: any;
+  } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -71,6 +76,16 @@ const ChainDropdown: React.FC = () => {
     };
   }, []);
 
+  // Handle chain selection
+  const handleChainSelect = (chain: {
+    id: number;
+    title: string;
+    img: any;
+  }) => {
+    setSelectedChain(chain);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div className="relative">
       <div
@@ -81,16 +96,33 @@ const ChainDropdown: React.FC = () => {
         }`}
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
-        <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-          Select Chain
-        </span>
+        {selectedChain ? (
+          <div className="flex items-center">
+            <Image
+              src={selectedChain.img}
+              alt={selectedChain.title}
+              width={24}
+              height={24}
+              className={`mr-2 rounded-full ${
+                theme === "dark" ? "bg-white" : "bg-black"
+              }`}
+            />
+            <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+              {selectedChain.title}
+            </span>
+          </div>
+        ) : (
+          <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+            Select Chain
+          </span>
+        )}
         <ChevronDown size={20} color="#FFE500" />
       </div>
 
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className={`absolute top-12 left-0 w-[200px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
+          className={`absolute top-12 left-0 w-[200px] rounded-md shadow-lg z-10 max-h-[300px] overflow-y-auto scroll ${
             theme === "dark"
               ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
               : "bg-white text-black border border-[#C6C6C6]"
@@ -99,7 +131,10 @@ const ChainDropdown: React.FC = () => {
           {chains.map((chain) => (
             <div
               key={chain.id}
-              className={`flex items-center p-2 cursor-default hover:bg-gray-100 hover:text-black`}
+              onClick={() => handleChainSelect(chain)}
+              className={`flex items-center p-2 cursor-pointer hover:bg-gray-100 hover:text-black mb-1 ${
+                selectedChain?.id === chain.id ? "bg-gray-200 text-black" : ""
+              }`}
             >
               <Image
                 src={chain.img}

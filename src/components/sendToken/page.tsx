@@ -37,6 +37,7 @@ import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from '../../abis/TRANSACTIONS_ABI.json'
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
+import MenuDivider from "antd/es/menu/MenuDivider";
 
 interface QRScannerState {
   showQRScanner: boolean;
@@ -799,9 +800,9 @@ const SendToken = () => {
                           Max
                         </button>
                       </div>
-                      <div className="relative">
+                      <div className="relative w-[30%]">
                         <div
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full  ${
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${
                             theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC] border border-gray-700"
@@ -809,7 +810,7 @@ const SendToken = () => {
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                           <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-                            Select a token
+                            {selectedTokenSymbol || "Select a token"}
                           </span>
                           <ChevronDown size={20} color="#FFE500" />
                         </div>
@@ -823,20 +824,38 @@ const SendToken = () => {
                                 : "bg-white text-black border border-gray-700"
                             }`}
                           >
-                            {Array.isArray(tokens) &&
+                            {tokens && tokens.length === 0 ? (
+                              <div className="p-2 text-center text-gray-500">
+                                Loading...
+                              </div>
+                            ) : (
+                              Array.isArray(tokens) &&
                               tokens.map((token) => (
-                                <option
+                                <div
                                   key={token.contractAddress}
-                                  value={token.contractAddress}
-                                  className={` text-black hover:bg-gray-200 bg-opacity-50 hover:text-black cursor-pointer p-2   ${
+                                  onClick={() => {
+                                    setSelectedToken(token.contractAddress);
+                                    setSelectedTokenSymbol(token.symbol);
+                                    setIsDropdownOpen(false);
+                                    // Reset token amount when changing token
+                                    setTokenAmount("");
+                                  }}
+                                  className={`cursor-pointer p-2 hover:bg-gray-200 ${
                                     theme === "dark"
-                                      ? "bg-[#000000]/100  text-white"
-                                      : "bg-[#FFFCFC]   text-black "
+                                      ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
+                                      : "bg-[#FFFCFC] text-black hover:bg-black hover:text-white mb-1"
+                                  } ${
+                                    selectedToken === token.contractAddress
+                                      ? theme === "dark"
+                                        ? "bg-white text-black"
+                                        : "bg-black text-white"
+                                      : ""
                                   }`}
                                 >
                                   {token.symbol}
-                                </option>
-                              ))}
+                                </div>
+                              ))
+                            )}
                           </div>
                         )}
                       </div>
