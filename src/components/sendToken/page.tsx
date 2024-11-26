@@ -730,7 +730,7 @@ const SendToken = () => {
                       </div>
                       <div className="relative">
                         <div
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full md:w-[15%] sm:w-[15%] lg:w-[15%] ${
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full  ${
                             theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC] border border-gray-700"
@@ -738,7 +738,7 @@ const SendToken = () => {
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                           <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-                            Select Chain
+                            Select a token
                           </span>
                           <ChevronDown size={20} color="#FFE500" />
                         </div>
@@ -746,10 +746,10 @@ const SendToken = () => {
                         {isDropdownOpen && (
                           <div
                             ref={dropdownRef}
-                            className={`absolute top-12 left-0 w-[200px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
+                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
                               theme === "dark"
-                                ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
-                                : "bg-white text-black border border-[#C6C6C6]"
+                                ? "bg-[#1C1C1C] text-white border border-white"
+                                : "bg-white text-black border border-gray-700"
                             }`}
                           >
                             {Array.isArray(tokens) &&
@@ -757,10 +757,10 @@ const SendToken = () => {
                                 <option
                                   key={token.contractAddress}
                                   value={token.contractAddress}
-                                  className={` text-black hover:bg-gray-200 bg-opacity-50 ${
+                                  className={` text-black hover:bg-gray-200 bg-opacity-50 hover:text-black cursor-pointer p-2   ${
                                     theme === "dark"
-                                      ? "bg-[#000000]/100 border border-white text-white"
-                                      : "bg-[#FFFCFC] border border-gray-700 text-black "
+                                      ? "bg-[#000000]/100  text-white"
+                                      : "bg-[#FFFCFC]   text-black "
                                   }`}
                                 >
                                   {token.symbol}
