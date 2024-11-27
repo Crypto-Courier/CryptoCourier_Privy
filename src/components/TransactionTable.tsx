@@ -35,13 +35,16 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
       if (!activeAddress) return;
 
       setIsLoading(true);
+      const chainId = walletData?.chainId.split(':')[1];
+      const additionalChainIds = ['8453', '919', '34443'];
+      console.log("Fetching the transaction for the chainID 8453, 919, 34443 and 11155111")
+      const allChainIds = [chainId, ...additionalChainIds];
+      const chainIdQuery = allChainIds.map(id => `chainId=${id}`).join('&');
       try {
         const endpoint =
           viewMode === "dashboard"
             ? `/api/get-dashboard-transaction?walletAddress=${activeAddress}`
-            : `/api/get-transactions?walletAddress=${activeAddress}&chainId=${
-                walletData?.chainId.split(":")[1]
-              }`;
+            : `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
 
         const response = await fetch(endpoint);
         if (!response.ok) {
