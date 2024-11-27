@@ -5,17 +5,16 @@ import SwitchNetwork from "@/components/SwitchNetwork";
 import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
-import Footer from "../Footer";import {
-  useSendTransaction,
-} from "wagmi";
-import { 
+import Footer from "../Footer";
+import { useSendTransaction } from "wagmi";
+import {
   useAccount,
   useSimulateContract,
   useWriteContract,
   useWalletClient,
-  usePublicClient
-} from 'wagmi'
-import { waitForTransaction } from '@wagmi/core'
+  usePublicClient,
+} from "wagmi";
+import { waitForTransaction } from "@wagmi/core";
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import notoken from "../../assets/Not-token.gif";
@@ -34,7 +33,7 @@ import QRScanner from "../QRScanner";
 import QR from "../../assets/QR.svg";
 import { Contract } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
-import TRANSACTIONS_CONTRACT_ABI from '../../abis/TRANSACTIONS_ABI.json'
+import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
@@ -48,9 +47,9 @@ const SendToken = () => {
   const { data: hash, sendTransaction } = useSendTransaction();
   const { sendTransaction: privySendTransaction } = usePrivy();
 
-  const { data: walletClient } = useWalletClient()
-  const publicClient = usePublicClient()
-  const { writeContractAsync: approveAsync } = useWriteContract()
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
+  const { writeContractAsync: approveAsync } = useWriteContract();
 
   const [copied, setCopied] = useState(false);
   const [previousChainId, setPreviousChainId] = useState<string>("");
@@ -80,10 +79,11 @@ const SendToken = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const TRANSACTIONS_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
+  const TRANSACTIONS_CONTRACT_ADDRESS =
+    process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
 
-  if(!TRANSACTIONS_CONTRACT_ADDRESS){
-    throw new Error('Contract address is not defined');
+  if (!TRANSACTIONS_CONTRACT_ADDRESS) {
+    throw new Error("Contract address is not defined");
   }
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -476,38 +476,40 @@ const SendToken = () => {
           TRANSACTIONS_CONTRACT_ADDRESS,
           TRANSACTIONS_CONTRACT_ABI,
           walletData?.provider
-        )
+        );
 
         const tokenContract = new Contract(
           selectedTokenData.contractAddress,
           ERC20_ABI,
           walletData?.provider
-        )
+        );
 
         if (isEmailConnected) {
           const approveTx = await privySendTransaction({
             to: selectedTokenData.contractAddress,
             data: tokenContract.interface.encodeFunctionData("approve", [
               TRANSACTIONS_CONTRACT_ADDRESS,
-              tokenAmountInWei
+              tokenAmountInWei,
             ]),
-          })
+          });
 
           if (approveTx.transactionHash) {
             const tx = await privySendTransaction({
               to: TRANSACTIONS_CONTRACT_ADDRESS,
               value: additionalEthInWei,
-              data: transactionsContract.interface.encodeFunctionData("transferWithEth", [
-                selectedTokenData.contractAddress,
-                walletAddress,
-                tokenAmountInWei
-              ]),
-            })
+              data: transactionsContract.interface.encodeFunctionData(
+                "transferWithEth",
+                [
+                  selectedTokenData.contractAddress,
+                  walletAddress,
+                  tokenAmountInWei,
+                ]
+              ),
+            });
 
             if (tx.transactionHash) {
-              toast.success("Transaction completed successfully!", {
-              })
-              setTransactionHash(tx.transactionHash)
+              toast.success("Transaction completed successfully!", {});
+              setTransactionHash(tx.transactionHash);
             }
           }
         } else if (walletData?.authenticated && walletClient) {
@@ -515,61 +517,62 @@ const SendToken = () => {
             const approveTxHash = await approveAsync({
               address: selectedTokenData.contractAddress as `0x${string}`,
               abi: ERC20_ABI,
-              functionName: 'approve',
-              args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei]
-            })
-            
-            const approveReceipt = await publicClient?.waitForTransactionReceipt({
-              hash: approveTxHash,
-              confirmations: 1
-            })
+              functionName: "approve",
+              args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei],
+            });
 
-            if (approveReceipt?.status === 'success') {
+            const approveReceipt =
+              await publicClient?.waitForTransactionReceipt({
+                hash: approveTxHash,
+                confirmations: 1,
+              });
+
+            if (approveReceipt?.status === "success") {
               const transferTxHash = await approveAsync({
                 address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
                 abi: TRANSACTIONS_CONTRACT_ABI,
-                functionName: 'transferWithEth',
+                functionName: "transferWithEth",
                 args: [
                   selectedTokenData.contractAddress,
                   walletAddress,
-                  tokenAmountInWei
+                  tokenAmountInWei,
                 ],
-                value: additionalEthInWei
-              })
-              
-              const transferReceipt = await publicClient?.waitForTransactionReceipt({
-                hash: transferTxHash,
-                confirmations: 1
-              })
+                value: additionalEthInWei,
+              });
 
-              if (transferReceipt?.status === 'success') {
-                toast.success("Transaction completed successfully!", {
-                })
-                setTransactionHash(transferTxHash)
+              const transferReceipt =
+                await publicClient?.waitForTransactionReceipt({
+                  hash: transferTxHash,
+                  confirmations: 1,
+                });
+
+              if (transferReceipt?.status === "success") {
+                toast.success("Transaction completed successfully!", {});
+                setTransactionHash(transferTxHash);
               }
             }
           }
         }
       }
 
-      setRecipientWalletAddress(walletAddress)
-      toast.success(`Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`)
-
-    }
-    catch (error) {
-      toast.dismiss()
-      console.error("Error sending transaction:", error)
+      setRecipientWalletAddress(walletAddress);
+      toast.success(
+        `Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`
+      );
+    } catch (error) {
+      toast.dismiss();
+      console.error("Error sending transaction:", error);
 
       if (error instanceof Error) {
         if (error.message.includes("user rejected")) {
-          toast.error("Transaction was rejected by user")
+          toast.error("Transaction was rejected by user");
         } else if (error.message.includes("insufficient funds")) {
-          toast.error("Insufficient funds for transaction")
+          toast.error("Insufficient funds for transaction");
         } else {
-          toast.error(`Failed to send transaction: ${error.message}`)
+          toast.error(`Failed to send transaction: ${error.message}`);
         }
       } else {
-        toast.error("Failed to send transaction")
+        toast.error("Failed to send transaction");
       }
     } finally {
       setIsLoading(false);
@@ -840,10 +843,10 @@ const SendToken = () => {
                                     // Reset token amount when changing token
                                     setTokenAmount("");
                                   }}
-                                  className={`cursor-pointer p-2 hover:bg-gray-200 ${
+                                  className={`cursor-pointer p-2 ${
                                     theme === "dark"
                                       ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
-                                      : "bg-[#FFFCFC] text-black hover:bg-black hover:text-white mb-1"
+                                      : "bg-[#FFFCFC]  hover:bg-black hover:text-white mb-1"
                                   } ${
                                     selectedToken === token.contractAddress
                                       ? theme === "dark"
