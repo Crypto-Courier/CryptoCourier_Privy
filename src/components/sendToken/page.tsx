@@ -1001,7 +1001,7 @@ const SendToken = () => {
             recipientEmail={recipientEmail}
             onConfirm={handleSend}
           />
-          <TransactionPopup
+          {/* <TransactionPopup
             isOpen={showTxPopup}
             onClose={() => setShowTxPopup(false)}
             tokenAmount={tokenAmount}
@@ -1012,7 +1012,7 @@ const SendToken = () => {
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
-          />
+          /> */}
         </div>
 
         {showAddTokenForm && (

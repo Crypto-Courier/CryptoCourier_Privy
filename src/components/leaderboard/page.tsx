@@ -69,7 +69,7 @@ const LeaderBoard: React.FC = () => {
             theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
           }`}
         >
-          <div className=" mx-auto my-8 md:my-12 lg:my-16 px-4 sm:px-6 lg:px-8">
+          <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row md:flex-row items-center justify-between gap-8 ">
               <div className="flex flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
                 <Image
@@ -106,7 +106,7 @@ const LeaderBoard: React.FC = () => {
                       </button>
                     </div>
                     <div className="w-full max-w-4xl mx-auto rounded-3xl">
-                      <div className="overflow-hidden ">
+                      <div className="overflow-hidden bg-[#030303] ">
                         <div
                           className={`grid grid-cols-4 gap-2 p-2 rounded-md mb-2 ${
                             theme === "dark"
@@ -132,7 +132,7 @@ const LeaderBoard: React.FC = () => {
                         <div
                           className={` grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px]  mb-1 last:mb-0 items-center rounded-md ${
                             theme === "dark"
-                              ? "bg-[#000000]/[0.40] border border-[#E265FF]"
+                              ? "bg-gradient-to-r from-[#ff3333ca] to-[#fe670ad3] border border-[#E265FF]"
                               : "bg-[#FF3333]/[0.50] border border-[#FFFFFF]"
                           }`}
                         >
