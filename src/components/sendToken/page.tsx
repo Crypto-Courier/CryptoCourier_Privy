@@ -6,15 +6,7 @@ import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import { useSendTransaction } from "wagmi";
-import {
-  useAccount,
-  useSimulateContract,
-  useWriteContract,
-  useWalletClient,
-  usePublicClient,
-} from "wagmi";
-import { waitForTransaction } from "@wagmi/core";
+import { useSendTransaction, useWriteContract, useWalletClient, usePublicClient } from "wagmi";
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import notoken from "../../assets/Not-token.gif";
@@ -28,7 +20,6 @@ import { NewToken, TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
-import { QrReader } from "react-qr-reader";
 import QRScanner from "../QRScanner";
 import QR from "../../assets/QR.svg";
 import { Contract } from "ethers";
@@ -37,10 +28,6 @@ import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
-
-interface QRScannerState {
-  showQRScanner: boolean;
-}
 
 const SendToken = () => {
   const { walletData } = useWallet();
@@ -51,7 +38,6 @@ const SendToken = () => {
   const publicClient = usePublicClient();
   const { writeContractAsync: approveAsync } = useWriteContract();
 
-  const [copied, setCopied] = useState(false);
   const [previousChainId, setPreviousChainId] = useState<string>("");
   const router = useRouter();
   const [tokens, setTokens] = useState<TokenWithBalance[]>([]);
@@ -86,6 +72,7 @@ const SendToken = () => {
   if (!TRANSACTIONS_CONTRACT_ADDRESS) {
     throw new Error("Contract address is not defined");
   }
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -108,6 +95,7 @@ const SendToken = () => {
     setRecipientEmail(address);
     setShowQRScanner(false);
   };
+
   const OpenHistory = () => {
     router.push("/history?mode=default");
   };
@@ -206,16 +194,6 @@ const SendToken = () => {
     }
   }, [selectedToken, tokens]);
 
-  // Update token amount in form to max amount
-  const updateMaxAmount = () => {
-    const selectedTokenData = tokens.find(
-      (t) => t.contractAddress === selectedToken
-    );
-    if (selectedTokenData) {
-      setMaxAmount(selectedTokenData.balance);
-    }
-  };
-
   // Fetch token details for available token from database
   const fetchTokens = async () => {
     if (!activeAddress) {
@@ -226,8 +204,7 @@ const SendToken = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${
-          walletData?.chainId.split(":")[1]
+        `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(":")[1]
         }`
       );
       if (!response.ok) {
@@ -263,32 +240,9 @@ const SendToken = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSelectedToken = e.target.value;
-    setSelectedToken(newSelectedToken);
-    const selectedTokenData = tokens.find(
-      (t) => t.contractAddress === newSelectedToken
-    );
-    if (selectedTokenData) {
-      setTokenAmount(selectedTokenData.balance);
-      setSelectedTokenSymbol(selectedTokenData.symbol);
-      setTokenAmount("");
-    }
-  };
-
   const handleMaxClick = () => {
     setTokenAmount(maxAmount);
   };
-
-  // Copy transaction hash for transaction
-  // const copyToClipboard = () => {
-  //   if (walletData?.transactionHash) {
-  //     navigator.clipboard.writeText(walletData.transactionHash);
-  //     setCopied(true);
-  //     setTimeout(() => setCopied(false), 2000);
-  //     toast.success("Tx hash copied to clipboard");
-  //   }
-  // };
 
   // Store txn data to show txn history
   const StoreTransactionData = async (
@@ -467,11 +421,13 @@ const SendToken = () => {
             value: totalValue,
           });
           setTransactionHash(tx.transactionHash);
+          setTxStatus("success");
         } else if (walletData?.authenticated && walletClient) {
-          await sendTransaction({
+          const tx = await sendTransaction({
             to: walletAddress as `0x${string}`,
             value: totalValue,
           });
+          setTxStatus("success");
         }
       } else {
         // Handle ERC20 token transfer
@@ -513,6 +469,7 @@ const SendToken = () => {
             if (tx.transactionHash) {
               toast.success("Transaction completed successfully!", {});
               setTransactionHash(tx.transactionHash);
+              setTxStatus("success");
             }
           }
         } else if (walletData?.authenticated && walletClient) {
@@ -552,6 +509,7 @@ const SendToken = () => {
               if (transferReceipt?.status === "success") {
                 toast.success("Transaction completed successfully!", {});
                 setTransactionHash(transferTxHash);
+                setTxStatus("success");
               }
             }
           }
@@ -610,6 +568,7 @@ const SendToken = () => {
       toast.error("An unexpected error occurred");
     }
   };
+
   useEffect(() => {
     fetchTokens();
   }, [walletData?.chainId, activeAddress]); // Re-fetch tokens when chainId or activeAddress changes
@@ -631,40 +590,30 @@ const SendToken = () => {
     };
   }, [showHelp]);
 
-  const handleQRAddressFound = (address: string) => {
-    console.log("QR code scanned address:", address);
-    setRecipientEmail(address);
-    toast.success("Address set from QR code");
-  };
-
   return (
     <div className="main">
       <Navbar />
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[4rem] ">
           <div
-            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
+            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${theme === "dark" ? "bg-black" : "bg-white"
+              } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
-                theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
-              }`}
+              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
+                }`}
             >
               <div
-                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                  theme === "dark"
+                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"
-                }`}
+                  }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    theme === "dark"
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
-                  }`}
+                    }`}
                 ></div>
               </div>
               <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -675,11 +624,10 @@ const SendToken = () => {
             </div>
             <div className="text-right  items-end">
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                  theme === "dark"
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#E265FF] text-white"
-                }`}
+                  }`}
                 onClick={OpenHistory}
               >
                 Transaction History
@@ -688,11 +636,10 @@ const SendToken = () => {
           </div>
           <div>
             <div
-              className={`${
-                theme === "dark"
+              className={`${theme === "dark"
                   ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                   : "bg-white/80 backdrop-blur-[80px]"
-              } rounded-br-[40px] rounded-bl-[40px] `}
+                } rounded-br-[40px] rounded-bl-[40px] `}
             >
               <SwitchNetwork />
               <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[30px] py-[30px] justify-between items-center lg:gap-[20px] md:gap-[20px] sm:gap-[20px] gap-[30px]">
@@ -700,19 +647,17 @@ const SendToken = () => {
                   <div className="flex justify-between lg:mx-5 md:mx-5 sm:mx-5  ">
                     {" "}
                     <h3
-                      className={`text-[20px] font-medium   ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                      }`}
+                      className={`text-[20px] font-medium   ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                        }`}
                     >
                       All assets
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
-                        theme === "dark"
+                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
                           ? "bg-[#FFE500] text-[#363535]"
                           : "bg-[#E265FF] text-white"
-                      }  px-4 py-2 rounded-full text-sm`}
+                        }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
                     </button>
@@ -729,17 +674,15 @@ const SendToken = () => {
                       tokens.map((token, index) => (
                         <div
                           key={index}
-                          className={`${
-                            theme === "dark"
+                          className={`${theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC]"
-                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
+                            } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
                         >
                           <div className="flex items-center space-x-2">
                             <span
-                              className={` font-bold ${
-                                theme === "dark" ? "text-white" : "text-black"
-                              }`}
+                              className={` font-bold ${theme === "dark" ? "text-white" : "text-black"
+                                }`}
                             >
                               {token.symbol}
                             </span>
@@ -755,11 +698,10 @@ const SendToken = () => {
                     ) : (
                       <div className="flex items-center justify-center h-full">
                         <span
-                          className={` ${
-                            theme === "dark"
+                          className={` ${theme === "dark"
                               ? "text-[#DEDEDE]"
                               : "text-[#696969]"
-                          } text-center text-gray-500 text-[18px]`}
+                            } text-center text-gray-500 text-[18px]`}
                         >
                           {isConnected
                             ? `No token found`
@@ -772,47 +714,42 @@ const SendToken = () => {
                 <div className="w-full md:w-[95%] m-auto">
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                      }`}
+                      className={`block text-lg font-[500]  mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                        }`}
                     >
                       Enter token amount to send
                     </label>
                     <div className="flex lg:space-x-2 md:space-x-2 sm:space-x-2 justify-end flex-col lg:flex-row md:flex-row sm:flex-row">
                       <div
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
-                          theme === "dark"
+                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${theme === "dark"
                             ? "bg-[#000000]/50 border border-white"
                             : " bg-[#FFFCFC] border border-gray-700"
-                        }`}
+                          }`}
                       >
                         <input
                           type="text"
                           placeholder=" token amount "
                           value={tokenAmount}
                           onChange={(e) => setTokenAmount(e.target.value)}
-                          className={`w-full bg-transparent outline-none ${
-                            theme === "dark" ? "text-white" : "text-gray-800 "
-                          } `}
+                          className={`w-full bg-transparent outline-none ${theme === "dark" ? "text-white" : "text-gray-800 "
+                            } `}
                         />
                         <button
                           onClick={handleMaxClick}
-                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${
-                            theme === "dark"
+                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${theme === "dark"
                               ? "text-[#E265FF]"
                               : "text-[#FF336A]"
-                          }`}
+                            }`}
                         >
                           Max
                         </button>
                       </div>
                       <div className="relative w-[30%]">
                         <div
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${
-                            theme === "dark"
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC] border border-gray-700"
-                          }`}
+                            }`}
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                           <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -824,11 +761,10 @@ const SendToken = () => {
                         {isDropdownOpen && (
                           <div
                             ref={dropdownRef}
-                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
-                              theme === "dark"
+                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${theme === "dark"
                                 ? "bg-[#1C1C1C] text-white border border-white"
                                 : "bg-white text-black border border-gray-700"
-                            }`}
+                              }`}
                           >
                             {tokens && tokens.length === 0 ? (
                               <div className="p-2 text-center text-gray-500">
@@ -846,17 +782,15 @@ const SendToken = () => {
                                     // Reset token amount when changing token
                                     setTokenAmount("");
                                   }}
-                                  className={`cursor-pointer p-2 ${
-                                    theme === "dark"
+                                  className={`cursor-pointer p-2 ${theme === "dark"
                                       ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
                                       : "bg-[#FFFCFC]  hover:bg-black hover:text-white mb-1"
-                                  } ${
-                                    selectedToken === token.contractAddress
+                                    } ${selectedToken === token.contractAddress
                                       ? theme === "dark"
                                         ? "bg-white text-black"
                                         : "bg-black text-white"
                                       : ""
-                                  }`}
+                                    }`}
                                 >
                                   {token.symbol}
                                 </div>
@@ -865,50 +799,13 @@ const SendToken = () => {
                           </div>
                         )}
                       </div>
-                      {/* <select
-                        value={selectedToken}
-                        onChange={handleChange}
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none w-full md:w-[15%] sm:w-[15%] lg:w-[15%] ${
-                          theme === "dark"
-                            ? "bg-[#000000]/50 border border-white"
-                            : " bg-[#FFFCFC] border border-gray-700"
-                        }`}
-                      >
-                        <option
-                          value=""
-                          disabled
-                          selected
-                          className={` text-black hover:bg-gray-200 bg-opacity-50 ${
-                            theme === "dark"
-                              ? "bg-[#000000]/100 border border-white text-white"
-                              : " bg-[#FFFCFC] border border-gray-700 text-black "
-                          }`}
-                        >
-                          Select a token
-                        </option>
-                        {Array.isArray(tokens) &&
-                          tokens.map((token) => (
-                            <option
-                              key={token.contractAddress}
-                              value={token.contractAddress}
-                              className={` text-black hover:bg-gray-200 bg-opacity-50 ${
-                                theme === "dark"
-                                  ? "bg-[#000000]/100 border border-white text-white"
-                                  : "bg-[#FFFCFC] border border-gray-700 text-black "
-                              }`}
-                            >
-                              {token.symbol}
-                            </option>
-                          ))}
-                      </select> */}
                     </div>
                   </div>
 
                   <div>
                     <label
-                      className={`block text-lg font-[500] mb-1 ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                      }`}
+                      className={`block text-lg font-[500] mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                        }`}
                     >
                       Enter recipient's email or address
                     </label>
@@ -917,19 +814,17 @@ const SendToken = () => {
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="recipient's email or address"
-                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
-                        theme === "dark"
+                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${theme === "dark"
                           ? "bg-[#000000]/50 border border-white"
                           : " bg-[#FFFCFC] border border-gray-700"
-                      }`}
+                        }`}
                     />
                     <button
                       onClick={() => setShowQRScanner(true)}
-                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${
-                        theme === "dark"
+                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${theme === "dark"
                           ? "bg-[#000000]/50 border border-white text-white"
                           : "bg-[#FFFCFC] border border-gray-700 text-black"
-                      }`}
+                        }`}
                       type="button"
                       aria-label="Scan QR Code"
                     >
@@ -950,39 +845,6 @@ const SendToken = () => {
                       {isLoading ? "SENDING..." : "SEND"}
                     </button>
                   </div>
-                  {/* {hash && (
-                    <div className="mt-5">
-                      <label
-                        className={`block text-lg font-[500]  mb-1 ${
-                          theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                        }`}
-                      >
-                        Txn Hash:
-                      </label>
-                      <div
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
-                          theme === "dark"
-                            ? "bg-[#000000]/50 border border-white"
-                            : " bg-[#FFFCFC]"
-                        }`}
-                      >
-                        {hash ? `${hash.slice(0, 20)}...${hash.slice(-7)}` : ""}
-
-                        <button
-                          className={`p-1 text-[#FF336A] transition-colors ${
-                            copied ? "text-[#FF336A]" : ""
-                          }`}
-                          onClick={copyToClipboard}
-                        >
-                          {copied ? (
-                            <CheckCircle className="w-4 h-4" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  )} */}
                 </div>
               </div>
             </div>

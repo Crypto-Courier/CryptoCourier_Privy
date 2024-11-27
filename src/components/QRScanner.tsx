@@ -23,7 +23,7 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
         onScan(address); // Pass only the Ethereum address
         onClose();
       } else {
-        setError("Invalid wallet address QR code");
+        setError("Invalid wallet address in QR code");
       }
     }
   };
