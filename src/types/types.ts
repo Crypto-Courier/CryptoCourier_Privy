@@ -66,6 +66,7 @@ export interface SendEmailParams {
   htmlContent: string;
   tokenAmount: string;
   tokenSymbol: string;
+  senderWallet: string;
 }
 
 export interface TokenDetails {

@@ -85,6 +85,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         htmlContent,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
+        senderWallet:tx.senderWallet,
       });
       toast.success("Email resent successfully!");
     } catch (error) {
