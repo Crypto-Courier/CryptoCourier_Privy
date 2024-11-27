@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Copy, CheckCircle } from "lucide-react";
 import wallet from "../assets/wallet.png";
 import Image from "next/image";
@@ -7,6 +7,7 @@ import trx2 from "../assets/trx2.png";
 import { TxDetailsProps } from "../types/types";
 import spinner from "../assets/spinner.gif";
 import toast from "react-hot-toast";
+import axios from "axios";
 const TxDetails: React.FC<TxDetailsProps> = ({
   isOpen,
   onClose,
@@ -20,8 +21,40 @@ const TxDetails: React.FC<TxDetailsProps> = ({
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false); // Add this state
+  const [checking, setChecking] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+
+    if (!isOpen || !recipientEmail) return;
+
+    const checkWallet = async () => {
+      setChecking(true);
+
+      try {
+        const response = await axios.post('/api/search', { email: recipientEmail });
+
+        if (response.data) {
+          setWalletAddress(response.data); // Set the wallet address
+          setIsWalletCreated(true); // Indicate the wallet is created
+        } else {
+          setIsWalletCreated(false); // No wallet found
+        }
+      } catch (error) {
+        console.error('Error checking wallet:', error);
+        setIsWalletCreated(false); // Handle the error state
+      } finally {
+        setChecking(false)
+      }
+    };
+
+    checkWallet();
+  }, [isOpen, recipientEmail]);
+
+  const handleCancel = () => {
+    setWalletAddress(""); // Reset walletAddress
+    setIsWalletCreated(false); // Reset wallet creation state
+    onClose(); // Close the modal
+  };
 
   const handleCreateWallet = async () => {
     setLoading(true); // Set loading to true when the API call starts
@@ -65,14 +98,16 @@ const TxDetails: React.FC<TxDetailsProps> = ({
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
       <div
-        className={`rounded-[10px] max-w-lg w-full mx-4 relative ${
-          theme === "dark"
+        className={`rounded-[10px] max-w-lg w-full mx-4 relative ${theme === "dark"
             ? "bg-[#111111] border-[#FE660A] border backdrop-blur-[10px]"
             : "bg-[#FFFCFC] border border-[#FE005B]/60"
-        }`}
+          }`}
       >
         <button
           onClick={onClose}
@@ -82,11 +117,10 @@ const TxDetails: React.FC<TxDetailsProps> = ({
         </button>
 
         <div
-          className={`flex justify-center items-center lg:p-6 md:p-6 sm:p-6 p-4 rounded-tr-[10px] rounded-tl-[10px] ${
-            theme === "dark"
+          className={`flex justify-center items-center lg:p-6 md:p-6 sm:p-6 p-4 rounded-tr-[10px] rounded-tl-[10px] ${theme === "dark"
               ? "bg-[#000000] border-b-2 border-[#FE660A]"
               : "bg-white border-b-2 border-[#FE005B]"
-          }`}
+            }`}
         >
           <div className="flex items-center flex-col">
             <div className="lg:w-8 lg:h-8 md:w-8 md:h-8 sm:w-8 sm:h-8 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center mb-2">
@@ -97,9 +131,8 @@ const TxDetails: React.FC<TxDetailsProps> = ({
               )}
             </div>
             <h2
-              className={`text-md lg:text-xl md:text-xl sm:text-xl font-bold ${
-                theme === "dark" ? "text-white" : "text-black"
-              }`}
+              className={`text-md lg:text-xl md:text-xl sm:text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"
+                }`}
             >
               {isWalletCreated ? "Transaction Details" : "Create Wallet"}
             </h2>
@@ -111,31 +144,30 @@ const TxDetails: React.FC<TxDetailsProps> = ({
             <div>
               <div className="flex gap-4 mb-2 mt-2 flex-col w-[80%] m-auto">
                 <div
-                  className={`item-start font-semibold  ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
+                  className={`item-start font-semibold  ${theme === "dark" ? "text-white" : "text-black"
+                    }`}
                 >
                   A new wallet will be created as
                 </div>
                 <div
-                  className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${
-                    theme === "dark"
+                  className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
                       ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                  } `}
+                    } `}
                 >
                   {recipientEmail}
                 </div>
                 <button
                   onClick={handleCreateWallet}
-                  disabled={loading}
-                  className={`${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                  } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
+                  disabled={loading || checking}
+                  className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
                 >
-                  {
-                    loading ? "Creating..." : "Create Wallet" // Show button text when not loading
-                  }
+                  {checking
+                    ? "Searching for existing wallet..."
+                    : loading
+                      ? "Creating..."
+                      : "Create Wallet"}
                 </button>
               </div>
             </div>
@@ -145,11 +177,10 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                 <div className="item-start font-semibold">Send</div>
 
                 <p
-                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${
-                    theme === "dark"
+                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
                       ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                  }`}
+                    }`}
                 >
                   {tokenAmount} {tokenSymbol} to {recipientEmail}
                 </p>
@@ -158,21 +189,19 @@ const TxDetails: React.FC<TxDetailsProps> = ({
                   New Wallet for Recipient
                 </div>
                 <p
-                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${
-                    theme === "dark"
+                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${theme === "dark"
                       ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                  }`}
+                    }`}
                 >
                   {walletAddress
                     ? `${walletAddress.slice(0, 10)}...${walletAddress.slice(
-                        -7
-                      )}`
+                      -7
+                    )}`
                     : ""}
                   <button
-                    className={`p-1 text-[#FFE500] transition-colors ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-[#0052FF]"
-                    }`}
+                    className={`p-1 text-[#FFE500] transition-colors ${theme === "dark" ? "text-[#FFE500]" : "text-[#0052FF]"
+                      }`}
                     onClick={copyToClipboard}
                   >
                     {copied ? (
@@ -189,20 +218,18 @@ const TxDetails: React.FC<TxDetailsProps> = ({
 
               <div className="flex gap-5 w-[80%] m-auto">
                 <button
-                  onClick={onClose}
-                  className={`${
-                    theme === "dark"
+                  onClick={handleCancel}
+                  className={`${theme === "dark"
                       ? "border border-[#FE660A]"
                       : "border border-[#0052FF] text-[#0052FF]"
-                  } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
+                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className={`${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                  } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
+                  className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
                 >
                   Confirm
                 </button>
