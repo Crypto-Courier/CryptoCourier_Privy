@@ -17,7 +17,7 @@ import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
-import ChainDropdown from "../ChainDropdown";
+import SwitchNetwork from "../SwitchNetwork";
 
 const History: React.FC = () => {
   const router = useRouter();
@@ -261,8 +261,7 @@ const History: React.FC = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
-            {/* {renderWalletAddress()} */}
-            <ChainDropdown />
+            {renderWalletAddress()}
             <div className="text-right flex items-end">
               <div className="gap-4 flex">
                 <button
@@ -304,13 +303,18 @@ const History: React.FC = () => {
           </div>
 
           <div
-            className={`pt-6 pb-6 ${
+            className={`${
               theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
+            } `}
           >
-            <TransactionTable viewMode={viewMode} />
+            <SwitchNetwork />
+            <div
+              className={` pt-6 pb-6 rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
+            >
+              <TransactionTable viewMode={viewMode} />
+            </div>
           </div>
         </div>
       </div>
