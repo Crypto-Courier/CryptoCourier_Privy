@@ -71,6 +71,7 @@ const SendToken = () => {
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
+  const [senderWallet, setsenderWallet] = useState("");
 
   const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
@@ -169,6 +170,7 @@ const SendToken = () => {
             recipientEmail={recipientEmail}
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenData.symbol}
+            senderWallet={senderWallet}
           />
         );
         sendEmail({
@@ -177,6 +179,7 @@ const SendToken = () => {
           htmlContent: emailContent,
           tokenAmount,
           tokenSymbol: selectedTokenData.symbol,
+          senderWallet,
         });
         StoreTransactionData(
           recipientWalletAddress,
