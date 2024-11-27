@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         { chainId: { $in: chainIds } }
       ]
     }).project({
-      // senderWallet: 1,
+      senderWallet: 1,
       recipientWallet: 1,
       tokenAmount: 1,
       tokenSymbol: 1,
