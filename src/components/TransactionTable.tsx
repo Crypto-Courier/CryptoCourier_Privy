@@ -35,11 +35,13 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
       if (!activeAddress) return;
 
       setIsLoading(true);
-      const chainId = walletData?.chainId.split(':')[1];
-      const additionalChainIds = ['8453', '919', '34443'];
-      console.log("Fetching the transaction for the chainID 8453, 919, 34443 and 11155111")
+      const chainId = walletData?.chainId.split(":")[1];
+      const additionalChainIds = ["8453", "919", "34443"];
+      console.log(
+        "Fetching the transaction for the chainID 8453, 919, 34443 and 11155111"
+      );
       const allChainIds = [chainId, ...additionalChainIds];
-      const chainIdQuery = allChainIds.map(id => `chainId=${id}`).join('&');
+      const chainIdQuery = allChainIds.map((id) => `chainId=${id}`).join("&");
       try {
         const endpoint =
           viewMode === "dashboard"
@@ -74,6 +76,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         recipientEmail: tx.recipientEmail,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
+        senderWallet: tx.senderWallet,
       });
 
       await sendEmail({
@@ -227,7 +230,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
             )
           ) : (
             <div
-              className={`text-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
+              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
                 theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
               }`}
             >
