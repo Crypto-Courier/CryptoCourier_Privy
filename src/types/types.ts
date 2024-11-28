@@ -81,6 +81,7 @@ export interface Transaction {
   tokenSymbol: string;
   customizedLink: string;
   recipientEmail: string;
+  senderIdentifier:string
 }
 
 export interface AddTokenFormProps {
