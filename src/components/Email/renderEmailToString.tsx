@@ -5,7 +5,7 @@ export function renderEmailToString(props: {
   recipientEmail: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderWallet: string;
+  senderIdentifier:string
 }): string {
   const emailContent = ReactDOMServer.renderToStaticMarkup(
     <Email {...props} />

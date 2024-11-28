@@ -76,7 +76,6 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         recipientEmail: tx.recipientEmail,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
-        senderWallet: tx.senderWallet,
       });
 
       await sendEmail({
@@ -85,7 +84,6 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
         htmlContent,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
-        senderWallet:tx.senderWallet,
       });
       toast.success("Email resent successfully!");
     } catch (error) {

@@ -106,7 +106,7 @@ const LeaderBoard: React.FC = () => {
                       </button>
                     </div>
                     <div className="w-full max-w-4xl mx-auto rounded-3xl">
-                      <div className="overflow-hidden bg-[#030303] ">
+                      <div className="overflow-hidden bg-[#030303] rounded-md ">
                         <div
                           className={`grid grid-cols-4 gap-2 p-2 rounded-md mb-2 ${
                             theme === "dark"

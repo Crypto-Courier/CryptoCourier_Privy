@@ -6,7 +6,12 @@ import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import { useSendTransaction, useWriteContract, useWalletClient, usePublicClient } from "wagmi";
+import {
+  useSendTransaction,
+  useWriteContract,
+  useWalletClient,
+  usePublicClient,
+} from "wagmi";
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import notoken from "../../assets/Not-token.gif";
@@ -58,6 +63,7 @@ const SendToken = () => {
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
   const [senderWallet, setsenderWallet] = useState("");
+  const { user } = usePrivy();
 
   const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
@@ -146,6 +152,15 @@ const SendToken = () => {
     }
   }, [tokens, selectedToken]);
 
+  const getSenderIdentifier = (user: any) => {
+    // If Privy wallet client and email exists, return email
+    if (user.wallet?.walletClientType === "privy" && user.email?.address) {
+      return user.email.address;
+    }
+
+    // Otherwise, return wallet address
+    return user.wallet?.address;
+  };
   // When hash is available for txn, email should be sent to receiver
   useEffect(() => {
     if (hash || transactionHash) {
@@ -153,12 +168,13 @@ const SendToken = () => {
         (t) => t.contractAddress === selectedToken
       );
       if (selectedTokenData) {
+        const senderIdentifier = getSenderIdentifier(user);
         const emailContent = renderToString(
           <Email
             recipientEmail={recipientEmail}
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenData.symbol}
-            senderWallet={senderWallet}
+            senderIdentifier={senderIdentifier} // Pass sender identifier to email component
           />
         );
         sendEmail({
@@ -167,7 +183,7 @@ const SendToken = () => {
           htmlContent: emailContent,
           tokenAmount,
           tokenSymbol: selectedTokenData.symbol,
-          senderWallet,
+          senderIdentifier,
         });
         StoreTransactionData(
           recipientWalletAddress,
@@ -204,7 +220,8 @@ const SendToken = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(":")[1]
+        `/api/get-tokens?address=${activeAddress}&chainId=${
+          walletData?.chainId.split(":")[1]
         }`
       );
       if (!response.ok) {
@@ -596,24 +613,28 @@ const SendToken = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[4rem] ">
           <div
-            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${theme === "dark" ? "bg-black" : "bg-white"
-              } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
+            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${
+              theme === "dark" ? "bg-black" : "bg-white"
+            } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
-                }`}
+              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
+                theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
+              }`}
             >
               <div
-                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
+                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+                  theme === "dark"
                     ? "border-white bg-transparent"
                     : "border-gray-500 bg-transparent"
-                  }`}
+                }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    theme === "dark"
                       ? "bg-[#FFE500] text-[#363535]"
                       : "bg-[#E265FF] text-white"
-                    }`}
+                  }`}
                 ></div>
               </div>
               <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -624,10 +645,11 @@ const SendToken = () => {
             </div>
             <div className="text-right  items-end">
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
+                  theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#E265FF] text-white"
-                  }`}
+                }`}
                 onClick={OpenHistory}
               >
                 Transaction History
@@ -636,10 +658,11 @@ const SendToken = () => {
           </div>
           <div>
             <div
-              className={`${theme === "dark"
+              className={`${
+                theme === "dark"
                   ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                   : "bg-white/80 backdrop-blur-[80px]"
-                } rounded-br-[40px] rounded-bl-[40px] `}
+              } rounded-br-[40px] rounded-bl-[40px] `}
             >
               <SwitchNetwork />
               <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[30px] py-[30px] justify-between items-center lg:gap-[20px] md:gap-[20px] sm:gap-[20px] gap-[30px]">
@@ -647,17 +670,19 @@ const SendToken = () => {
                   <div className="flex justify-between lg:mx-5 md:mx-5 sm:mx-5  ">
                     {" "}
                     <h3
-                      className={`text-[20px] font-medium   ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                        }`}
+                      className={`text-[20px] font-medium   ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                      }`}
                     >
                       All assets
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
+                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
+                        theme === "dark"
                           ? "bg-[#FFE500] text-[#363535]"
                           : "bg-[#E265FF] text-white"
-                        }  px-4 py-2 rounded-full text-sm`}
+                      }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
                     </button>
@@ -674,15 +699,17 @@ const SendToken = () => {
                       tokens.map((token, index) => (
                         <div
                           key={index}
-                          className={`${theme === "dark"
+                          className={`${
+                            theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC]"
-                            } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
+                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
                         >
                           <div className="flex items-center space-x-2">
                             <span
-                              className={` font-bold ${theme === "dark" ? "text-white" : "text-black"
-                                }`}
+                              className={` font-bold ${
+                                theme === "dark" ? "text-white" : "text-black"
+                              }`}
                             >
                               {token.symbol}
                             </span>
@@ -698,10 +725,11 @@ const SendToken = () => {
                     ) : (
                       <div className="flex items-center justify-center h-full">
                         <span
-                          className={` ${theme === "dark"
+                          className={` ${
+                            theme === "dark"
                               ? "text-[#DEDEDE]"
                               : "text-[#696969]"
-                            } text-center text-gray-500 text-[18px]`}
+                          } text-center text-gray-500 text-[18px]`}
                         >
                           {isConnected
                             ? `No token found`
@@ -714,42 +742,47 @@ const SendToken = () => {
                 <div className="w-full md:w-[95%] m-auto">
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                        }`}
+                      className={`block text-lg font-[500]  mb-1 ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                      }`}
                     >
                       Enter token amount to send
                     </label>
                     <div className="flex lg:space-x-2 md:space-x-2 sm:space-x-2 justify-end flex-col lg:flex-row md:flex-row sm:flex-row">
                       <div
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${theme === "dark"
+                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
+                          theme === "dark"
                             ? "bg-[#000000]/50 border border-white"
                             : " bg-[#FFFCFC] border border-gray-700"
-                          }`}
+                        }`}
                       >
                         <input
                           type="text"
                           placeholder=" token amount "
                           value={tokenAmount}
                           onChange={(e) => setTokenAmount(e.target.value)}
-                          className={`w-full bg-transparent outline-none ${theme === "dark" ? "text-white" : "text-gray-800 "
-                            } `}
+                          className={`w-full bg-transparent outline-none ${
+                            theme === "dark" ? "text-white" : "text-gray-800 "
+                          } `}
                         />
                         <button
                           onClick={handleMaxClick}
-                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${theme === "dark"
+                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${
+                            theme === "dark"
                               ? "text-[#E265FF]"
                               : "text-[#FF336A]"
-                            }`}
+                          }`}
                         >
                           Max
                         </button>
                       </div>
                       <div className="relative w-[30%]">
                         <div
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${theme === "dark"
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${
+                            theme === "dark"
                               ? "bg-[#000000]/50 border border-white"
                               : " bg-[#FFFCFC] border border-gray-700"
-                            }`}
+                          }`}
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                           <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -761,10 +794,11 @@ const SendToken = () => {
                         {isDropdownOpen && (
                           <div
                             ref={dropdownRef}
-                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${theme === "dark"
+                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
+                              theme === "dark"
                                 ? "bg-[#1C1C1C] text-white border border-white"
                                 : "bg-white text-black border border-gray-700"
-                              }`}
+                            }`}
                           >
                             {tokens && tokens.length === 0 ? (
                               <div className="p-2 text-center text-gray-500">
@@ -782,15 +816,17 @@ const SendToken = () => {
                                     // Reset token amount when changing token
                                     setTokenAmount("");
                                   }}
-                                  className={`cursor-pointer p-2 ${theme === "dark"
+                                  className={`cursor-pointer p-2 ${
+                                    theme === "dark"
                                       ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
                                       : "bg-[#FFFCFC]  hover:bg-black hover:text-white mb-1"
-                                    } ${selectedToken === token.contractAddress
+                                  } ${
+                                    selectedToken === token.contractAddress
                                       ? theme === "dark"
                                         ? "bg-white text-black"
                                         : "bg-black text-white"
                                       : ""
-                                    }`}
+                                  }`}
                                 >
                                   {token.symbol}
                                 </div>
@@ -804,8 +840,9 @@ const SendToken = () => {
 
                   <div>
                     <label
-                      className={`block text-lg font-[500] mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                        }`}
+                      className={`block text-lg font-[500] mb-1 ${
+                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                      }`}
                     >
                       Enter recipient's email or address
                     </label>
@@ -814,17 +851,19 @@ const SendToken = () => {
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="recipient's email or address"
-                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${theme === "dark"
+                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
+                        theme === "dark"
                           ? "bg-[#000000]/50 border border-white"
                           : " bg-[#FFFCFC] border border-gray-700"
-                        }`}
+                      }`}
                     />
                     <button
                       onClick={() => setShowQRScanner(true)}
-                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${theme === "dark"
+                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${
+                        theme === "dark"
                           ? "bg-[#000000]/50 border border-white text-white"
                           : "bg-[#FFFCFC] border border-gray-700 text-black"
-                        }`}
+                      }`}
                       type="button"
                       aria-label="Scan QR Code"
                     >
