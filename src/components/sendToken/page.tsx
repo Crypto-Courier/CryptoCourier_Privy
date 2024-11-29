@@ -157,9 +157,11 @@ const SendToken = () => {
     if (user.wallet?.walletClientType === "privy" && user.email?.address) {
       return user.email.address;
     }
-
-    // Otherwise, return wallet address
-    return user.wallet?.address;
+    if (user.wallet?.address) {
+      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(
+        -4
+      )}`;
+    }
   };
   // When hash is available for txn, email should be sent to receiver
   useEffect(() => {

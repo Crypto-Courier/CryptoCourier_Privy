@@ -41,10 +41,7 @@ export default async function handler(
     );
 
     // Search for users by email
-    // const users = await privyClient.getUserByEmail(email);
-    const users = await privyClient.getUserByWalletAddress(
-      "0xABCDEFGHIJKL01234567895C5cAe8B9472c14328"
-    );
+    const users = await privyClient.getUserByEmail(email);
 
     // Use type assertion to tell TypeScript about the expected structure
     const walletAccount = users?.linkedAccounts?.find(

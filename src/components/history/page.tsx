@@ -18,6 +18,7 @@ import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
 import SwitchNetwork from "../SwitchNetwork";
+import SwitchHistory from "../SwitchHistory";
 
 const History: React.FC = () => {
   const router = useRouter();
@@ -309,7 +310,7 @@ const History: React.FC = () => {
                 : "bg-white/80 backdrop-blur-[80px]"
             } `}
           >
-            <SwitchNetwork />
+            <SwitchHistory />
             <div
               className={` pt-6 pb-6 rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
             >
