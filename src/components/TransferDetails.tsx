@@ -145,7 +145,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   className={`item-start font-semibold  ${theme === "dark" ? "text-white" : "text-black"
                     }`}
                 >
-                  A new wallet will be created as
+                  {checking ? "Searching embedded wallet for" : "A new wallet will be created for"}
                 </div>
                 <div
                   className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
