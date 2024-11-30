@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { QrReader } from "react-qr-reader";
-
-interface QRScannerProps {
-  onScan: (address: string) => void;
-  onClose: () => void;
-}
-
-interface QRResult {
-  text: string;
-}
+import { ethers } from "ethers";
+import { QRScannerProps, QRResult } from "../types/scannerTypes"
 
 const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
   const [error, setError] = useState<string>("");
@@ -17,20 +10,14 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
     if (result) {
       // Validate if the scanned result is an Ethereum address
       const address = result.text.split("ethereum:")[1];
-      const addressRegex = /^0x[a-fA-F0-9]{40}$/;
 
-      if (address && addressRegex.test(address)) {
+      if (address && ethers.isAddress(address)) {
         onScan(address); // Pass only the Ethereum address
         onClose();
       } else {
         setError("Invalid wallet address in QR code");
       }
     }
-  };
-
-  const handleError = (err: Error): void => {
-    console.error(err);
-    setError("Error accessing camera");
   };
 
   return (

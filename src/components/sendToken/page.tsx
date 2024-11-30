@@ -7,7 +7,6 @@ import "../../styles/History.css";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import {
-  useSendTransaction,
   useWriteContract,
   useWalletClient,
   usePublicClient,
@@ -38,7 +37,6 @@ import MenuDivider from "antd/es/menu/MenuDivider";
 
 const SendToken = () => {
   const { walletData } = useWallet();
-  // const { data: hash, sendTransaction } = useSendTransaction();
   const { sendTransaction: privySendTransaction } = usePrivy();
 
   const { data: walletClient } = useWalletClient();
@@ -565,7 +563,7 @@ const SendToken = () => {
         } else if (error.message.includes("insufficient funds")) {
           toast.error("Insufficient funds for transaction");
         } else {
-          toast.error(`Failed to send transaction: ${error.message}`);
+          toast.error("Failed to send transaction");
         }
       } else {
         toast.error("Failed to send transaction");
