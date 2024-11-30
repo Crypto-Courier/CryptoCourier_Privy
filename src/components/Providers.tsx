@@ -38,7 +38,7 @@ import {
 import { WalletProvider } from "../context/WalletContext";
 import { Tooltip } from "antd";
 
-const wagmiConfig = createConfig({
+export const wagmiConfig = createConfig({
   chains: [
     base,
     fraxtal,

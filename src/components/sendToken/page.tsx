@@ -12,6 +12,7 @@ import {
   useWalletClient,
   usePublicClient,
 } from "wagmi";
+import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core'
 import { parseUnits } from "viem";
 import { toast, Toaster } from "react-hot-toast";
 import notoken from "../../assets/Not-token.gif";
@@ -30,13 +31,14 @@ import QR from "../../assets/QR.svg";
 import { Contract } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
+import { wagmiConfig } from "../Providers";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
 
 const SendToken = () => {
   const { walletData } = useWallet();
-  const { data: hash, sendTransaction } = useSendTransaction();
+  // const { data: hash, sendTransaction } = useSendTransaction();
   const { sendTransaction: privySendTransaction } = usePrivy();
 
   const { data: walletClient } = useWalletClient();
@@ -165,7 +167,7 @@ const SendToken = () => {
   };
   // When hash is available for txn, email should be sent to receiver
   useEffect(() => {
-    if (hash || transactionHash) {
+    if (transactionHash) {
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
       );
@@ -199,7 +201,7 @@ const SendToken = () => {
         setRecipientEmail("");
       }
     }
-  }, [hash || transactionHash]);
+  }, [transactionHash]);
 
   useEffect(() => {
     if (selectedToken) {
@@ -222,8 +224,7 @@ const SendToken = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${
-          walletData?.chainId.split(":")[1]
+        `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(":")[1]
         }`
       );
       if (!response.ok) {
@@ -283,7 +284,7 @@ const SendToken = () => {
           tokenAmount,
           tokenSymbol: selectedTokenData,
           recipientEmail,
-          transactionHash: hash || transactionHash,
+          transactionHash: transactionHash,
           chainId: walletData?.chainId.split(":")[1],
         }),
       });
@@ -305,114 +306,14 @@ const SendToken = () => {
     }
   };
 
-  // Handler for sending transaction
-  // const handleSend = async (walletAddress: string) => {
-  //   try {
-  //     setIsLoading(true);
-  //     const selectedTokenData = tokens.find(
-  //       (t) => t.contractAddress === selectedToken
-  //     );
-  //     if (!selectedTokenData) {
-  //       throw new Error("Selected token not found");
-  //     }
-
-  //     const amountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
-
-  //     if (isEmailConnected) {
-  //       // Use Privy's sendTransaction for email-connected users
-  //       const tx = await privySendTransaction({
-  //         to: walletAddress,
-  //         value: amountInWei,
-  //       });
-  //       setTransactionHash(tx.transactionHash);
-  //       console.log("Transaction hash:", transactionHash);
-  //     } else if (walletData?.authenticated) {
-  //       await sendTransaction({
-  //         to: walletAddress as `0x${string}`,
-  //         value: amountInWei,
-  //       });
-  //     } else {
-  //       throw new Error("No wallet connected");
-  //     }
-
-  //     setRecipientWalletAddress(walletAddress);
-  //   } catch (error) {
-  //     console.error("Error sending transaction:", error);
-  //     toast.error("Failed to send transaction");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // const handleSend = async (walletAddress: string) => {
-  //   try {
-  //     setIsLoading(true);
-  //     const selectedTokenData = tokens.find(
-  //       (t) => t.contractAddress === selectedToken
-  //     );
-  //     if (!selectedTokenData) {
-  //       throw new Error("Selected token not found");
-  //     }
-
-  //     // Calculate the token amount in Wei
-  //     const tokenAmountInWei = parseUnits(tokenAmount, selectedTokenData.decimals);
-
-  //     // Calculate 0.002 ETH in Wei (fixed amount)
-  //     const additionalEthInWei = parseUnits("0.0002", 18);
-
-  //     if (isEmailConnected) {
-  //       // For Privy users, we need to send two separate transactions
-  //       // First send the token amount
-
-  //       const totalValue = tokenAmountInWei + additionalEthInWei;
-
-  //       const tokenTx = await privySendTransaction({
-  //         to: walletAddress,
-  //         value: totalValue,
-  //       });
-
-  //       // Then send the additional ETH
-  //       // const ethTx = await privySendTransaction({
-  //       //   to: walletAddress,
-  //       //   value: additionalEthInWei,
-  //       // });
-
-  //       // Store the last transaction hash
-  //       setTransactionHash(tokenTx.transactionHash);
-  //       console.log("Transaction hashes:", tokenTx.transactionHash/*, ethTx.transactionHash*/);
-
-  //     } else if (walletData?.authenticated) {
-  //       // For regular wallet users, we can combine both values
-  //       const totalValue = tokenAmountInWei + additionalEthInWei;
-
-  //       await sendTransaction({
-  //         to: walletAddress as `0x${string}`,
-  //         value: totalValue,
-  //         // You might want to add gas estimation here
-  //         // gas: await estimateGas({ ... }),
-  //       });
-  //     } else {
-  //       throw new Error("No wallet connected");
-  //     }
-
-  //     setRecipientWalletAddress(walletAddress);
-
-  //     // Show success message for bundled transaction
-  //     toast.success("Sending token amount plus 0.002 ETH");
-
-  //   } catch (error) {
-  //     console.error("Error sending bundled transaction:", error);
-  //     toast.error("Failed to send bundled transaction");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
+  // Handling the transaction for embedded as well as external wallets
   const handleSend = async (walletAddress: string) => {
     try {
       setTxStatus("pending");
       setShowTxPopup(true);
       setIsLoading(true);
+
+      // Find Token contract address from the token data to interact
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
       );
@@ -430,32 +331,76 @@ const SendToken = () => {
       // Additional ETH amount in Wei
       const additionalEthInWei = parseUnits("0.0002", 18);
 
+      // Tokens are sent only to recipients who have been invited via email.
+      const totalValue = tokenAmountInWei + additionalEthInWei;
+
+      // Handle native token (ETH) transfer
       if (selectedToken === "native") {
-        // Handle native token (ETH) transfer
-        const totalValue = tokenAmountInWei + additionalEthInWei;
 
         if (isEmailConnected) {
-          const tx = await privySendTransaction({
-            to: walletAddress,
-            value: totalValue,
-          });
-          setTransactionHash(tx.transactionHash);
-          setTxStatus("success");
+          // Embedded wallet is connected and native token is selected
+
+          if (!isValidEmail(recipientEmail)) {
+            // Sending through EOA or Scanning
+            const tx = await privySendTransaction({
+              to: walletAddress,
+              value: tokenAmountInWei,
+            });
+            setTransactionHash(tx.transactionHash);
+            setTxStatus("success");
+          } else {
+            // Sedning through Email or Inviting
+            const tx = await privySendTransaction({
+              to: walletAddress,
+              value: totalValue,
+            });
+            setTransactionHash(tx.transactionHash);
+            setTxStatus("success");
+          }
         } else if (walletData?.authenticated && walletClient) {
-          const tx = await sendTransaction({
-            to: walletAddress as `0x${string}`,
-            value: totalValue,
-          });
-          setTxStatus("success");
+          // External wallet is connected and native token is selected
+
+          if (!isValidEmail(recipientEmail)) {
+            // Sending through EOA or Scanning
+            const tx = await sendTransaction(wagmiConfig, {
+              to: walletAddress as `0x${string}`,
+              value: tokenAmountInWei,
+            });
+            const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: tx });
+            if (receipt.status === "success") {
+              setTransactionHash(tx);
+              setTxStatus("success");
+              toast.success(
+                `Successfully sent ${tokenAmount} ETH`
+              );
+            }
+          } else {
+            // Sedning through Email or Inviting
+            const tx = await sendTransaction(wagmiConfig, {
+              to: walletAddress as `0x${string}`,
+              value: totalValue,
+            });
+            const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: tx });
+            if (receipt.status === "success") {
+              setTransactionHash(tx);
+              setTxStatus("success");
+              toast.success(
+                `Successfully sent ${tokenAmount} ETH`
+              );
+            }
+          }
         }
       } else {
-        // Handle ERC20 token transfer
+        // Handle ERC20 token / NON-NATIVE token transfer
+
+        // Initialize a contract instance for interacting with Transaction contract.
         const transactionsContract = new Contract(
           TRANSACTIONS_CONTRACT_ADDRESS,
           TRANSACTIONS_CONTRACT_ABI,
           walletData?.provider
         );
 
+        // Initialize a contract instance for interacting with the selected ERC-20 token contract.
         const tokenContract = new Contract(
           selectedTokenData.contractAddress,
           ERC20_ABI,
@@ -463,22 +408,53 @@ const SendToken = () => {
         );
 
         if (isEmailConnected) {
-          const approveTx = await privySendTransaction({
-            to: selectedTokenData.contractAddress,
-            data: tokenContract.interface.encodeFunctionData("approve", [
-              TRANSACTIONS_CONTRACT_ADDRESS,
-              tokenAmountInWei,
-            ]),
-          });
 
-          if (approveTx.transactionHash) {
+          // Embedded wallet is connected and non-native token is selected
+
+          if (isValidEmail(recipientEmail)) {
+
+            // Sedning through Email or Inviting
+
+            // Sends a transaction to approve the Transactions contract to spend a specified non-native token amount on behalf of the sender.
+            const approveTx = await privySendTransaction({
+              to: selectedTokenData.contractAddress,
+              data: tokenContract.interface.encodeFunctionData("approve", [
+                TRANSACTIONS_CONTRACT_ADDRESS,
+                tokenAmountInWei,
+              ]),
+            });
+
+            if (approveTx.transactionHash) {
+
+              // Sends a transaction to the Transactions contract to transfer both ETH and non-native token to the recipient.
+              const tx = await privySendTransaction({
+                to: TRANSACTIONS_CONTRACT_ADDRESS,
+                value: additionalEthInWei,
+                data: transactionsContract.interface.encodeFunctionData(
+                  "transferWithEth",
+                  [
+                    selectedTokenData.contractAddress,
+                    walletAddress,
+                    tokenAmountInWei,
+                  ]
+                ),
+              });
+
+              if (tx.transactionHash) {
+                setTransactionHash(tx.transactionHash);
+                setTxStatus("success");
+              }
+            }
+          } else {
+
+            // Sending through EOA or Scanning
+
+            // Transaction for transfer both ETH and non-native token to the recipient.
             const tx = await privySendTransaction({
-              to: TRANSACTIONS_CONTRACT_ADDRESS,
-              value: additionalEthInWei,
-              data: transactionsContract.interface.encodeFunctionData(
-                "transferWithEth",
+              to: selectedTokenData.contractAddress,
+              data: tokenContract.interface.encodeFunctionData(
+                "transfer",
                 [
-                  selectedTokenData.contractAddress,
                   walletAddress,
                   tokenAmountInWei,
                 ]
@@ -486,59 +462,99 @@ const SendToken = () => {
             });
 
             if (tx.transactionHash) {
-              toast.success("Transaction completed successfully!", {});
               setTransactionHash(tx.transactionHash);
               setTxStatus("success");
             }
           }
         } else if (walletData?.authenticated && walletClient) {
-          if (approveAsync) {
-            const approveTxHash = await approveAsync({
-              address: selectedTokenData.contractAddress as `0x${string}`,
-              abi: ERC20_ABI,
-              functionName: "approve",
-              args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei],
-            });
 
-            const approveReceipt =
-              await publicClient?.waitForTransactionReceipt({
-                hash: approveTxHash,
-                confirmations: 1,
+          // External wallet is connected and non-native token is selected
+
+          if (isValidEmail(recipientEmail)) {
+
+            // Sedning through Email or Inviting
+
+            if (approveAsync) {
+
+              // Approve the Transactions contract to spend the selected token amount
+              const approveTxHash = await approveAsync({
+                address: selectedTokenData.contractAddress as `0x${string}`,
+                abi: ERC20_ABI,
+                functionName: "approve",
+                args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei],
               });
 
-            if (approveReceipt?.status === "success") {
-              const transferTxHash = await approveAsync({
-                address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
-                abi: TRANSACTIONS_CONTRACT_ABI,
-                functionName: "transferWithEth",
-                args: [
-                  selectedTokenData.contractAddress,
-                  walletAddress,
-                  tokenAmountInWei,
-                ],
-                value: additionalEthInWei,
-              });
-
-              const transferReceipt =
+              // Wait for the approval transaction 
+              const approveReceipt =
                 await publicClient?.waitForTransactionReceipt({
-                  hash: transferTxHash,
+                  hash: approveTxHash,
                   confirmations: 1,
                 });
 
+              if (approveReceipt?.status === "success") {
+
+                // Call the transferWithEth function on the Transactions contract to send ETH and tokens
+                const transferTxHash = await approveAsync({
+                  address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
+                  abi: TRANSACTIONS_CONTRACT_ABI,
+                  functionName: "transferWithEth",
+                  args: [
+                    selectedTokenData.contractAddress,
+                    walletAddress,
+                    tokenAmountInWei,
+                  ],
+                  value: additionalEthInWei,
+                });
+
+                // Wait for the transfer transaction
+                const transferReceipt =
+                  await publicClient?.waitForTransactionReceipt({
+                    hash: transferTxHash,
+                    confirmations: 1,
+                  });
+
+                if (transferReceipt?.status === "success") {
+                  toast.success(
+                    `Successfully sent ${tokenAmount} ${selectedTokenSymbol}`
+                  );
+                  setTransactionHash(transferTxHash);
+                  setTxStatus("success");
+                }
+              }
+            }
+          } else {
+
+            // Sedning through EOA or Scan
+
+            if (approveAsync) {
+              // Send the selected tokens directly to the recipient using the transfer function
+              const tx = await approveAsync({
+                address: selectedTokenData.contractAddress as `0x${string}`,
+                abi: ERC20_ABI,
+                functionName: "transfer",
+                args: [walletAddress, tokenAmountInWei],
+              });
+
+              // Wait for the transfer transaction to be mined
+              const transferReceipt = await publicClient?.waitForTransactionReceipt({
+                hash: tx,
+                confirmations: 1,
+              });
+
               if (transferReceipt?.status === "success") {
-                toast.success("Transaction completed successfully!", {});
-                setTransactionHash(transferTxHash);
+                toast.success(
+                  `Successfully sent ${tokenAmount} ${selectedTokenSymbol}`
+                );
+                setTransactionHash(tx);
                 setTxStatus("success");
               }
             }
+
           }
         }
       }
 
       setRecipientWalletAddress(walletAddress);
-      toast.success(
-        `Sending ${tokenAmount} ${selectedTokenData.symbol} plus 0.0002 ETH`
-      );
     } catch (error) {
       toast.dismiss();
       console.error("Error sending transaction:", error);
@@ -615,28 +631,24 @@ const SendToken = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[4rem] ">
           <div
-            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
+            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  ${theme === "dark" ? "bg-black" : "bg-white"
+              } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
             <div
-              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
-                theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
-              }`}
+              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
+                }`}
             >
               <div
-                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                  theme === "dark"
-                    ? "border-white bg-transparent"
-                    : "border-gray-500 bg-transparent"
-                }`}
+                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${theme === "dark"
+                  ? "border-white bg-transparent"
+                  : "border-gray-500 bg-transparent"
+                  }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    theme === "dark"
-                      ? "bg-[#FFE500] text-[#363535]"
-                      : "bg-[#E265FF] text-white"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${theme === "dark"
+                    ? "bg-[#FFE500] text-[#363535]"
+                    : "bg-[#E265FF] text-white"
+                    }`}
                 ></div>
               </div>
               <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -647,11 +659,10 @@ const SendToken = () => {
             </div>
             <div className="text-right  items-end">
               <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                  theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#E265FF] text-white"
-                }`}
+                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
+                  ? "bg-[#FFE500] text-[#363535]"
+                  : "bg-[#E265FF] text-white"
+                  }`}
                 onClick={OpenHistory}
               >
                 Transaction History
@@ -660,11 +671,10 @@ const SendToken = () => {
           </div>
           <div>
             <div
-              className={`${
-                theme === "dark"
-                  ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
-                  : "bg-white/80 backdrop-blur-[80px]"
-              } rounded-br-[40px] rounded-bl-[40px] `}
+              className={`${theme === "dark"
+                ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
+                : "bg-white/80 backdrop-blur-[80px]"
+                } rounded-br-[40px] rounded-bl-[40px] `}
             >
               <SwitchNetwork />
               <div className="flex flex-col-reverse md:flex-col-reverse lg:flex-row space-y-6 md:space-y-0  lg:py-[40px] px-[30px]  md:py-[30px] py-[30px] justify-between items-center lg:gap-[20px] md:gap-[20px] sm:gap-[20px] gap-[30px]">
@@ -672,19 +682,17 @@ const SendToken = () => {
                   <div className="flex justify-between lg:mx-5 md:mx-5 sm:mx-5  ">
                     {" "}
                     <h3
-                      className={`text-[20px] font-medium   ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                      }`}
+                      className={`text-[20px] font-medium   ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                        }`}
                     >
                       All assets
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
-                        theme === "dark"
-                          ? "bg-[#FFE500] text-[#363535]"
-                          : "bg-[#E265FF] text-white"
-                      }  px-4 py-2 rounded-full text-sm`}
+                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
+                        ? "bg-[#FFE500] text-[#363535]"
+                        : "bg-[#E265FF] text-white"
+                        }  px-4 py-2 rounded-full text-sm`}
                     >
                       Add Token
                     </button>
@@ -701,17 +709,15 @@ const SendToken = () => {
                       tokens.map((token, index) => (
                         <div
                           key={index}
-                          className={`${
-                            theme === "dark"
-                              ? "bg-[#000000]/50 border border-white"
-                              : " bg-[#FFFCFC]"
-                          } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
+                          className={`${theme === "dark"
+                            ? "bg-[#000000]/50 border border-white"
+                            : " bg-[#FFFCFC]"
+                            } flex justify-between items-center bg-opacity-50 rounded-xl shadow-sm py-2 px-5 my-4 mx-0 lg:mx-4 md:mx-4 sm:mx-4 `}
                         >
                           <div className="flex items-center space-x-2">
                             <span
-                              className={` font-bold ${
-                                theme === "dark" ? "text-white" : "text-black"
-                              }`}
+                              className={` font-bold ${theme === "dark" ? "text-white" : "text-black"
+                                }`}
                             >
                               {token.symbol}
                             </span>
@@ -727,11 +733,10 @@ const SendToken = () => {
                     ) : (
                       <div className="flex items-center justify-center h-full">
                         <span
-                          className={` ${
-                            theme === "dark"
-                              ? "text-[#DEDEDE]"
-                              : "text-[#696969]"
-                          } text-center text-gray-500 text-[18px]`}
+                          className={` ${theme === "dark"
+                            ? "text-[#DEDEDE]"
+                            : "text-[#696969]"
+                            } text-center text-gray-500 text-[18px]`}
                         >
                           {isConnected
                             ? `No token found`
@@ -744,47 +749,42 @@ const SendToken = () => {
                 <div className="w-full md:w-[95%] m-auto">
                   <div>
                     <label
-                      className={`block text-lg font-[500]  mb-1 ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                      }`}
+                      className={`block text-lg font-[500]  mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                        }`}
                     >
                       Enter token amount to send
                     </label>
                     <div className="flex lg:space-x-2 md:space-x-2 sm:space-x-2 justify-end flex-col lg:flex-row md:flex-row sm:flex-row">
                       <div
-                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${
-                          theme === "dark"
-                            ? "bg-[#000000]/50 border border-white"
-                            : " bg-[#FFFCFC] border border-gray-700"
-                        }`}
+                        className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center ${theme === "dark"
+                          ? "bg-[#000000]/50 border border-white"
+                          : " bg-[#FFFCFC] border border-gray-700"
+                          }`}
                       >
                         <input
                           type="text"
                           placeholder=" token amount "
                           value={tokenAmount}
                           onChange={(e) => setTokenAmount(e.target.value)}
-                          className={`w-full bg-transparent outline-none ${
-                            theme === "dark" ? "text-white" : "text-gray-800 "
-                          } `}
+                          className={`w-full bg-transparent outline-none ${theme === "dark" ? "text-white" : "text-gray-800 "
+                            } `}
                         />
                         <button
                           onClick={handleMaxClick}
-                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${
-                            theme === "dark"
-                              ? "text-[#E265FF]"
-                              : "text-[#FF336A]"
-                          }`}
+                          className={`text-[12px] border  border-gray rounded-[5px] px-3 py-1 font-bold opacity-1 hover:opacity-[0.7] ${theme === "dark"
+                            ? "text-[#E265FF]"
+                            : "text-[#FF336A]"
+                            }`}
                         >
                           Max
                         </button>
                       </div>
                       <div className="relative w-[30%]">
                         <div
-                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${
-                            theme === "dark"
-                              ? "bg-[#000000]/50 border border-white"
-                              : " bg-[#FFFCFC] border border-gray-700"
-                          }`}
+                          className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${theme === "dark"
+                            ? "bg-[#000000]/50 border border-white"
+                            : " bg-[#FFFCFC] border border-gray-700"
+                            }`}
                           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
                           <span className="font-semibold text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
@@ -796,11 +796,10 @@ const SendToken = () => {
                         {isDropdownOpen && (
                           <div
                             ref={dropdownRef}
-                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
-                              theme === "dark"
-                                ? "bg-[#1C1C1C] text-white border border-white"
-                                : "bg-white text-black border border-gray-700"
-                            }`}
+                            className={`absolute top-12 left-0 w-[150px] rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${theme === "dark"
+                              ? "bg-[#1C1C1C] text-white border border-white"
+                              : "bg-white text-black border border-gray-700"
+                              }`}
                           >
                             {tokens && tokens.length === 0 ? (
                               <div className="p-2 text-center text-gray-500">
@@ -818,17 +817,15 @@ const SendToken = () => {
                                     // Reset token amount when changing token
                                     setTokenAmount("");
                                   }}
-                                  className={`cursor-pointer p-2 ${
-                                    theme === "dark"
-                                      ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
-                                      : "bg-[#FFFCFC]  hover:bg-black hover:text-white mb-1"
-                                  } ${
-                                    selectedToken === token.contractAddress
+                                  className={`cursor-pointer p-2 ${theme === "dark"
+                                    ? "bg-[#000000]/100  hover:bg-gray-100 hover:text-black mb-1 "
+                                    : "bg-[#FFFCFC]  hover:bg-black hover:text-white mb-1"
+                                    } ${selectedToken === token.contractAddress
                                       ? theme === "dark"
                                         ? "bg-white text-black"
                                         : "bg-black text-white"
                                       : ""
-                                  }`}
+                                    }`}
                                 >
                                   {token.symbol}
                                 </div>
@@ -842,9 +839,8 @@ const SendToken = () => {
 
                   <div>
                     <label
-                      className={`block text-lg font-[500] mb-1 ${
-                        theme === "dark" ? "text-[#DEDEDE]" : "text-black"
-                      }`}
+                      className={`block text-lg font-[500] mb-1 ${theme === "dark" ? "text-[#DEDEDE]" : "text-black"
+                        }`}
                     >
                       Enter recipient's email or address
                     </label>
@@ -853,19 +849,17 @@ const SendToken = () => {
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="recipient's email or address"
-                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
-                        theme === "dark"
-                          ? "bg-[#000000]/50 border border-white"
-                          : " bg-[#FFFCFC] border border-gray-700"
-                      }`}
+                      className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${theme === "dark"
+                        ? "bg-[#000000]/50 border border-white"
+                        : " bg-[#FFFCFC] border border-gray-700"
+                        }`}
                     />
                     <button
                       onClick={() => setShowQRScanner(true)}
-                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${
-                        theme === "dark"
-                          ? "bg-[#000000]/50 border border-white text-white"
-                          : "bg-[#FFFCFC] border border-gray-700 text-black"
-                      }`}
+                      className={`px-2 mb-3 py-2 rounded-md lg:hidden md:hidden sm:hidden flex ${theme === "dark"
+                        ? "bg-[#000000]/50 border border-white text-white"
+                        : "bg-[#FFFCFC] border border-gray-700 text-black"
+                        }`}
                       type="button"
                       aria-label="Scan QR Code"
                     >
