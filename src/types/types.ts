@@ -29,16 +29,6 @@ export interface TokenWithBalance extends TokenConfig {
 export interface PrivyWrapperProps {
   children: React.ReactNode;
 }
-
-export interface TxDetailsProps {
-  isOpen: boolean;
-  onClose: () => void;
-  tokenAmount: string;
-  tokenSymbol: string;
-  recipientEmail: string;
-  onConfirm: (walletAddress: string) => void;
-}
-
 export interface Transaction {
   isOpen: boolean;
   onClose: () => void;

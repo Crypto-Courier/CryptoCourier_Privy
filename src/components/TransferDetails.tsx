@@ -4,11 +4,10 @@ import wallet from "../assets/wallet.png";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import trx2 from "../assets/trx2.png";
-import { TxDetailsProps } from "../types/types";
-import spinner from "../assets/spinner.gif";
-import toast from "react-hot-toast";
+import { TransferDetailsProps } from "../types/transfer-detail-types";
 import axios from "axios";
-const TxDetails: React.FC<TxDetailsProps> = ({
+
+const TransferDetails: React.FC<TransferDetailsProps> = ({
   isOpen,
   onClose,
   tokenAmount,
@@ -20,7 +19,7 @@ const TxDetails: React.FC<TxDetailsProps> = ({
   const [walletAddress, setWalletAddress] = useState("");
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false); // Add this state
+  const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
@@ -31,17 +30,17 @@ const TxDetails: React.FC<TxDetailsProps> = ({
       setChecking(true);
 
       try {
-        const response = await axios.post('/api/search', { email: recipientEmail });
+        const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail });
 
         if (response.data) {
-          setWalletAddress(response.data); // Set the wallet address
-          setIsWalletCreated(true); // Indicate the wallet is created
+          setWalletAddress(response.data);
+          setIsWalletCreated(true);
         } else {
-          setIsWalletCreated(false); // No wallet found
+          setIsWalletCreated(false);
         }
       } catch (error) {
         console.error('Error checking wallet:', error);
-        setIsWalletCreated(false); // Handle the error state
+        setIsWalletCreated(false);
       } finally {
         setChecking(false)
       }
@@ -51,15 +50,20 @@ const TxDetails: React.FC<TxDetailsProps> = ({
   }, [isOpen, recipientEmail]);
 
   const handleCancel = () => {
-    setWalletAddress(""); // Reset walletAddress
-    setIsWalletCreated(false); // Reset wallet creation state
-    onClose(); // Close the modal
+    setWalletAddress("");
+    setIsWalletCreated(false);
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    onConfirm(walletAddress);
+    onClose();
   };
 
   const handleCreateWallet = async () => {
     setLoading(true); // Set loading to true when the API call starts
     try {
-      const response = await fetch("/api/create-wallet", {
+      const response = await fetch("/api/create-privy-wallet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,12 +87,6 @@ const TxDetails: React.FC<TxDetailsProps> = ({
     } finally {
       setLoading(false); // Set loading to false after the API call finishes
     }
-  };
-
-  const handleConfirm = () => {
-    onConfirm(walletAddress);
-
-    onClose();
   };
 
   const copyToClipboard = () => {
@@ -242,4 +240,4 @@ const TxDetails: React.FC<TxDetailsProps> = ({
   );
 };
 
-export default TxDetails;
+export default TransferDetails;

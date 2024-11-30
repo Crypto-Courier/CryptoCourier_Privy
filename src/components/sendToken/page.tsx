@@ -19,7 +19,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { sendEmail } from "../Email/Emailer";
 import Email from "../Email/Email";
-import TxDetails from "../TxDetails";
+import TransferDetails from "../TransferDetails";
 import AddTokenForm from "./AddTokenForm";
 import { NewToken, TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
@@ -888,7 +888,7 @@ const SendToken = () => {
               />
             )}
           </div>
-          <TxDetails
+          <TransferDetails
             isOpen={isPopupOpen}
             onClose={() => setIsPopupOpen(false)}
             tokenAmount={tokenAmount}

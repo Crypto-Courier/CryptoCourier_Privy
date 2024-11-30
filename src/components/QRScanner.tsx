@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { ethers } from "ethers";
-import { QRScannerProps, QRResult } from "../types/scannerTypes"
+import { QRScannerProps, QRResult } from "../types/qr-scanner-types"
 
 const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
   const [error, setError] = useState<string>("");

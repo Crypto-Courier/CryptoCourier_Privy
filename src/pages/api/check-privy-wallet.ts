@@ -1,22 +1,6 @@
-// pages/api/check-privy-wallet.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrivyClient } from "@privy-io/server-auth";
-
-// Create a custom interface that extends the existing type
-interface WalletAccount {
-  address: string;
-  type: "wallet";
-  verifiedAt: string;
-  firstVerifiedAt: string;
-  latestVerifiedAt: string;
-  chainType: "ethereum";
-  chainId: string;
-  walletClientType: "privy";
-  connectorType: "embedded";
-  hdWalletIndex: number;
-  imported: boolean;
-  delegated: boolean;
-}
+import { WalletAccount } from "../../types/check-privy-wallet-api-types" 
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,7 +27,6 @@ export default async function handler(
     // Search for users by email
     const users = await privyClient.getUserByEmail(email);
 
-    // Use type assertion to tell TypeScript about the expected structure
     const walletAccount = users?.linkedAccounts?.find(
       (account: any) => account.type === "wallet"
     ) as WalletAccount | undefined;
