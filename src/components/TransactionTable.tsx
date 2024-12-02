@@ -13,9 +13,13 @@ import SwitchNetwork from "./SwitchNetwork";
 
 interface TransactionTableProps {
   viewMode: string;
+  selectedChains: number[];
 }
 
-const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
+const TransactionTable: React.FC<TransactionTableProps> = ({ 
+  viewMode, 
+  selectedChains 
+}) => {
   const { walletData } = useWallet();
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
   const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
@@ -35,36 +39,41 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ viewMode }) => {
       if (!activeAddress) return;
 
       setIsLoading(true);
-      const chainId = walletData?.chainId.split(":")[1];
-      const additionalChainIds = ["8453", "919", "34443"];
-      console.log(
-        "Fetching the transaction for the chainID 8453, 919, 34443 and 11155111"
-      );
-      const allChainIds = [chainId, ...additionalChainIds];
-      const chainIdQuery = allChainIds.map((id) => `chainId=${id}`).join("&");
+      setError(null);
+      
       try {
-        const endpoint =
-          viewMode === "dashboard"
-            ? `/api/get-dashboard-transaction?walletAddress=${activeAddress}`
-            : `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
+        const chainsToQuery = selectedChains.length > 0 
+          ? selectedChains 
+          : [8453, 919, 34443, 11155111];
+        
+        const chainIdQuery = chainsToQuery.map(id => `chainId=${id}`).join("&");
+        
+        const endpoint = `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
 
         const response = await fetch(endpoint);
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
         }
         const data: Transaction[] = await response.json();
+        
         setTransactions(data);
       } catch (err: any) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+        console.error("Error fetching transactions:", err);
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setTransactions([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchTransactions();
-  }, [activeAddress, viewMode, walletData?.chainId]);
+    const timeoutId = setTimeout(() => {
+      fetchTransactions();
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [activeAddress, viewMode, selectedChains]);
 
   // Resend email
   const handleResend = async (tx: Transaction, index: number) => {
