@@ -48,10 +48,6 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         
         const chainIdQuery = chainsToQuery.map(id => `chainId=${id}`).join("&");
         
-        // const endpoint = viewMode === "dashboard"
-        //   ? `/api/get-dashboard-transaction?walletAddress=${activeAddress}`
-        //   : `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
-
         const endpoint = `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
 
         const response = await fetch(endpoint);
