@@ -71,15 +71,48 @@ const LeaderBoard: React.FC = () => {
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row md:flex-row items-center justify-between gap-8 ">
-              <div className="flex flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
-                <Image
-                  src={trophy}
-                  alt="Trophy"
-                  className="w-48 md:w-64 lg:w-80"
-                />
-                <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold mt-4 text-white ">
-                  Leaderboard
-                </h1>
+              <div className="flex gap-20 flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
+                <div className="flex flex-col border-bg-[#FFE500] border py-10 px-20 bg-gradient-to-r from-[#000000] to-[#0052FF]">
+                  <div className="flex gap-7 ">
+                    <div className="flex flex-col">
+                      <div className="border rounded-full p-3 text-[#FFE925]">
+                        10
+                      </div>
+                      <div>Your Rank</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="border rounded-full p-3 text-[#FFE925]">
+                        23
+                      </div>
+                      <div>Invited User</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="border rounded-full p-3 text-[#FFE925]">
+                        70
+                      </div>
+
+                      <div>Claimed User</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col border-bg-[#FFE500] border py-10 px-20 bg-gradient-to-r from-[#000000] to-[#0052FF]">
+                  <div className="flex gap-7 ">
+                    <div className="border rounded-full p-3 text-[#FFE925]">
+                      10
+                    </div>
+                    <div className="border rounded-full p-3 text-[#FFE925]">
+                      23
+                    </div>
+                    <div className="border rounded-full p-3 text-[#FFE925]">
+                      70
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <div>Your Rank</div>
+                    <div>Invited User</div>
+                    <div>Claimed User</div>
+                  </div>
+                </div>
               </div>
 
               <div className="w-full lg:w-2/3 ">
