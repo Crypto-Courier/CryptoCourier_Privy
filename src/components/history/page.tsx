@@ -17,7 +17,6 @@ import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
-import SwitchNetwork from "../SwitchNetwork";
 import SwitchHistory from "../SwitchHistory";
 
 const History: React.FC = () => {
