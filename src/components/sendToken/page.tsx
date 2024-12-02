@@ -21,7 +21,8 @@ import { sendEmail } from "../Email/Emailer";
 import Email from "../Email/Email";
 import TransferDetails from "../TransferDetails";
 import AddTokenForm from "./AddTokenForm";
-import { NewToken, TokenWithBalance } from "../../types/types";
+import { AddToken } from "../../types/add-token-form-types";
+import { TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
@@ -574,8 +575,9 @@ const SendToken = () => {
   };
 
   // Handler for adding token into database
-  const handleAddToken = async (newToken: NewToken) => {
+  const handleAddToken = async (newToken: AddToken) => {
     try {
+      const chainId = walletData?.chainId.split(":")[1];
       const response = await fetch("/api/add-token", {
         method: "POST",
         headers: {
@@ -583,7 +585,7 @@ const SendToken = () => {
         },
         body: JSON.stringify({
           ...newToken,
-          chainId: walletData?.chainId.split(":")[1],
+          chainId: chainId ? parseInt(chainId, 10) : undefined,
         }),
       });
 

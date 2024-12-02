@@ -1,11 +1,3 @@
-export interface NewToken {
-  chainId: number;
-  contractAddress: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-}
-
 export interface TokenConfig {
   contractAddress: string;
   symbol: string;
@@ -73,12 +65,6 @@ export interface Transaction {
   recipientEmail: string;
   senderIdentifier:string
 }
-
-export interface AddTokenFormProps {
-  onClose: () => void;
-  onAddToken: (token: NewToken) => void;
-}
-
 export interface ApiResponse {
   id: string;
   created_at: number;

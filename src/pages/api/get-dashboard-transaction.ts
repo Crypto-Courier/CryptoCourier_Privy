@@ -1,4 +1,3 @@
-// src/pages/api/get-transactions.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
 
