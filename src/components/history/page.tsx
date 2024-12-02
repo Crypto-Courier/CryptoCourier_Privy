@@ -34,6 +34,9 @@ const History: React.FC = () => {
   const activeAddress =
     viewMode === "dashboard" ? dashboardAddress : walletData?.address;
   const isConnected = walletData?.authenticated;
+  const [selectedChains, setSelectedChains] = useState<number[]>([
+    8453, 919, 34443, 11155111
+  ]);
 
   const { logout } = useLogout({
     onSuccess: () => {
@@ -138,6 +141,13 @@ const History: React.FC = () => {
 
   const invite = () => {
     router.push("/");
+  };
+
+  const handleChainSelect = (chains: number[]) => {
+    const newSelectedChains = chains.length > 0 
+      ? chains 
+      : [8453, 919, 34443, 11155111];
+    setSelectedChains(newSelectedChains);
   };
 
   const renderWalletAddress = () => {
@@ -309,11 +319,11 @@ const History: React.FC = () => {
                 : "bg-white/80 backdrop-blur-[80px]"
             } `}
           >
-            <SwitchHistory />
+            <SwitchHistory onChainSelect={handleChainSelect} />
             <div
               className={` pt-6 pb-6 rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
             >
-              <TransactionTable viewMode={viewMode} />
+              <TransactionTable viewMode={viewMode} selectedChains={selectedChains} />
             </div>
           </div>
         </div>

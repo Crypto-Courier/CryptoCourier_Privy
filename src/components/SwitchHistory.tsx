@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { Tooltip } from "antd";
@@ -25,8 +25,48 @@ import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg";
 import snaxChain from "../assets/snax.png";
 
-function SwitchHistory() {
+interface SwitchHistoryProps {
+  onChainSelect: (selectedChains: number[]) => void;
+}
+
+function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
   const { theme } = useTheme();
+  const [userHasSelected, setUserHasSelected] = useState(false);
+  const [selectedChains, setSelectedChains] = useState<number[]>([
+    8453, 919, 34443, 11155111, 291, 7560, 7777777, 1135, 255, 10, 
+    252, 480, 288, 185, 690, 360, 254, 8866, 1750, 5112, 2192, 888888888
+  ]); 
+
+  const handleChainClick = (chainId: number) => {
+    if (!userHasSelected) {
+      // First click - select only this chain
+      setUserHasSelected(true);
+      setSelectedChains([chainId]);
+      onChainSelect([chainId]);
+    } else {
+      // Subsequent clicks
+      if (selectedChains.includes(chainId)) {
+        // If chain is already selected and it's the only one selected,
+        // reset to all chains
+        if (selectedChains.length === 1) {
+          setUserHasSelected(false);
+          const allChains = chains.map(chain => chain.id);
+          setSelectedChains(allChains);
+          onChainSelect(allChains);
+        } else {
+          // Remove this chain from selection
+          const newSelected = selectedChains.filter(id => id !== chainId);
+          setSelectedChains(newSelected);
+          onChainSelect(newSelected);
+        }
+      } else {
+        // Add this chain to selection
+        const newSelected = [...selectedChains, chainId];
+        setSelectedChains(newSelected);
+        onChainSelect(newSelected);
+      }
+    }
+  };
 
   const chains = [
     { id: 8453, title: "Base", img: base },
@@ -58,13 +98,18 @@ function SwitchHistory() {
       <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
         {chains.map((chain) => (
           <Tooltip title={chain.title} key={chain.id}>
-            <div className="border-0 cursor-default p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md">
+            <div 
+              onClick={() => handleChainClick(chain.id)}
+              className={`border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md ${
+                selectedChains.includes(chain.id) ? 'scale-110' : ''
+              }`}
+            >
               <Image
                 src={chain.img}
                 alt={chain.title}
-                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] opacity-40 ${
-                  theme === "dark" ? "bg-white" : "bg-black"
-                }`}
+                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                  !userHasSelected || selectedChains.includes(chain.id) ? 'opacity-100' : 'opacity-40'
+                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
               />
             </div>
           </Tooltip>
@@ -73,22 +118,24 @@ function SwitchHistory() {
 
       {/* Mobile view */}
       <div className="md:hidden">
-        <div
-          className={`backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 flex justify-center items-center outline-none ${
-            theme === "dark"
-              ? "bg-[#000000]/50 border border-white text-white"
-              : "bg-[#FFFCFC] border border-gray-700 text-black"
-          }`}
-        >
+        <div className={`backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 flex justify-center items-center outline-none ${
+          theme === "dark"
+            ? "bg-[#000000]/50 border border-white text-white"
+            : "bg-[#FFFCFC] border border-gray-700 text-black"
+        }`}>
           <div className="flex flex-wrap justify-center gap-4">
             {chains.map((chain) => (
-              <div key={chain.id} className="flex items-center">
+              <div 
+                key={chain.id} 
+                onClick={() => handleChainClick(chain.id)}
+                className="flex items-center cursor-pointer"
+              >
                 <Image
                   src={chain.img}
                   alt={chain.title}
-                  className={`w-[24px] h-[24px] block p-[1px] rounded-[15px] opacity-40 ${
-                    theme === "dark" ? "bg-white" : "bg-black"
-                  }`}
+                  className={`w-[24px] h-[24px] block p-[1px] rounded-[15px] ${
+                  !userHasSelected || selectedChains.includes(chain.id) ? 'opacity-100' : 'opacity-40'
+                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
                 />
               </div>
             ))}
@@ -98,5 +145,5 @@ function SwitchHistory() {
     </div>
   );
 }
- 
+
 export default SwitchHistory;
