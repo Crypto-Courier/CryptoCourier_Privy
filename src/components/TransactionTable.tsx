@@ -9,16 +9,15 @@ import { renderEmailToString } from "./Email/renderEmailToString";
 import { Transaction } from "../types/types";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import SwitchNetwork from "./SwitchNetwork";
-
+import { isValidEmail } from "../lib/validation";
 interface TransactionTableProps {
   viewMode: string;
   selectedChains: number[];
 }
 
-const TransactionTable: React.FC<TransactionTableProps> = ({ 
-  viewMode, 
-  selectedChains 
+const TransactionTable: React.FC<TransactionTableProps> = ({
+  viewMode,
+  selectedChains
 }) => {
   const { walletData } = useWallet();
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
@@ -40,22 +39,22 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
 
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        const chainsToQuery = selectedChains.length > 0 
-          ? selectedChains 
-          : [8453, 919, 34443, 11155111];
-        
+        const chainsToQuery = selectedChains;
+
         const chainIdQuery = chainsToQuery.map(id => `chainId=${id}`).join("&");
-        
+
         const endpoint = `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
 
         const response = await fetch(endpoint);
+
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
         }
+
         const data: Transaction[] = await response.json();
-        
+
         setTransactions(data);
       } catch (err: any) {
         console.error("Error fetching transactions:", err);
@@ -77,6 +76,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
 
   // Resend email
   const handleResend = async (tx: Transaction, index: number) => {
+
+    if (!isValidEmail(tx.recipientEmail)) {
+      toast.error("Invalid email address to send email");
+      return;
+    }
     setLoadingTxId(index);
     try {
       const subject =
@@ -132,9 +136,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     <div>
       <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
         <h3
-          className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${
-            theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-          }`}
+          className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+            }`}
         >
           Transaction history
         </h3>
@@ -155,19 +158,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               transactions.map((tx, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px] ${
-                    theme === "dark"
-                      ? "bg-[#000000]/20 border border-[#5C5C5C]"
-                      : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
-                  }`}
+                  className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px] ${theme === "dark"
+                    ? "bg-[#000000]/20 border border-[#5C5C5C]"
+                    : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
+                    }`}
                 >
                   <div className="flex items-center space-x-3">
                     <span
-                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${
-                        theme === "dark"
-                          ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
-                          : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
-                      }`}
+                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
+                        ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
+                        : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
+                        }`}
                     >
                       {tx.tokenAmount} {tx.tokenSymbol}
                     </span>
@@ -175,11 +176,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       <>
                         <span className="text-[15px]">To</span>
                         <span
-                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${
-                            theme === "dark"
-                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                          }`}
+                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${theme === "dark"
+                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                            }`}
                         >
                           {tx.recipientEmail}
                         </span>
@@ -188,11 +188,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       <>
                         <span className="text-[15px]">From</span>
                         <span
-                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${
-                            theme === "dark"
-                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                          }`}
+                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
+                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                            }`}
                         >
                           {`${tx.senderWallet.slice(
                             0,
@@ -203,7 +202,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                     )}
                   </div>
                   <div className="justify-end flex gap-3">
-                    {tx.senderWallet === activeAddress && (
+                    {tx.senderWallet === activeAddress && isValidEmail(tx.recipientEmail) && (
                       <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                         {loadingTxId === index ? (
                           <div className="tracking-wide text-[15px]">
@@ -240,9 +239,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             )
           ) : (
             <div
-              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
-                theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-              }`}
+              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                }`}
             >
               Connect your wallet to view your transactions.
             </div>
