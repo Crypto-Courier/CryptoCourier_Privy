@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { NewToken, AddTokenFormProps } from "../../types/types"; // Make sure this import path is correct
+import { AddToken, AddTokenFormProps } from "../../types/add-token-form-types";
 import { useChainId } from "wagmi";
 
 const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
   const chainId = useChainId();
   const { theme } = useTheme();
-  const [newToken, setNewToken] = useState<Partial<NewToken>>({
+  const [newToken, setNewToken] = useState<Partial<AddToken>>({
     contractAddress: "",
     name: "",
     symbol: "",
@@ -20,7 +20,6 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
   useEffect(() => {
     const fetchTokenDetails = async () => {
       if (newToken.contractAddress && newToken.contractAddress.length === 42) {
-        // Basic check for Ethereum address length
         setError(null);
         setIsFetching(true);
 
@@ -79,10 +78,11 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
       newToken.symbol &&
       newToken.decimals !== undefined
     ) {
-      onAddToken(newToken as NewToken);
+      onAddToken(newToken as AddToken);
       onClose();
     }
   };
+  
   useEffect(() => {
     // Function to detect clicks outside the modal
     const handleClickOutside = (event: MouseEvent) => {

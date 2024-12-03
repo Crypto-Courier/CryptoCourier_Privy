@@ -14,8 +14,9 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-
-  /* height: 80vh; */
+  padding: 30px 0px;
+  height: 100vh;
+  /* height: 100vh; */
   /* display: flex; */
   flex-direction: column;
   justify-content: center;
@@ -25,8 +26,9 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  padding: 30px 0px;
 
-  /* height: 80vh; */
+  height: 100vh;
   /* display: flex; */
   flex-direction: column;
   justify-content: center;

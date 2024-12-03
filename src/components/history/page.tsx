@@ -17,6 +17,7 @@ import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
+import SwitchHistory from "../SwitchHistory";
 
 const History: React.FC = () => {
   const router = useRouter();
@@ -33,6 +34,9 @@ const History: React.FC = () => {
   const activeAddress =
     viewMode === "dashboard" ? dashboardAddress : walletData?.address;
   const isConnected = walletData?.authenticated;
+  const [selectedChains, setSelectedChains] = useState<number[]>([
+    8453, 919, 34443, 11155111
+  ]);
 
   const { logout } = useLogout({
     onSuccess: () => {
@@ -139,6 +143,13 @@ const History: React.FC = () => {
     router.push("/");
   };
 
+  const handleChainSelect = (chains: number[]) => {
+    const newSelectedChains = chains.length > 0 
+      ? chains 
+      : [8453, 919, 34443, 11155111];
+    setSelectedChains(newSelectedChains);
+  };
+
   const renderWalletAddress = () => {
     if (viewMode === "dashboard") {
       return (
@@ -227,7 +238,7 @@ const History: React.FC = () => {
         }`}
       >
         <div
-          className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
+          className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
             theme === "dark"
               ? "border-white bg-transparent"
               : "border-gray-500 bg-transparent"
@@ -302,13 +313,18 @@ const History: React.FC = () => {
           </div>
 
           <div
-            className={`pt-6 pb-6 ${
+            className={`${
               theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
+            } `}
           >
-            <TransactionTable viewMode={viewMode} />
+            <SwitchHistory onChainSelect={handleChainSelect} />
+            <div
+              className={` pt-6 pb-6 rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
+            >
+              <TransactionTable viewMode={viewMode} selectedChains={selectedChains} />
+            </div>
           </div>
         </div>
       </div>

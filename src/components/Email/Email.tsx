@@ -5,6 +5,7 @@ const Email: React.FC<EmailProps> = ({
   recipientEmail,
   tokenAmount,
   tokenSymbol,
+  senderIdentifier,
 }) => {
   return (
     <div
@@ -40,7 +41,7 @@ const Email: React.FC<EmailProps> = ({
             <strong>
               {tokenAmount} {tokenSymbol}
             </strong>{" "}
-            Token{" "}
+            Token from {senderIdentifier}
           </pre>
         </div>
       </div>
@@ -57,7 +58,7 @@ const Email: React.FC<EmailProps> = ({
       >
         <p style={{ fontSize: "16px", color: "#4b5563" }}>
           "Welcome to the crypto space, <br />
-          Enjoy the {tokenSymbol} Token"
+          Enjoy the {tokenSymbol} Token
         </p>
       </div>
 

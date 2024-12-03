@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
-import { NewToken } from '../../types/types';
+import { AddToken } from '../../types/add-token-form-types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const newToken = req.body as NewToken;
+    const newToken = req.body as AddToken;
 
     // Validate token data
     const validationError = validateTokenData(newToken);
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-function validateTokenData(token: NewToken): string | null {
+function validateTokenData(token: AddToken): string | null {
   if (!token.contractAddress) return 'Contract address is required';
   if (!token.symbol) return 'Symbol is required';
   if (!token.name) return 'Name is required';

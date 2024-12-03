@@ -98,6 +98,7 @@ export const Connect = () => {
       setIsWalletConnected(false);
       setIsEmailConnected(false);
       setWalletData(null);
+      clearCookiesAndStorage();
 
       // Redirect to homepage after disconnect
       router.push("/");
@@ -178,6 +179,20 @@ export const Connect = () => {
       setWalletData(null);
     }
   }, [authenticated, user, setWalletData, wallet]);
+
+  const clearCookiesAndStorage = () => {
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    });
+  
+    // Clear sessionStorage and localStorage
+    localStorage.clear();
+    sessionStorage.clear();
+  };
+  
 
   if (!ready) {
     return (

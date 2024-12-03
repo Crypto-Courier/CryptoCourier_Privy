@@ -1,13 +1,16 @@
-import ReactDOMServer from 'react-dom/server';
-import Email from './Email';
+import ReactDOMServer from "react-dom/server";
+import Email from "./Email";
 
 export function renderEmailToString(props: {
   recipientEmail: string;
   tokenAmount: string;
   tokenSymbol: string;
+  senderIdentifier:string
 }): string {
-  const emailContent = ReactDOMServer.renderToStaticMarkup(<Email {...props} />);
-  
+  const emailContent = ReactDOMServer.renderToStaticMarkup(
+    <Email {...props} />
+  );
+
   return `
     <!DOCTYPE html>
     <html lang="en">
