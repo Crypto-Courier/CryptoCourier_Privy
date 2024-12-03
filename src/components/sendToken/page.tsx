@@ -28,10 +28,11 @@ import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import QRScanner from "../QRScanner";
 import QR from "../../assets/QR.svg";
-import { Contract } from "ethers";
+import { Contract, ethers } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
+import { isValidEmail } from "../../lib/validation"
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
@@ -55,11 +56,11 @@ const SendToken = () => {
   const [showAddTokenForm, setShowAddTokenForm] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { theme } = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTokenLoading, setIsTokenLoading] = useState(false);
+  const [isTransactionLoading, setIsTransactionLoading] = useState(false);
   const [maxAmount, setMaxAmount] = useState("");
-  const [showHelp, setShowHelp] = useState(false);
-  const helpRef = useRef<HTMLDivElement | null>(null); // Define the type for the ref
   const [transactionHash, setTransactionHash] = useState<string>("");
+  const [transactionStauts, setTransactionStatus] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
@@ -73,29 +74,11 @@ const SendToken = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const TRANSACTIONS_CONTRACT_ADDRESS =
-    process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
+  const TRANSACTIONS_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
 
   if (!TRANSACTIONS_CONTRACT_ADDRESS) {
     throw new Error("Contract address is not defined");
   }
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   // Add this handler function
   const handleQRScan = (address: string): void => {
@@ -105,19 +88,6 @@ const SendToken = () => {
 
   const OpenHistory = () => {
     router.push("/history?mode=default");
-  };
-
-  // Add a function to validate if input is an email
-  const isValidEmail = (input: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(input);
-  };
-
-  // Add a function to validate if input is a wallet address
-  const isValidWalletAddress = (input: string): boolean => {
-    // Basic Ethereum address validation (0x followed by 40 hex characters)
-    const addressRegex = /^0x[a-fA-F0-9]{40}$/;
-    return addressRegex.test(input);
   };
 
   // Modify the button click handler
@@ -130,19 +100,13 @@ const SendToken = () => {
     if (isValidEmail(recipientEmail)) {
       // If it's an email, show the popup
       setIsPopupOpen(true);
-    } else if (isValidWalletAddress(recipientEmail)) {
+    } else if (ethers.isAddress(recipientEmail)) {
       // If it's a wallet address, directly call handleSend
       await handleSend(recipientEmail);
     } else {
       toast.error("Please enter a valid email or wallet address");
     }
   };
-
-  useEffect(() => {
-    if (activeAddress) {
-      fetchTokens();
-    }
-  }, [activeAddress]);
 
   useEffect(() => {
     const selectedTokenData = tokens.find(
@@ -152,24 +116,32 @@ const SendToken = () => {
       setSelectedTokenSymbol(selectedTokenData.symbol);
     }
   }, [tokens, selectedToken]);
+  
+  // For fetch token from database
+  useEffect(() => {
+    if (activeAddress || transactionStauts === true || walletData?.chainId) {
+      fetchTokens();
+    }
+  }, [activeAddress, transactionStauts, walletData?.chainId ]);
 
+  // Give sender identity in mail for receiver
   const getSenderIdentifier = (user: any) => {
     // If Privy wallet client and email exists, return email
     if (user.wallet?.walletClientType === "privy" && user.email?.address) {
       return user.email.address;
     }
     if (user.wallet?.address) {
-      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(
-        -4
-      )}`;
+      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}`;
     }
   };
-  // When hash is available for txn, email should be sent to receiver
+
+  // When TransactionHash is available then data store and email will be sent.
   useEffect(() => {
-    if (transactionHash) {
+    if (transactionHash && transactionStauts === true) {
       const selectedTokenData = tokens.find(
         (t) => t.contractAddress === selectedToken
       );
+
       if (selectedTokenData) {
         const senderIdentifier = getSenderIdentifier(user);
         const emailContent = renderToString(
@@ -180,14 +152,16 @@ const SendToken = () => {
             senderIdentifier={senderIdentifier} // Pass sender identifier to email component
           />
         );
-        sendEmail({
-          recipientEmail,
-          subject: "Hooray! You got some crypto coin 🪙",
-          htmlContent: emailContent,
-          tokenAmount,
-          tokenSymbol: selectedTokenData.symbol,
-          senderIdentifier,
-        });
+        if (isValidEmail(recipientEmail)) {
+          sendEmail({
+            recipientEmail,
+            subject: "Hooray! You got some crypto coin 🪙",
+            htmlContent: emailContent,
+            tokenAmount,
+            tokenSymbol: selectedTokenData.symbol,
+            senderIdentifier,
+          });
+        }
         StoreTransactionData(
           recipientWalletAddress,
           activeAddress as `0x${string}`,
@@ -195,12 +169,11 @@ const SendToken = () => {
           selectedTokenData.symbol,
           recipientEmail
         );
-
         setTokenAmount("");
         setRecipientEmail("");
       }
     }
-  }, [transactionHash]);
+  }, [transactionHash, transactionStauts]);
 
   useEffect(() => {
     if (selectedToken) {
@@ -220,7 +193,7 @@ const SendToken = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsTokenLoading(true);
     try {
       const response = await fetch(
         `/api/get-tokens?address=${activeAddress}&chainId=${walletData?.chainId.split(":")[1]
@@ -255,7 +228,7 @@ const SendToken = () => {
     } catch (error) {
       console.error("Error fetching tokens:", error);
     } finally {
-      setIsLoading(false);
+      setIsTokenLoading(false);
     }
   };
 
@@ -310,7 +283,7 @@ const SendToken = () => {
     try {
       setTxStatus("pending");
       setShowTxPopup(true);
-      setIsLoading(true);
+      setIsTransactionLoading(true);
 
       // Find Token contract address from the token data to interact
       const selectedTokenData = tokens.find(
@@ -345,16 +318,22 @@ const SendToken = () => {
               to: walletAddress,
               value: tokenAmountInWei,
             });
-            setTransactionHash(tx.transactionHash);
-            setTxStatus("success");
+            if (tx.status === 1) {
+              setTransactionHash(tx.transactionHash);
+              setTransactionStatus(true);
+              setTxStatus("success");
+            }
           } else {
             // Sedning through Email or Inviting
             const tx = await privySendTransaction({
               to: walletAddress,
               value: totalValue,
             });
-            setTransactionHash(tx.transactionHash);
-            setTxStatus("success");
+            if (tx.status === 1) {
+              setTransactionHash(tx.transactionHash);
+              setTransactionStatus(true);
+              setTxStatus("success");
+            }
           }
         } else if (walletData?.authenticated && walletClient) {
           // External wallet is connected and native token is selected
@@ -368,6 +347,7 @@ const SendToken = () => {
             const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: tx });
             if (receipt.status === "success") {
               setTransactionHash(tx);
+              setTransactionStatus(true);
               setTxStatus("success");
               toast.success(
                 `Successfully sent ${tokenAmount} ETH`
@@ -382,6 +362,7 @@ const SendToken = () => {
             const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: tx });
             if (receipt.status === "success") {
               setTransactionHash(tx);
+              setTransactionStatus(true);
               setTxStatus("success");
               toast.success(
                 `Successfully sent ${tokenAmount} ETH`
@@ -423,7 +404,7 @@ const SendToken = () => {
               ]),
             });
 
-            if (approveTx.transactionHash) {
+            if (approveTx.status === 1) {
 
               // Sends a transaction to the Transactions contract to transfer both ETH and non-native token to the recipient.
               const tx = await privySendTransaction({
@@ -439,8 +420,9 @@ const SendToken = () => {
                 ),
               });
 
-              if (tx.transactionHash) {
+              if (tx.status === 1) {
                 setTransactionHash(tx.transactionHash);
+                setTransactionStatus(true);
                 setTxStatus("success");
               }
             }
@@ -460,8 +442,9 @@ const SendToken = () => {
               ),
             });
 
-            if (tx.transactionHash) {
+            if (tx.status === 1) {
               setTransactionHash(tx.transactionHash);
+              setTransactionStatus(true);
               setTxStatus("success");
             }
           }
@@ -517,6 +500,7 @@ const SendToken = () => {
                     `Successfully sent ${tokenAmount} ${selectedTokenSymbol}`
                   );
                   setTransactionHash(transferTxHash);
+                  setTransactionStatus(true);
                   setTxStatus("success");
                 }
               }
@@ -545,6 +529,7 @@ const SendToken = () => {
                   `Successfully sent ${tokenAmount} ${selectedTokenSymbol}`
                 );
                 setTransactionHash(tx);
+                setTransactionStatus(true);
                 setTxStatus("success");
               }
             }
@@ -570,7 +555,7 @@ const SendToken = () => {
         toast.error("Failed to send transaction");
       }
     } finally {
-      setIsLoading(false);
+      setIsTransactionLoading(false);
     }
   };
 
@@ -603,27 +588,6 @@ const SendToken = () => {
       toast.error("An unexpected error occurred");
     }
   };
-
-  useEffect(() => {
-    fetchTokens();
-  }, [walletData?.chainId, activeAddress]); // Re-fetch tokens when chainId or activeAddress changes
-
-  // Close the help popup if clicking outside of it
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (helpRef.current && !helpRef.current.contains(event.target as Node)) {
-        setShowHelp(false); // Close the popup
-      }
-    }
-    if (showHelp) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showHelp]);
 
   return (
     <div className="main">
@@ -699,7 +663,7 @@ const SendToken = () => {
                   </div>
 
                   <div className="h-[30vh] overflow-y-auto scroll mt-[15px]">
-                    {isLoading ? (
+                    {isTokenLoading ? (
                       <div className="flex items-center justify-center h-full">
                         <span className="text-center text-gray-500 text-[18px]">
                           Loading tokens...
@@ -874,10 +838,10 @@ const SendToken = () => {
 
                     <button
                       onClick={handleButtonClick}
-                      disabled={isLoading}
+                      disabled={isTransactionLoading}
                       className="hover:scale-110 duration-500 transition 0.3 px-7 py-3 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-md bg-[#FF336A]"
                     >
-                      {isLoading ? "SENDING..." : "SEND"}
+                      {isTransactionLoading ? "SENDING..." : "SEND"}
                     </button>
                   </div>
                 </div>
