@@ -21,15 +21,15 @@ function Homepage() {
   const { user, login, authenticated } = usePrivy();
   const { walletData } = useWallet();
 
-  // const OpenSendToken = () => {
-  //   if (walletData && walletData.authenticated) {
-  //     router.push("/send-token");
-  //   } else {
-  //     alert(
-  //       "Please connect your wallet or log in to gift tokens to your friend."
-  //     );
-  //   }
-  // };
+  const OpenSendToken = () => {
+    if (walletData && walletData.authenticated) {
+      router.push("/send-token");
+    } else {
+      alert(
+        "Please connect your wallet or log in to gift tokens to your friend."
+      );
+    }
+  };
 
   const getActiveAddress = () => {
     if (walletData && walletData.address) {
