@@ -11,6 +11,13 @@ import rankImage from "../../assets/rank.png";
 import { LeaderboardEntry } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import QuizGamePopup from "../Game";
+import mask from "../../assets/Mask.png";
+import r1 from "../../assets/R1.png";
+import r2 from "../../assets/R2.png";
+import r3 from "../../assets/R3.png";
+import path1 from "../../assets/path1.png";
+import path2 from "../../assets/path2.png";
+import path3 from "../../assets/path3.png";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
@@ -64,7 +71,7 @@ const LeaderBoard: React.FC = () => {
       try {
         const queryParams = activeAddress
           ? `?activeAddress=${activeAddress}`
-          : '';
+          : "";
 
         const response = await fetch(`/api/leaderboard${queryParams}`);
 
@@ -83,7 +90,7 @@ const LeaderBoard: React.FC = () => {
             rank: data.userRank,
             invites: data.userDetails.invites,
             claims: data.userDetails.claims,
-            address: data.userDetails.address
+            address: data.userDetails.address,
           });
         }
       } catch (err) {
@@ -117,56 +124,134 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`${theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
-            }`}
+          className={`${
+            theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
+          }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row md:flex-row items-center justify-between gap-8 ">
-              <div className="flex gap-20 flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
-                <div className="flex flex-col border-bg-[#FFE500] border py-10 px-20 bg-gradient-to-r from-[#000000] to-[#0052FF]">
-                  <div className="flex gap-7 ">
-                    <div className="flex flex-col">
-                      <div className="border rounded-full p-3 text-[#FFE925]">
-                        10
+            <div className="w-full  mx-auto flex justify-end mb-4">
+              <button
+                onClick={invite}
+                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${
+                  theme === "dark"
+                    ? "bg-[#FFE500] text-[#363535]"
+                    : "bg-[#FFFFFF] text-black"
+                }`}
+              >
+                Invite Your Friends
+              </button>
+            </div>
+            <div className="flex flex-col lg:flex-row md:flex-row  justify-between gap-8 items-start">
+              <div className="w-[40%] flex gap-5 flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
+                <div className="flex flex-col border border-[#ffe600ba] py-6 w-[90%] bg-gradient-to-r to-[#000000dc] from-[#0051ff98] rounded-lg shadow-lg backdrop-blur-[20px]">
+                  <div className="flex gap-7 items-center justify-evenly ">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="relative">
+                        <Image src={mask} width={100} alt="Rank" />
+                        <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">
+                          {userDetails?.rank}
+                        </span>
                       </div>
-                      <div>Your Rank</div>
+                      <div className="text-lg text-white mb-[15px]">
+                        Your Rank
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <div className="border rounded-full p-3 text-[#FFE925]">
-                        23
-                      </div>
-                      <div>Invited User</div>
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="border rounded-full p-3 text-[#FFE925]">
-                        70
-                      </div>
 
-                      <div>Claimed User</div>
+                    <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
+                      <div className="  border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748]  text-xl font-extrabold">
+                        {userDetails?.invites}
+                      </div>
+                      <div className="text-lg text-white">Invited User</div>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-2 justify-between h-[12vh]">
+                      <div className="border-2  w-[65px]  border-[#cfc45c9b] rounded-full p-4 flex items-center justify-center text-[#FFE925] text-xl font-extrabold">
+                        {userDetails?.claims}
+                      </div>
+                      <div className="text-lg text-white">Claimed User</div>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col border-bg-[#FFE500] border py-10 px-20 bg-gradient-to-r from-[#000000] to-[#0052FF]">
-                  <div className="flex gap-7 ">
-                    <div className="border rounded-full p-3 text-[#FFE925]">
-                      10
+
+                <h2 className="text-[#e7d748] text-2xl font-bold ">Top 3</h2>
+
+                <div className="space-y-4 w-[90%]">
+                  {[1, 2, 3].map((rank, index) => (
+                    <div
+                      key={index}
+                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${
+                        rank === 1
+                          ? "border-[#FF3333]"
+                          : rank === 2
+                          ? "border-[#FF3333]"
+                          : "border-[#FF3333]"
+                      }`}
+                    >
+                      {rank === 1 && (
+                        <Image
+                          src={path1} // Replace with your image path
+                          alt="First Rank Badge"
+                          width={50}
+                          className="absolute top-6 left-0 transform -translate-x-1/2"
+                        />
+                      )}
+                      {rank === 2 && (
+                        <Image
+                          src={path2} // Replace with your image path
+                          alt="Second Rank Badge"
+                          width={50}
+                          className="absolute top-6 left-0 transform -translate-x-1/2"
+                        />
+                      )}
+                      {rank === 3 && (
+                        <Image
+                          src={path3} // Replace with your image path
+                          alt="Third Rank Badge"
+                          width={50}
+                          className="absolute top-6 left-0 transform -translate-x-1/2"
+                        />
+                      )}
+                      <div className="flex items-center  flex-col ">
+                        <div className="relative">
+                          {/* Conditional image based on rank */}
+
+                          <Image
+                            src={rank === 1 ? r1 : rank === 2 ? r2 : r3}
+                            alt={`Rank ${rank}`}
+                            width={50}
+                          />
+                          <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg">
+                            {rank}
+                          </span>
+                        </div>
+                        <div className="text-white font-semibold text-md">
+                          Oxa...Lla
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        <div className="text-[#FFE500] font-bold text-lg">
+                          23
+                        </div>
+                        <div className="text-white text-md mt-1">
+                          Invited User
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center ">
+                        <div className="text-[#FFE500] font-bold text-lg">
+                          12
+                        </div>
+                        <div className="mt-1 text-white text-md">
+                          Claimed User
+                        </div>
+                      </div>
                     </div>
-                    <div className="border rounded-full p-3 text-[#FFE925]">
-                      23
-                    </div>
-                    <div className="border rounded-full p-3 text-[#FFE925]">
-                      70
-                    </div>
-                  </div>
-                  <div className="flex">
-                    <div>Your Rank</div>
-                    <div>Invited User</div>
-                    <div>Claimed User</div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="w-full lg:w-2/3 ">
+              <div className="w-[60%]">
                 {isLoading ? (
                   <div className="h-40 md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
                     Loading...
@@ -176,96 +261,53 @@ const LeaderBoard: React.FC = () => {
                     {error}
                   </div>
                 ) : (
-                  <div className="">
-                    <div className="w-full max-w-4xl mx-auto flex justify-end mb-4">
-                      <button
-                        onClick={invite}
-                        className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
-                            ? "bg-[#FFE500] text-[#363535]"
-                            : "bg-[#FFFFFF] text-black"
-                          }`}
+                  <div className="w-full  rounded-3xl">
+                    <div className="overflow-hidden rounded-md ">
+                      <div
+                        className={`grid grid-cols-4 gap-2 p-3 rounded-md  ${
+                          theme === "dark"
+                            ? " bg-black border border-[#FE660A]"
+                            : " bg-white border border-[#FFFFFF]"
+                        }`}
                       >
-                        Invite Your Friends
-                      </button>
-                    </div>
-                    <div className="w-full max-w-4xl mx-auto rounded-3xl">
-                      <div className="overflow-hidden bg-[#030303] rounded-md ">
-                        <div
-                          className={`grid grid-cols-4 gap-2 p-2 rounded-md mb-2 ${theme === "dark"
-                              ? "bg-[#090406] border border-[#FE660A]"
-                              : "bg-[#FFFCFC] border border-[#FFFFFF]"
-                            }`}
-                        >
-                          {["Rank", "Gifter", "Claimer", "Claim Rate"].map(
-                            (header, index) => (
-                              <div
-                                key={index}
-                                className={`text-center font-semibold ${theme === "dark"
-                                    ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                                    : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                                  }`}
-                              >
-                                {header}
-                              </div>
-                            )
-                          )}
-                        </div>
-                        <div
-                          className={` grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px]  mb-1 last:mb-0 items-center rounded-md ${theme === "dark"
-                              ? "bg-gradient-to-r from-[#ff3333ca] to-[#fe670ad3] border border-[#E265FF]"
-                              : "bg-[#FF3333]/[0.50] border border-[#FFFFFF]"
-                            }`}
-                        >
-                          {/* Yellow Line */}
-                          <div className="h-[70%] bg-[#FFE500] w-[2px]"></div>
-
-                          {/* Rank Section */}
-                          <div className="flex justify-center items-center">
-                            <div className="w-8 h-8 relative">
-                              <Image
-                                src={rankImage}
-                                alt="Rank"
-                                layout="fill"
-                                objectFit="contain"
-                              />
-                              <span className="inset-0 flex items-center justify-center text-white font-bold">
-                                {userDetails?.rank}
-                              </span>
+                        {["Rank", "Gifter", "Claimer", "Claim Rate"].map(
+                          (header, index) => (
+                            <div
+                              key={index}
+                              className={`text-center font-semibold mb-0 bg-black ${
+                                theme === "dark"
+                                  ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
+                                  : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
+                              }`}
+                            >
+                              {header}
                             </div>
-                          </div>
-
-                          {/* Address */}
-                          <div className="text-center text-white truncate">
-                          {userDetails?.address}
-                          </div>
-
-                          {/* Invites */}
-                          <div className="text-center text-white">{userDetails?.invites}</div>
-
-                          {/* Claims */}
-                          <div className="text-center text-white">{userDetails?.claims}</div>
-                        </div>
+                          )
+                        )}
+                      </div>
+                      <div className="mt-2">
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md ${theme === "dark"
-                                ? "bg-[#000000]/[0.40] border border-[#E265FF]"
-                                : "bg-[#FF3333]/[0.50] border border-[#FFFFFF]"
-                              }`}
+                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${
+                              theme === "dark"
+                                ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
+                                : "bg-[#FF3333]/40 border border-[#FFFFFF]"
+                            }`}
                           >
                             {/* Yellow Line */}
                             <div className="h-[70%] bg-[#FFE500] w-[2px]"></div>
 
                             {/* Rank Section */}
-                            <div className="flex justify-center items-center">
-                              <div className="w-8 h-8 relative">
+                            <div className="flex justify-center items-center  backdrop-blur-20 p-2 rounded-md">
+                              <div className="relative w-8 h-8">
                                 <Image
                                   src={rankImage}
                                   alt="Rank"
                                   layout="fill"
                                   objectFit="contain"
                                 />
-                                <span className="inset-0 flex items-center justify-center text-white font-bold">
+                                <span className="bottom-[10px] absolute inset-0 flex items-center justify-center text-white font-bold">
                                   {indexOfFirstItem + index + 1}
                                 </span>
                               </div>
@@ -291,39 +333,40 @@ const LeaderBoard: React.FC = () => {
                           </div>
                         ))}
                       </div>
-
-                      {/* Conditional Pagination - Only show if more than 10 entries */}
-                      {leaderboardData.length > itemsPerPage && (
-                        <div className="flex justify-center items-center mt-4 space-x-2">
-                          <button
-                            onClick={() => paginate(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className={`px-4 py-2 rounded ${currentPage === 1
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-blue-500 text-white hover:bg-blue-600"
-                              }`}
-                          >
-                            Previous
-                          </button>
-
-                          {/* Page Number Display */}
-                          <span className="text-white">
-                            Page {currentPage} of {totalPages}
-                          </span>
-
-                          <button
-                            onClick={() => paginate(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className={`px-4 py-2 rounded ${currentPage === totalPages
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-blue-500 text-white hover:bg-blue-600"
-                              }`}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      )}
                     </div>
+                    {/* Conditional Pagination - Only show if more than 10 entries */}
+                    {/* {leaderboardData.length > itemsPerPage && (
+                      <div className="flex justify-center items-center mt-4 space-x-2">
+                        <button
+                          onClick={() => paginate(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className={`px-4 py-2 rounded ${
+                            currentPage === 1
+                              ? "bg-gray-300 cursor-not-allowed"
+                              : "bg-blue-500 text-white hover:bg-blue-600"
+                          }`}
+                        >
+                          Previous
+                        </button>
+
+                      
+                        <span className="text-white">
+                          Page {currentPage} of {totalPages}
+                        </span>
+
+                        <button
+                          onClick={() => paginate(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className={`px-4 py-2 rounded ${
+                            currentPage === totalPages
+                              ? "bg-gray-300 cursor-not-allowed"
+                              : "bg-blue-500 text-white hover:bg-blue-600"
+                          }`}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )} */}
                   </div>
                 )}
               </div>
