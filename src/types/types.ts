@@ -79,3 +79,10 @@ export interface LeaderboardEntry {
   invites: number;
   claims: number;
 }
+
+export type LeaderboardUser = {
+  address: string;
+  invites: number;
+  claims: number;
+  transactions: any[]; // Adjust this type based on your actual transaction structure
+};

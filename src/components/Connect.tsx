@@ -193,6 +193,30 @@ export const Connect = () => {
     sessionStorage.clear();
   };
   
+  useEffect(() => {
+    const clearInitialStorage = () => {
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+      });
+    
+      // Clear sessionStorage and localStorage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Optional: Set a flag in localStorage to indicate initial load is done
+      localStorage.setItem('initialLoadCleared', 'true');
+    };
+
+    // Check if this is the first load
+    const isFirstLoad = !localStorage.getItem('initialLoadCleared');
+    
+    if (isFirstLoad) {
+      clearInitialStorage();
+    }
+  }, []);
 
   if (!ready) {
     return (

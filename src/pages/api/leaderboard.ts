@@ -53,7 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Prepare response
       const response: any = {
         allUsers: leaderboardData, // All users data
-        totalUsers: leaderboardData.length
+        totalUsers: leaderboardData.length,
+        topThreeUsers: leaderboardData.slice(0, 3) // Add top 3 users
       };
 
       // If activeAddress is provided, get specific data for that address
