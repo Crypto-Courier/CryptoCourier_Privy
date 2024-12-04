@@ -90,7 +90,7 @@ const TransactionPopup: React.FC<Transaction> = ({
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold mb-2">
+              <h2 className="text-2xl font-bold mb-2 text-black">
                 {status === "pending"
                   ? "Processing Transaction"
                   : status === "success"
@@ -99,21 +99,21 @@ const TransactionPopup: React.FC<Transaction> = ({
               </h2>
 
               <div className="text-center space-y-2 mb-4">
-                <p className="text-lg">
+                <p className="text-lg text-black">
                   {status === "pending"
                     ? "Sending"
                     : status === "success"
                     ? "Sent"
                     : "Failed to send"}
                 </p>
-                <p className="text-3xl font-bold text-gray-800">
+                <p className="text-3xl font-bold text-black">
                   {tokenAmount} {tokenSymbol}
                 </p>
               </div>
 
               {status === "success" && txHash && (
                 <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
-                  <span className="text-sm text-gray-600 truncate mr-2">
+                  <span className="text-sm text-black truncate mr-2">
                     {txHash}
                   </span>
                   <motion.button

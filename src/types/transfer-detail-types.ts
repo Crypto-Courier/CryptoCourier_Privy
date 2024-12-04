@@ -5,4 +5,5 @@ export interface TransferDetailsProps {
     tokenSymbol: string;
     recipientEmail: string;
     onConfirm: (walletAddress: string) => void;
+    transferType: 'email' | 'eoa';
   }

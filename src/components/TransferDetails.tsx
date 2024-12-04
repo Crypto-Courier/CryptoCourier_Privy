@@ -14,6 +14,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   tokenSymbol,
   recipientEmail,
   onConfirm,
+  transferType
 }) => {
   const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
@@ -24,7 +25,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
 
   useEffect(() => {
 
-    if (!isOpen || !recipientEmail) return;
+    if (!isOpen || !recipientEmail || transferType !== 'email') return;
 
     const checkWallet = async () => {
       setChecking(true);
@@ -47,7 +48,15 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
     };
 
     checkWallet();
-  }, [isOpen, recipientEmail]);
+  }, [isOpen, recipientEmail, transferType]);
+
+  // Reset states when modal opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      setWalletAddress("");
+      setIsWalletCreated(false);
+    }
+  }, [isOpen]);
 
   const handleCancel = () => {
     setWalletAddress("");
@@ -56,7 +65,10 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   };
 
   const handleConfirm = () => {
-    onConfirm(walletAddress);
+    const addressToConfirm = transferType === 'eoa' 
+      ? recipientEmail 
+      : walletAddress;
+    onConfirm(addressToConfirm);
     onClose();
   };
 
@@ -90,8 +102,12 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   };
 
   const copyToClipboard = () => {
-    if (walletAddress) {
-      navigator.clipboard.writeText(walletAddress);
+    const addressToCopy = transferType === 'eoa' 
+      ? recipientEmail 
+      : walletAddress;
+
+    if (addressToCopy) {
+      navigator.clipboard.writeText(addressToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -132,13 +148,79 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
               className={`text-md lg:text-xl md:text-xl sm:text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"
                 }`}
             >
-              {isWalletCreated ? "Transaction Details" : "Create Wallet"}
+              {transferType === 'eoa' 
+                ? "Transaction Details" 
+                : isWalletCreated 
+                  ? "Transaction Details" 
+                  : "Create Wallet"}
             </h2>
           </div>
         </div>
 
         <div className="p-6">
-          {!isWalletCreated ? (
+        {transferType === 'eoa' ? (
+            <>
+              <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
+                <div className="item-start font-semibold">Send</div>
+
+                <p
+                  className={`text-sm lg:text-md md:text-md sm:text-md rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+                      ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
+                      : "text-black border border-[#0052FF]"
+                    }`}
+                >
+                  {tokenAmount} {tokenSymbol} to {recipientEmail}
+                </p>
+                
+                <div className="item-start font-semibold text-md lg:text-md md:text-md sm:text-md">
+                  Recipient Wallet Address
+                </div>
+                <p
+                  className={`text-sm lg:text-md md:text-md sm:text-md rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${theme === "dark"
+                      ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
+                      : "text-black border border-[#0052FF]"
+                    }`}
+                >
+                  {recipientEmail
+                    ? `${recipientEmail.slice(0, 10)}...${recipientEmail.slice(
+                      -7
+                    )}`
+                    : ""}
+                  <button
+                    className={`p-1 transition-colors ${theme === "dark" ? "text-[#FFE500]" : "text-[#0052FF]"
+                      }`}
+                    onClick={copyToClipboard}
+                  >
+                    {copied ? (
+                      <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </p>
+              </div>
+
+              <div className="flex gap-5 w-[80%] m-auto">
+                <button
+                  onClick={handleCancel}
+                  className={`${theme === "dark"
+                      ? "border border-[#FE660A]"
+                      : "border border-[#0052FF] text-[#0052FF]"
+                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
+                >
+                  Confirm
+                </button>
+              </div>
+            </>
+          ) : (
+          !isWalletCreated ? (
             <div>
               <div className="flex gap-4 mb-2 mt-2 flex-col w-[80%] m-auto">
                 <div
@@ -233,6 +315,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                 </button>
               </div>
             </>
+          )
           )}
         </div>
       </div>

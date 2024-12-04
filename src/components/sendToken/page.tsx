@@ -99,15 +99,15 @@ const SendToken = () => {
       return;
     }
 
-    if (isValidEmail(recipientEmail)) {
+    // if (isValidEmail(recipientEmail)) {
       // If it's an email, show the popup
       setIsPopupOpen(true);
-    } else if (ethers.isAddress(recipientEmail)) {
-      // If it's a wallet address, directly call handleSend
-      await handleSend(recipientEmail);
-    } else {
-      toast.error("Please enter a valid email or wallet address");
-    }
+    // } else if (ethers.isAddress(recipientEmail)) {
+    //   // If it's a wallet address, directly call handleSend
+    //   await handleSend(recipientEmail);
+    // } else {
+    //   toast.error("Please enter a valid email or wallet address");
+    // }
   };
 
   useEffect(() => {
@@ -545,6 +545,7 @@ const SendToken = () => {
 
       setRecipientWalletAddress(walletAddress);
     } catch (error) {
+      setTxStatus("error")
       toast.dismiss();
       console.error("Error sending transaction:", error);
 
@@ -866,6 +867,7 @@ const SendToken = () => {
             tokenSymbol={selectedTokenSymbol}
             recipientEmail={recipientEmail}
             onConfirm={handleSend}
+            transferType={isValidEmail(recipientEmail) ? "email" : "eoa"}
           />
           {/* <TransactionPopup
             isOpen={showTxPopup}
@@ -873,11 +875,12 @@ const SendToken = () => {
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenSymbol}
             status={txStatus}
-            txHash={hash || transactionHash}
+            txHash={transactionHash}
             senderWallet={""}
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
+            senderIdentifier={""}
           /> */}
         </div>
 
