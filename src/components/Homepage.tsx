@@ -58,7 +58,7 @@ function Homepage() {
             theme === "light" ? "border-[#1E1E1E]" : "border-white"
           }`}
         >
-          <div className="flex lg:flex-row md:flex-row items-center justify-between lg:w-[90%] md:w-[90%] sm:w-[80%] w-[70%] mx-auto flex-col lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
+          <div className="flex lg:flex-row md:flex-row items-center justify-between lg:w-[90%] md:w-[90%] sm:w-[80%] w-[80%] mx-auto flex-col lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div
               className={`sec1 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex items-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-[700] lg:border-r-2 sm:rounded-r-[100px]  rounded-r-[100px] lg:rounded-r-[100px] md:border-r-2 md:rounded-r-[100px] md:pr-8 pb-0 md:pb-0 w-full md:w-[60%] lg:w-[60%] border-r-2 text-center md:text-left lg:justify-start md:justify-start sm:border-r-2 sm:justify-start justify-start ${
                 theme === "light" ? "border-[#1E1E1E]" : "border-white"
@@ -86,7 +86,7 @@ function Homepage() {
                   className="w-[70%] sm:w-[80%] lg:w-auto md:w-auto py-5 h-[70%] sm:h-[70%] lg:h-auto md:h-auto "
                 />
               </div>
-              <div> CryptoCourier</div>
+              <div className=""> CryptoCourier</div>
             </div>
             <div className="hidden lg:inline-flex md-inline-flex sm:hidden mt-0 my-2">
               {theme === "light" ? (
@@ -104,7 +104,7 @@ function Homepage() {
               )}
             </div>
             <div className="flex items-center">
-              <div className="inline-flex lg:hidden md-hidden ">
+              <div className=" lg:hidden md-hidden ">
                 {theme === "light" ? (
                   <Image
                     src={send2}
