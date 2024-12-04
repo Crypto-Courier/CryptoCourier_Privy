@@ -30,12 +30,14 @@ interface SwitchHistoryProps {
 }
 
 function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const { theme } = useTheme();
   const [userHasSelected, setUserHasSelected] = useState(false);
   const [selectedChains, setSelectedChains] = useState<number[]>([
-    8453, 919, 34443, 11155111, 291, 7560, 7777777, 1135, 255, 10, 
-    252, 480, 288, 185, 690, 360, 254, 8866, 1750, 5112, 2192, 888888888
-  ]); 
+    8453, 919, 34443, 11155111, 291, 7560, 7777777, 1135, 255, 10, 252, 480,
+    288, 185, 690, 360, 254, 8866, 1750, 5112, 2192, 888888888,
+  ]);
 
   const handleChainClick = (chainId: number) => {
     if (!userHasSelected) {
@@ -50,12 +52,12 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         // reset to all chains
         if (selectedChains.length === 1) {
           setUserHasSelected(false);
-          const allChains = chains.map(chain => chain.id);
+          const allChains = chains.map((chain) => chain.id);
           setSelectedChains(allChains);
           onChainSelect(allChains);
         } else {
           // Remove this chain from selection
-          const newSelected = selectedChains.filter(id => id !== chainId);
+          const newSelected = selectedChains.filter((id) => id !== chainId);
           setSelectedChains(newSelected);
           onChainSelect(newSelected);
         }
@@ -70,7 +72,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
 
   const handleClearAll = () => {
     setUserHasSelected(false);
-    const allChains = chains.map(chain => chain.id);
+    const allChains = chains.map((chain) => chain.id);
     setSelectedChains(allChains);
     onChainSelect(allChains);
   };
@@ -113,11 +115,13 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
             }`}
           >
             Clear All
-            <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
-              theme === "dark"
-                ? "bg-[#363535] text-[#FFE500]"
-                : "bg-white text-[#E265FF]"
-            }`}>
+            <span
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                theme === "dark"
+                  ? "bg-[#363535] text-[#FFE500]"
+                  : "bg-white text-[#E265FF]"
+              }`}
+            >
               {selectedChains.length}
             </span>
           </button>
@@ -128,17 +132,19 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
       <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
         {chains.map((chain) => (
           <Tooltip title={chain.title} key={chain.id}>
-            <div 
+            <div
               onClick={() => handleChainClick(chain.id)}
               className={`border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md ${
-                selectedChains.includes(chain.id) ? 'scale-110' : ''
+                selectedChains.includes(chain.id) ? "scale-110" : ""
               }`}
             >
               <Image
                 src={chain.img}
                 alt={chain.title}
                 className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                  !userHasSelected || selectedChains.includes(chain.id) ? 'opacity-100' : 'opacity-40'
+                  !userHasSelected || selectedChains.includes(chain.id)
+                    ? "opacity-100"
+                    : "opacity-40"
                 } ${theme === "dark" ? "bg-white" : "bg-black"}`}
               />
             </div>
@@ -147,30 +153,56 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
       </div>
 
       {/* Mobile view */}
+      {/* Dropdown for small screens */}
       <div className="md:hidden">
-        <div className={`backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 flex justify-center items-center outline-none ${
-          theme === "dark"
-            ? "bg-[#000000]/50 border border-white text-white"
-            : "bg-[#FFFCFC] border border-gray-700 text-black"
-        }`}>
-          <div className="flex flex-wrap justify-center gap-4">
+        <div
+          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
+            theme === "dark"
+              ? "bg-[#000000]/50 border border-white text-white"
+              : "bg-[#FFFCFC] border border-gray-700 text-black"
+          }`}
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <div className="flex items-center">
+            {/* Display the currently selected chain */}
+            <Image
+              src={sepolia}
+              alt="Selected Chain"
+              className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
+                theme === "dark" ? "bg-white" : "bg-black"
+              }`}
+            />
+            Select chain
+          </div>
+          <span>{dropdownOpen ? "▲" : "▼"}</span>
+        </div>
+
+        {/* Dropdown options */}
+        {dropdownOpen && (
+          <div
+            className={`absolute z-10 w-full rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
+              theme === "dark"
+                ? "bg-[#000000]/70 border border-white text-white"
+                : "bg-[#FFFCFC] border border-gray-700 text-black"
+            }`}
+          >
             {chains.map((chain) => (
-              <div 
-                key={chain.id} 
-                onClick={() => handleChainClick(chain.id)}
-                className="flex items-center cursor-pointer"
+              <div
+                key={chain.id}
+                className={`flex  px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 `}
               >
                 <Image
                   src={chain.img}
                   alt={chain.title}
-                  className={`w-[24px] h-[24px] block p-[1px] rounded-[15px] ${
-                  !userHasSelected || selectedChains.includes(chain.id) ? 'opacity-100' : 'opacity-40'
-                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
+                  className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
+                    theme === "dark" ? "bg-white" : "bg-black"
+                  }`}
                 />
+                {chain.title}
               </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import r3 from "../../assets/R3.png";
 import path1 from "../../assets/path1.png";
 import path2 from "../../assets/path2.png";
 import path3 from "../../assets/path3.png";
+import loader from "../../assets/processing.gif";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
@@ -158,17 +159,43 @@ const LeaderBoard: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
-                      <div className="  border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748]  text-xl font-extrabold">
-                        {userDetails?.invites}
-                      </div>
-                      <div className="text-lg text-white">Invited User</div>
+                      {userDetails ? (
+                        <>
+                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748] text-xl font-extrabold">
+                            {userDetails.invites}
+                          </div>
+                          <div className="text-lg text-white">Invited User</div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <Image
+                            src={loader}
+                            alt="Loading"
+                            width={40}
+                            height={40}
+                          />
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex flex-col items-center gap-2 justify-between h-[12vh]">
-                      <div className="border-2  w-[65px]  border-[#cfc45c9b] rounded-full p-4 flex items-center justify-center text-[#FFE925] text-xl font-extrabold">
-                        {userDetails?.claims}
-                      </div>
-                      <div className="text-lg text-white">Claimed User</div>
+                    <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
+                      {userDetails ? (
+                        <>
+                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#FFE925] text-xl font-extrabold">
+                            {userDetails.claims}
+                          </div>
+                          <div className="text-lg text-white">Claimed User</div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <Image
+                            src={loader}
+                            alt="Loading"
+                            width={40}
+                            height={40}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
