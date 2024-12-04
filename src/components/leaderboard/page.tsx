@@ -27,6 +27,7 @@ const LeaderBoard: React.FC = () => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     []
   );
+  const [topThreeUsers, setTopThreeUsers] = useState<LeaderboardEntry[]>([]);
   const [userDetails, setUserDetails] = useState<{
     rank?: number;
     invites: number;
@@ -37,33 +38,11 @@ const LeaderBoard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const isConnected = walletData?.authenticated;
   const activeAddress = walletData?.address;
-  const isEmailConnected = walletData?.isEmailConnected;
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  // useEffect(() => {
-  //   const fetchLeaderboardData = async () => {
-  //     try {
-  //       const response = await fetch("/api/leaderboard");
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch leaderboard data");
-  //       }
-  //       const data = await response.json();
-  //       setLeaderboardData(data);
-  //     } catch (err) {
-  //       setError("Failed to load leaderboard data");
-  //       console.error(err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchLeaderboardData();
-  // }, []);
 
   // Pagination calculations
 
@@ -85,6 +64,7 @@ const LeaderBoard: React.FC = () => {
         // Update state with all users data
         setLeaderboardData(data.allUsers);
 
+        setTopThreeUsers(data.topThreeUsers || []);
         // If user-specific data is available, you can use it
         if (data.userDetails) {
           setUserDetails({
@@ -125,19 +105,17 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`${
-            theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
-          }`}
+          className={`${theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
+            }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
             <div className="w-full  mx-auto flex justify-end mb-4">
               <button
                 onClick={invite}
-                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${
-                  theme === "dark"
+                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#FFFFFF] text-black"
-                }`}
+                  }`}
               >
                 Invite Your Friends
               </button>
@@ -203,18 +181,17 @@ const LeaderBoard: React.FC = () => {
                 <h2 className="text-[#e7d748] text-2xl font-bold ">Top 3</h2>
 
                 <div className="space-y-4 w-[90%]">
-                  {[1, 2, 3].map((rank, index) => (
+                  {topThreeUsers.map((user, index) => (
                     <div
                       key={index}
-                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${
-                        rank === 1
+                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${index === 0
                           ? "border-[#FF3333]"
-                          : rank === 2
-                          ? "border-[#FF3333]"
-                          : "border-[#FF3333]"
-                      }`}
+                          : index === 1
+                            ? "border-[#FF3333]"
+                            : "border-[#FF3333]"
+                        }`}
                     >
-                      {rank === 1 && (
+                      {index === 0 && (
                         <Image
                           src={path1} // Replace with your image path
                           alt="First Rank Badge"
@@ -222,7 +199,7 @@ const LeaderBoard: React.FC = () => {
                           className="absolute top-6 left-0 transform -translate-x-1/2"
                         />
                       )}
-                      {rank === 2 && (
+                      {index === 1 && (
                         <Image
                           src={path2} // Replace with your image path
                           alt="Second Rank Badge"
@@ -230,7 +207,7 @@ const LeaderBoard: React.FC = () => {
                           className="absolute top-6 left-0 transform -translate-x-1/2"
                         />
                       )}
-                      {rank === 3 && (
+                      {index === 2 && (
                         <Image
                           src={path3} // Replace with your image path
                           alt="Third Rank Badge"
@@ -243,22 +220,22 @@ const LeaderBoard: React.FC = () => {
                           {/* Conditional image based on rank */}
 
                           <Image
-                            src={rank === 1 ? r1 : rank === 2 ? r2 : r3}
-                            alt={`Rank ${rank}`}
+                            src={index === 0 ? r1 : index === 1 ? r2 : r3}
+                            alt={`Rank ${index + 1}`}
                             width={50}
                           />
                           <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg">
-                            {rank}
+                            {index + 1}
                           </span>
                         </div>
                         <div className="text-white font-semibold text-md">
-                          Oxa...Lla
+                          {`${user.address.slice(0, 4)}...${user.address.slice(-4)}`}
                         </div>
                       </div>
 
                       <div className="flex flex-col items-center">
                         <div className="text-[#FFE500] font-bold text-lg">
-                          23
+                          {user.invites}
                         </div>
                         <div className="text-white text-md mt-1">
                           Invited User
@@ -267,7 +244,7 @@ const LeaderBoard: React.FC = () => {
 
                       <div className="flex flex-col items-center ">
                         <div className="text-[#FFE500] font-bold text-lg">
-                          12
+                          {user.claims}
                         </div>
                         <div className="mt-1 text-white text-md">
                           Claimed User
@@ -291,21 +268,19 @@ const LeaderBoard: React.FC = () => {
                   <div className="w-full  rounded-3xl">
                     <div className="overflow-hidden rounded-md ">
                       <div
-                        className={`grid grid-cols-4 gap-2 p-3 rounded-md  ${
-                          theme === "dark"
+                        className={`grid grid-cols-4 gap-2 p-3 rounded-md  ${theme === "dark"
                             ? " bg-black border border-[#FE660A]"
                             : " bg-white border border-[#FFFFFF]"
-                        }`}
+                          }`}
                       >
                         {["Rank", "Gifter", "Claimer", "Claim Rate"].map(
                           (header, index) => (
                             <div
                               key={index}
-                              className={`text-center font-semibold mb-0 bg-black ${
-                                theme === "dark"
+                              className={`text-center font-semibold mb-0 bg-black ${theme === "dark"
                                   ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
                                   : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                              }`}
+                                }`}
                             >
                               {header}
                             </div>
@@ -316,11 +291,10 @@ const LeaderBoard: React.FC = () => {
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${
-                              theme === "dark"
+                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${theme === "dark"
                                 ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
                                 : "bg-[#FF3333]/40 border border-[#FFFFFF]"
-                            }`}
+                              }`}
                           >
                             {/* Yellow Line */}
                             <div className="h-[70%] bg-[#FFE500] w-[2px]"></div>

@@ -62,6 +62,7 @@ const SendToken = () => {
   const [maxAmount, setMaxAmount] = useState("");
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [transactionStauts, setTransactionStatus] = useState(false);
+  const [isContractCall, setIsContractCall] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
@@ -99,15 +100,15 @@ const SendToken = () => {
       return;
     }
 
-    if (isValidEmail(recipientEmail)) {
+    // if (isValidEmail(recipientEmail)) {
       // If it's an email, show the popup
       setIsPopupOpen(true);
-    } else if (ethers.isAddress(recipientEmail)) {
-      // If it's a wallet address, directly call handleSend
-      await handleSend(recipientEmail);
-    } else {
-      toast.error("Please enter a valid email or wallet address");
-    }
+    // } else if (ethers.isAddress(recipientEmail)) {
+    //   // If it's a wallet address, directly call handleSend
+    //   await handleSend(recipientEmail);
+    // } else {
+    //   toast.error("Please enter a valid email or wallet address");
+    // }
   };
 
   useEffect(() => {
@@ -117,7 +118,12 @@ const SendToken = () => {
     if (selectedTokenData) {
       setSelectedTokenSymbol(selectedTokenData.symbol);
     }
-  }, [tokens, selectedToken]);
+
+    if(!(selectedToken === "native") && isValidEmail(recipientEmail)){
+      setIsContractCall(true);
+    }
+
+  }, [tokens, selectedToken, recipientEmail]);
   
   // For fetch token from database
   useEffect(() => {
@@ -545,6 +551,7 @@ const SendToken = () => {
 
       setRecipientWalletAddress(walletAddress);
     } catch (error) {
+      setTxStatus("error")
       toast.dismiss();
       console.error("Error sending transaction:", error);
 
@@ -866,6 +873,8 @@ const SendToken = () => {
             tokenSymbol={selectedTokenSymbol}
             recipientEmail={recipientEmail}
             onConfirm={handleSend}
+            transferType={isValidEmail(recipientEmail) ? "email" : "eoa"}
+            isContractCall={isContractCall}
           />
           {/* <TransactionPopup
             isOpen={showTxPopup}
@@ -873,11 +882,12 @@ const SendToken = () => {
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenSymbol}
             status={txStatus}
-            txHash={hash || transactionHash}
+            txHash={transactionHash}
             senderWallet={""}
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
+            senderIdentifier={""}
           /> */}
         </div>
 
