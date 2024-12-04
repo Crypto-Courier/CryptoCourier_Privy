@@ -14,7 +14,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   tokenSymbol,
   recipientEmail,
   onConfirm,
-  transferType
+  transferType,
+  isContractCall
 }) => {
   const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
@@ -32,7 +33,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
 
       try {
         const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail });
-
+        console.log("Hello is Contract call ", isContractCall);
         if (response.data) {
           setWalletAddress(response.data);
           setIsWalletCreated(true);
@@ -65,8 +66,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   };
 
   const handleConfirm = () => {
-    const addressToConfirm = transferType === 'eoa' 
-      ? recipientEmail 
+    const addressToConfirm = transferType === 'eoa'
+      ? recipientEmail
       : walletAddress;
     onConfirm(addressToConfirm);
     onClose();
@@ -102,8 +103,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   };
 
   const copyToClipboard = () => {
-    const addressToCopy = transferType === 'eoa' 
-      ? recipientEmail 
+    const addressToCopy = transferType === 'eoa'
+      ? recipientEmail
       : walletAddress;
 
     if (addressToCopy) {
@@ -119,8 +120,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
       <div
         className={`rounded-[10px] max-w-lg w-full mx-4 relative ${theme === "dark"
-            ? "bg-[#111111] border-[#FE660A] border backdrop-blur-[10px]"
-            : "bg-[#FFFCFC] border border-[#FE005B]/60"
+          ? "bg-[#111111] border-[#FE660A] border backdrop-blur-[10px]"
+          : "bg-[#FFFCFC] border border-[#FE005B]/60"
           }`}
       >
         <button
@@ -132,8 +133,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
 
         <div
           className={`flex justify-center items-center lg:p-6 md:p-6 sm:p-6 p-4 rounded-tr-[10px] rounded-tl-[10px] ${theme === "dark"
-              ? "bg-[#000000] border-b-2 border-[#FE660A]"
-              : "bg-white border-b-2 border-[#FE005B]"
+            ? "bg-[#000000] border-b-2 border-[#FE660A]"
+            : "bg-white border-b-2 border-[#FE005B]"
             }`}
         >
           <div className="flex items-center flex-col">
@@ -148,37 +149,63 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
               className={`text-md lg:text-xl md:text-xl sm:text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"
                 }`}
             >
-              {transferType === 'eoa' 
-                ? "Transaction Details" 
-                : isWalletCreated 
-                  ? "Transaction Details" 
+              {transferType === 'eoa'
+                ? "Transaction Details"
+                : isWalletCreated
+                  ? "Transaction Details"
                   : "Create Wallet"}
             </h2>
           </div>
         </div>
 
         <div className="p-6">
-        {transferType === 'eoa' ? (
+          {transferType === 'eoa' ? (
             <>
               <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
                 <div className="item-start font-semibold">Send</div>
 
                 <p
                   className={`text-sm lg:text-md md:text-md sm:text-md rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
-                      ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
-                      : "text-black border border-[#0052FF]"
+                    ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
+                    : "text-black border border-[#0052FF]"
                     }`}
                 >
                   {tokenAmount} {tokenSymbol} to {recipientEmail}
                 </p>
-                
+
+                {isContractCall && (
+                  <div
+                    className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+                      ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
+                      : "text-black border border-[#0052FF]"
+                      }`}
+                  >
+                    <ol className="list-none list-inside">
+                      <li>
+                        <strong>Approve Transaction:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                          ? "text-white   bg-[#272626]"
+                          : "text-black"
+                          }`}>
+                          You will approve <u>{tokenAmount} {tokenSymbol}</u> to Transfer.</span>
+                      </li>
+                      <li>
+                        <strong>Execute Transfer:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                          ? "text-white   bg-[#272626]"
+                          : "text-black"
+                          }`}>
+                          You will transfer the approved token to <u>{recipientEmail}</u></span>
+                      </li>
+                    </ol>
+                  </div>
+                )}
+
                 <div className="item-start font-semibold text-md lg:text-md md:text-md sm:text-md">
                   Recipient Wallet Address
                 </div>
                 <p
                   className={`text-sm lg:text-md md:text-md sm:text-md rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${theme === "dark"
-                      ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
-                      : "text-black border border-[#0052FF]"
+                    ? "text-[#FFE500] bg-[#272626] border border-[#3EFEFEF]"
+                    : "text-black border border-[#0052FF]"
                     }`}
                 >
                   {recipientEmail
@@ -204,8 +231,8 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                 <button
                   onClick={handleCancel}
                   className={`${theme === "dark"
-                      ? "border border-[#FE660A]"
-                      : "border border-[#0052FF] text-[#0052FF]"
+                    ? "border border-[#FE660A]"
+                    : "border border-[#0052FF] text-[#0052FF]"
                     } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
                 >
                   Cancel
@@ -220,102 +247,129 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
               </div>
             </>
           ) : (
-          !isWalletCreated ? (
-            <div>
-              <div className="flex gap-4 mb-2 mt-2 flex-col w-[80%] m-auto">
-                <div
-                  className={`item-start font-semibold  ${theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                >
-                  {checking ? "Searching embedded wallet for" : "A new wallet will be created for"}
-                </div>
-                <div
-                  className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+            !isWalletCreated ? (
+              <div>
+                <div className="flex gap-4 mb-2 mt-2 flex-col w-[80%] m-auto">
+                  <div
+                    className={`item-start font-semibold  ${theme === "dark" ? "text-white" : "text-black"
+                      }`}
+                  >
+                    {checking ? "Searching embedded wallet for" : "A new wallet will be created for"}
+                  </div>
+                  <div
+                    className={`text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
                       ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                    } `}
-                >
-                  {recipientEmail}
+                      } `}
+                  >
+                    {recipientEmail}
+                  </div>
+                  <button
+                    onClick={handleCreateWallet}
+                    disabled={loading || checking}
+                    className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                      } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
+                  >
+                    {checking
+                      ? "Searching for existing wallet..."
+                      : loading
+                        ? "Creating..."
+                        : "Create Wallet"}
+                  </button>
                 </div>
-                <button
-                  onClick={handleCreateWallet}
-                  disabled={loading || checking}
-                  className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                    } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
-                >
-                  {checking
-                    ? "Searching for existing wallet..."
-                    : loading
-                      ? "Creating..."
-                      : "Create Wallet"}
-                </button>
               </div>
-            </div>
-          ) : (
-            <>
-              <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
-                <div className="item-start font-semibold">Send</div>
+            ) : (
+              <>
+                <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
+                  <div className="item-start font-semibold">Send</div>
 
-                <p
-                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+                  <p
+                    className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
                       ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                    }`}
-                >
-                  {tokenAmount} {tokenSymbol} to {recipientEmail}
-                </p>
-                <div className="item-start font-semibold text-md lg:text-md  md:text-md sm:text-md ">
-                  {" "}
-                  New Wallet for Recipient
-                </div>
-                <p
-                  className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${theme === "dark"
+                      }`}
+                  >
+                    {tokenAmount} {tokenSymbol} to {recipientEmail}
+                  </p>
+                  <div className="item-start font-semibold">Transaction Flow</div>
+                  {isContractCall && (
+                    <div
+                      className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+                        ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
+                        : "text-black border border-[#0052FF]"
+                        }`}
+                    >
+                      <ol className="list-none list-inside">
+                        <li>
+                          <strong>Approve Transaction:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                            ? "text-white   bg-[#272626]"
+                            : "text-black"
+                            }`}>
+                            You will approve <u>{tokenAmount} {tokenSymbol}</u> to Transfer.</span>
+                        </li>
+                        <li>
+                          <strong>Execute Transfer:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                            ? "text-white   bg-[#272626]"
+                            : "text-black"
+                            }`}>
+                            You will transfer the approved token to <u>{recipientEmail}</u></span>
+                        </li>
+                      </ol>
+                    </div>
+                  )}
+
+                  <div className="item-start font-semibold text-md lg:text-md  md:text-md sm:text-md ">
+                    {" "}
+                    New Wallet for Recipient
+                  </div>
+                  <p
+                    className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 flex justify-between font-bold ${theme === "dark"
                       ? "text-[#FFE500]  bg-[#272626] border border-[#3EFEFEF]"
                       : "text-black border border-[#0052FF]"
-                    }`}
-                >
-                  {walletAddress
-                    ? `${walletAddress.slice(0, 10)}...${walletAddress.slice(
-                      -7
-                    )}`
-                    : ""}
-                  <button
-                    className={`p-1 text-[#FFE500] transition-colors ${theme === "dark" ? "text-[#FFE500]" : "text-[#0052FF]"
                       }`}
-                    onClick={copyToClipboard}
                   >
-                    {copied ? (
-                      <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
-                </p>
-                <div className="text-md lg:text-md  md:text-md sm:text-md font-semibold ">
-                  You can check out transaction for transparency.
+                    {walletAddress
+                      ? `${walletAddress.slice(0, 10)}...${walletAddress.slice(
+                        -7
+                      )}`
+                      : ""}
+                    <button
+                      className={`p-1 text-[#FFE500] transition-colors ${theme === "dark" ? "text-[#FFE500]" : "text-[#0052FF]"
+                        }`}
+                      onClick={copyToClipboard}
+                    >
+                      {copied ? (
+                        <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </p>
+                  <div className="text-md lg:text-md  md:text-md sm:text-md font-semibold ">
+                    You can check out transaction for transparency.
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex gap-5 w-[80%] m-auto">
-                <button
-                  onClick={handleCancel}
-                  className={`${theme === "dark"
+                <div className="flex gap-5 w-[80%] m-auto">
+                  <button
+                    onClick={handleCancel}
+                    className={`${theme === "dark"
                       ? "border border-[#FE660A]"
                       : "border border-[#0052FF] text-[#0052FF]"
-                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirm}
-                  className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                    } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
-                >
-                  Confirm
-                </button>
-              </div>
-            </>
-          )
+                      } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold `}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirm}
+                    className={`${theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                      } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </>
+            )
           )}
         </div>
       </div>

@@ -62,6 +62,7 @@ const SendToken = () => {
   const [maxAmount, setMaxAmount] = useState("");
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [transactionStauts, setTransactionStatus] = useState(false);
+  const [isContractCall, setIsContractCall] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
@@ -117,7 +118,12 @@ const SendToken = () => {
     if (selectedTokenData) {
       setSelectedTokenSymbol(selectedTokenData.symbol);
     }
-  }, [tokens, selectedToken]);
+
+    if(!(selectedToken === "native") && isValidEmail(recipientEmail)){
+      setIsContractCall(true);
+    }
+
+  }, [tokens, selectedToken, recipientEmail]);
   
   // For fetch token from database
   useEffect(() => {
@@ -868,6 +874,7 @@ const SendToken = () => {
             recipientEmail={recipientEmail}
             onConfirm={handleSend}
             transferType={isValidEmail(recipientEmail) ? "email" : "eoa"}
+            isContractCall={isContractCall}
           />
           {/* <TransactionPopup
             isOpen={showTxPopup}
