@@ -167,7 +167,8 @@ const SendToken = () => {
           activeAddress as `0x${string}`,
           tokenAmount,
           selectedTokenData.symbol,
-          recipientEmail
+          recipientEmail,
+          senderIdentifier
         );
         setTokenAmount("");
         setRecipientEmail("");
@@ -242,7 +243,8 @@ const SendToken = () => {
     address: string,
     tokenAmount: string,
     selectedTokenData: string,
-    recipientEmail: string
+    recipientEmail: string,
+    senderIdentifier: string
   ) => {
     try {
       const storeResponse = await fetch("/api/store-transaction", {
@@ -258,6 +260,7 @@ const SendToken = () => {
           recipientEmail,
           transactionHash: transactionHash,
           chainId: walletData?.chainId.split(":")[1],
+          senderIdentifier
         }),
       });
 

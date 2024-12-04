@@ -5,10 +5,10 @@ import chainConfig from '../../config/chains';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId } = req.body;
-      console.log('Request body:', { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId });
+      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId, senderIdentifier } = req.body;
+      console.log('Request body:', { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId, senderIdentifier });
 
-      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !transactionHash || !chainId) {
+      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !transactionHash || !chainId || !senderIdentifier) {
         console.log('Missing required fields in request');
         return res.status(400).json({ error: 'Missing required fields' });
       }
@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tokenSymbol,
         recipientEmail,
         transactionHash,
+        senderIdentifier,
         chainId,
         createdAt: new Date(),
         customizedLink: `${blockExplorerUrl}/${transactionHash}`,
