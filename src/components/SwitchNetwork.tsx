@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import useOutsideClick from "../lib/useOutsideClick";
 import { useWallet } from "../context/WalletContext";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -23,7 +24,7 @@ import ancient from "../assets/ancient.webp";
 import shape from "../assets/shape.jpeg";
 import swan from "../assets/swan.webp";
 import superlumio from "../assets/superlumio.jpeg";
-import  metalL2 from "../assets/metalL2.webp";
+import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg"
 import snaxChain from "../assets/snax.png"
 
@@ -34,6 +35,8 @@ function SwitchNetwork() {
   const { theme } = useTheme();
   const { selectedChain, setSelectedChain } = useWallet();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(dropdownRef, () => setDropdownOpen(false));
 
   // Set default chain if none selected
   useEffect(() => {
@@ -64,17 +67,17 @@ function SwitchNetwork() {
     { id: 255, title: "Kroma", img: kroma },
     { id: 10, title: "Optimism", img: op },
     { id: 252, title: "Fraxtal", img: fraxtal },
-    { id: 480, title: "World Chain", img: worldChain},
+    { id: 480, title: "World Chain", img: worldChain },
     { id: 288, title: "Boba Network", img: boba },
-    { id: 185, title: "Mint Blockchain", img: mint},
-    { id: 690, title: "Redstone", img: redstone},
-    { id: 360, title: "Shape", img: shape},
-    { id: 254, title: "Swan Chain", img: swan},
-    { id: 8866, title: "Superlumio", img: superlumio},
-    { id: 1750, title: "MetalL2", img: metalL2},
-    { id: 5112, title: "Ham Chain", img: hamchain},
-    { id: 2192, title: "SNAX Chain", img: snaxChain},
-    { id: 888888888, title: "Ancient 8", img: ancient},
+    { id: 185, title: "Mint Blockchain", img: mint },
+    { id: 690, title: "Redstone", img: redstone },
+    { id: 360, title: "Shape", img: shape },
+    { id: 254, title: "Swan Chain", img: swan },
+    { id: 8866, title: "Superlumio", img: superlumio },
+    { id: 1750, title: "MetalL2", img: metalL2 },
+    { id: 5112, title: "Ham Chain", img: hamchain },
+    { id: 2192, title: "SNAX Chain", img: snaxChain },
+    { id: 888888888, title: "Ancient 8", img: ancient },
     { id: 11155111, title: "Ethereum Sepolia", img: sepolia },
   ];
 
@@ -85,7 +88,7 @@ function SwitchNetwork() {
   return (
     <div>
       {/* Responsive layout */}
-      <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
+      <div ref={dropdownRef} className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
         {chains.map((chain) => (
           <Tooltip title={chain.title} key={chain.id}>
             {" "}
@@ -98,9 +101,8 @@ function SwitchNetwork() {
               <Image
                 src={chain.img}
                 alt={chain.title}
-                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
-                  currentChain === chain.id ? "opacity-100" : "opacity-40"
-                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
+                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${currentChain === chain.id ? "opacity-100" : "opacity-40"
+                  } ${theme === "dark" ? "bg-white" : "bg-black"}`}
               />
             </button>
           </Tooltip>
@@ -110,11 +112,11 @@ function SwitchNetwork() {
       {/* Dropdown for small screens */}
       <div className="md:hidden">
         <div
-          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
-            theme === "dark"
+          ref={dropdownRef}
+          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${theme === "dark"
               ? "bg-[#000000]/50 border border-white text-white"
               : "bg-[#FFFCFC] border border-gray-700 text-black"
-          }`}
+            }`}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           <div className="flex items-center">
@@ -125,9 +127,8 @@ function SwitchNetwork() {
                 sepolia
               }
               alt="Selected Chain"
-              className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
-                theme === "dark" ? "bg-white" : "bg-black"
-              }`}
+              className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${theme === "dark" ? "bg-white" : "bg-black"
+                }`}
             />
             {chains.find((chain) => chain.id === currentChain)?.title ||
               "Select chain"}
@@ -138,26 +139,23 @@ function SwitchNetwork() {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-full rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
-              theme === "dark"
+            className={`absolute z-10 w-full rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
-            }`}
+              }`}
           >
             {chains.map((chain) => (
               <div
                 key={chain.id}
                 onClick={() => handleChainSwitch(chain.id)}
-                className={`flex  px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 ${
-                  currentChain === chain.id ? "bg-opacity-20" : ""
-                }`}
+                className={`flex  px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 ${currentChain === chain.id ? "bg-opacity-20" : ""
+                  }`}
               >
                 <Image
                   src={chain.img}
                   alt={chain.title}
-                  className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
-                    currentChain === chain.id ? "opacity-100" : "opacity-40"
-                  } ${theme === "dark" ? "bg-white" : "bg-black"}`}
+                  className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${currentChain === chain.id ? "opacity-100" : "opacity-40"
+                    } ${theme === "dark" ? "bg-white" : "bg-black"}`}
                 />
                 {chain.title}
               </div>
