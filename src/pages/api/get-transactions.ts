@@ -32,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tokenSymbol: 1,
       customizedLink: 1,
       recipientEmail: 1,
+      senderIdentifier: 1,
       chainId: 1
     }).toArray();
 

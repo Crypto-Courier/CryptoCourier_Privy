@@ -33,6 +33,7 @@ import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
 import { isValidEmail } from "../../lib/validation"
+import useOutsideClick from "../../lib/useOutsideClick";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
@@ -73,6 +74,7 @@ const SendToken = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
   const TRANSACTIONS_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
 
@@ -167,7 +169,8 @@ const SendToken = () => {
           activeAddress as `0x${string}`,
           tokenAmount,
           selectedTokenData.symbol,
-          recipientEmail
+          recipientEmail,
+          senderIdentifier
         );
         setTokenAmount("");
         setRecipientEmail("");
@@ -242,7 +245,8 @@ const SendToken = () => {
     address: string,
     tokenAmount: string,
     selectedTokenData: string,
-    recipientEmail: string
+    recipientEmail: string,
+    senderIdentifier: string
   ) => {
     try {
       const storeResponse = await fetch("/api/store-transaction", {
@@ -258,6 +262,7 @@ const SendToken = () => {
           recipientEmail,
           transactionHash: transactionHash,
           chainId: walletData?.chainId.split(":")[1],
+          senderIdentifier
         }),
       });
 
