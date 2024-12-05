@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="text-center text-sm sm:text-md md:text-lg pb-4 pt-4 md:pb-6 md:pt-6 px-2">
+    <footer className="text-center text-sm sm:text-sm md:text-lg pb-4 pt-4 md:pb-6 md:pt-6 px-2">
       <p>
         Copyright © 2024 CryptoCourier. | Built with ❤️ for Superchain
         {/* <span className="text-white-700 px-1 font-bold"></span> */}

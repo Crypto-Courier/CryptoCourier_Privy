@@ -43,11 +43,11 @@ function Homepage() {
   const activeAddress = getActiveAddress();
 
   // Redirect to /send-token if activeAddress is available
-  useEffect(() => {
-    if (activeAddress) {
-      router.push("/send-token");
-    }
-  }, [activeAddress, router]);
+  // useEffect(() => {
+  //   if (activeAddress) {
+  //     router.push("/send-token");
+  //   }
+  // }, [activeAddress, router]);
 
   return (
     <div className="main min-h-screen flex flex-col ">
@@ -76,17 +76,22 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[90%] mx-auto flex justify-center">
-          <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center space-y-4  sm:space-x-4 font-[600]">
-            <div className="flex items-center">
-              <div className="lg:mt-4 md:mt-0 lg:h-[20vh] md:h-[20vh]  w-full md:w-auto flex justify-center  lg:hidden md:hidden sm:hidden">
+        <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[100%] mx-auto flex justify-center">
+          <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center lg:space-y-4 md:space-y-4  sm:space-y-0 ">
+            <div className="flex items-center relative">
+              <div className=" lg:mt-4 md:mt-0 lg:h-[20vh] md:h-[20vh]  w-full md:w-auto flex justify-center  lg:hidden md:hidden sm:hidden">
                 <Image
                   src={TokenCircles}
                   alt="Token circles"
-                  className="w-[70%] sm:w-[80%] lg:w-auto md:w-auto py-5 h-[70%] sm:h-[70%] lg:h-auto md:h-auto "
+                  className="w-[60%] sm:w-[80%] lg:w-auto md:w-auto py-5 h-[70%] sm:h-[70%] lg:h-auto md:h-auto "
                 />
               </div>
-              <div className=""> CryptoCourier</div>
+              <div className="sm:absolute lg:hidden md:hidden absolute left-[63px] bg-black opacity-[0.5] text-[27px] px-[7px] pb-[6px]">
+                CryptoCourier
+              </div>
+              <div className="mx-3 sm:hidden lg:block md:block hidden">
+                CryptoCourier
+              </div>
             </div>
             <div className="hidden lg:inline-flex md-inline-flex sm:hidden mt-0 my-2">
               {theme === "light" ? (
@@ -103,7 +108,7 @@ function Homepage() {
                 />
               )}
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-y-0">
               <div className=" lg:hidden md-hidden ">
                 {theme === "light" ? (
                   <Image
@@ -119,7 +124,7 @@ function Homepage() {
                   />
                 )}
               </div>
-              <div className="sm:space-y-0 mx-3"> Email to anyone</div>
+              <div className=" mx-3"> Email to anyone</div>
             </div>
           </div>
         </div>
@@ -127,14 +132,12 @@ function Homepage() {
         <div className="sec3Bg relative lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex-grow flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
-              {!activeAddress && (
-                <button
-                  className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
-                  onClick={() => login()}
-                >
-                  Connect Wallet
-                </button>
-              )}
+              <button
+                className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
+                onClick={() => OpenSendToken()}
+              >
+                {!activeAddress ? "Connect  Wallet " : "Send"}
+              </button>
             </div>
           </div>
         </div>
