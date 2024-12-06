@@ -52,7 +52,7 @@ function Homepage() {
   return (
     <div className="main min-h-screen flex flex-col ">
       <Navbar />
-      <div className="flex-grow flex flex-col justify-between ">
+      <div className="sm:flex-grow-0 flex flex-col justify-between flex-grow-0 md:flex-grow-1 lg:flex-grow-1">
         <div
           className={`border-y w-full flex justify-center items-center ${
             theme === "light" ? "border-[#1E1E1E]" : "border-white"
@@ -76,9 +76,9 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[100%] mx-auto flex justify-center">
-          <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center lg:space-y-4 md:space-y-0  sm:space-y-0 ">
-            <div className="flex items-center w-full ">
+        <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[30vh] h-[30vh] w-[100%] mx-auto flex justify-center">
+          <div className="sec2 font-[700] flex flex-col sm:flex-col items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center lg:space-y-4 md:space-y-0  sm:space-y-0 lg:flex-row md:flex-row">
+            <div className="flex items-center">
               <div className="w-[30%] lg:mt-4 md:mt-0 lg:h-[20vh] md:h-[20vh]  md:w-auto flex justify-start  lg:hidden md:hidden ">
                 <Image
                   src={TokenCircles}
@@ -107,18 +107,18 @@ function Homepage() {
               )}
             </div>
             <div className="flex items-center space-y-0">
-              <div className=" lg:hidden md-hidden ">
+              <div className=" lg:hidden md-hidden my-6">
                 {theme === "light" ? (
                   <Image
                     src={send2}
                     alt="send email"
-                    className="w-12 sm:w-16 md:w-20 lg:w-24  inline-flex h-auto"
+                    className="w-16 sm:w-16 md:w-20 lg:w-24  inline-flex h-auto"
                   />
                 ) : (
                   <Image
                     src={send}
                     alt="send email"
-                    className="w-12 sm:w-16 md:w-20 lg:w-24 inline-flex h-auto"
+                    className="w-16 sm:w-16 md:w-20 lg:w-24 inline-flex h-auto"
                   />
                 )}
               </div>
