@@ -6,6 +6,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import "../../styles/History.css";
+import { Tooltip } from "antd";
 import Navbar from "../Navbar";
 import NewNavbar from "../newNavbar";
 import Footer from "../Footer";
@@ -35,7 +36,7 @@ const History: React.FC = () => {
     viewMode === "dashboard" ? dashboardAddress : walletData?.address;
   const isConnected = walletData?.authenticated;
   const [selectedChains, setSelectedChains] = useState<number[]>([
-    8453, 919, 34443, 11155111
+    8453, 919, 34443, 11155111,
   ]);
 
   const { logout } = useLogout({
@@ -144,9 +145,8 @@ const History: React.FC = () => {
   };
 
   const handleChainSelect = (chains: number[]) => {
-    const newSelectedChains = chains.length > 0 
-      ? chains 
-      : [8453, 919, 34443, 11155111];
+    const newSelectedChains =
+      chains.length > 0 ? chains : [8453, 919, 34443, 11155111];
     setSelectedChains(newSelectedChains);
   };
 
@@ -272,18 +272,21 @@ const History: React.FC = () => {
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
             {renderWalletAddress()}
+
             <div className="text-right flex items-end">
               <div className="gap-4 flex">
-                <button
-                  onClick={leaderboard}
-                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
-                    theme === "dark"
-                      ? " text-[#363535] border border-[#FFE500] "
-                      : "bg-[#E265FF] text-white"
-                  }`}
-                >
-                  <Image src={board} width={20} alt="" />
-                </button>
+                <Tooltip title="Leaderboard">
+                  <button
+                    onClick={leaderboard}
+                    className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                      theme === "dark"
+                        ? " text-[#363535] border border-[#FFE500] "
+                        : "bg-[#E265FF] text-white"
+                    }`}
+                  >
+                    <Image src={board} width={20} alt="" />
+                  </button>
+                </Tooltip>
                 {viewMode === "default" && (
                   <button
                     className={`px-[30px] py-[10px] rounded-full lg:mx-5 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
@@ -319,11 +322,17 @@ const History: React.FC = () => {
                 : "bg-white/80 backdrop-blur-[80px]"
             } `}
           >
-            <SwitchHistory onChainSelect={handleChainSelect} />
+            <div className="">
+              <SwitchHistory onChainSelect={handleChainSelect} />
+            </div>
+
             <div
               className={` pt-6 pb-6 rounded-br-[40px] rounded-bl-[40px] md:flex-row space-y-6 md:space-y-0 md:space-x-6 lg:py-[30px] lg:px-[30px] md:py-[50px] md:px-[30px] sm:py-[50px] sm:px-[30px] justify-between items-start`}
             >
-              <TransactionTable viewMode={viewMode} selectedChains={selectedChains} />
+              <TransactionTable
+                viewMode={viewMode}
+                selectedChains={selectedChains}
+              />
             </div>
           </div>
         </div>
