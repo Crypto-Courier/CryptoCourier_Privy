@@ -77,21 +77,19 @@ function Homepage() {
         </div>
 
         <div className="py-0 lg:py-10 md:py-10 sm:py-10 lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[30vh] w-[100%] mx-auto flex justify-center">
-          <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center lg:space-y-4 md:space-y-4  sm:space-y-0 ">
-            <div className="flex items-center relative">
-              <div className=" lg:mt-4 md:mt-0 lg:h-[20vh] md:h-[20vh]  w-full md:w-auto flex justify-center  lg:hidden md:hidden sm:hidden">
+          <div className="sec2 font-[700] flex flex-col sm:flex-row items-center justify-center text-3xl sm:text-3xl md:text-4xl lg:text-6xl w-full mx-auto text-center lg:space-y-4 md:space-y-0  sm:space-y-0 ">
+            <div className="flex items-center w-full ">
+              <div className="w-[30%] lg:mt-4 md:mt-0 lg:h-[20vh] md:h-[20vh]  md:w-auto flex justify-start  lg:hidden md:hidden ">
                 <Image
                   src={TokenCircles}
                   alt="Token circles"
-                  className="w-[60%] sm:w-[80%] lg:w-auto md:w-auto py-5 h-[70%] sm:h-[70%] lg:h-auto md:h-auto "
+                  className="w-[100%] sm:w-[80%] lg:w-auto md:w-auto  h-[70%] sm:h-[70%] lg:h-auto md:h-auto "
                 />
               </div>
-              <div className="sm:absolute lg:hidden md:hidden absolute left-[63px] bg-black opacity-[0.5] text-[27px] px-[7px] pb-[6px]">
+              {/* <div className="sm:absolute lg:hidden md:hidden absolute left-[63px] bg-black opacity-[0.5] text-[27px] px-[7px] pb-[6px]">
                 CryptoCourier
-              </div>
-              <div className="mx-3 sm:hidden lg:block md:block hidden">
-                CryptoCourier
-              </div>
+              </div> */}
+              <div className="mx-3 ">CryptoCourier</div>
             </div>
             <div className="hidden lg:inline-flex md-inline-flex sm:hidden mt-0 my-2">
               {theme === "light" ? (
@@ -129,7 +127,7 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="sec3Bg relative lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh] flex-grow flex items-center">
+        <div className="sec3Bg relative  py-20 flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
               <button

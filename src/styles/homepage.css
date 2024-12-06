@@ -27,7 +27,7 @@
   /* padding: 50px 40px; */
   border: 0.1px solid rgba(255, 255, 255, 0.485);
   width: 100%;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   border-radius: 100px;
