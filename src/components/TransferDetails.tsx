@@ -24,6 +24,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
 
+  // Check email embedded wallet from privy
   useEffect(() => {
 
     if (!isOpen || !recipientEmail || transferType !== 'email') return;
@@ -33,7 +34,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
 
       try {
         const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail });
-        console.log("Hello is Contract call ", isContractCall);
+
         if (response.data) {
           setWalletAddress(response.data);
           setIsWalletCreated(true);
@@ -41,7 +42,6 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
           setIsWalletCreated(false);
         }
       } catch (error) {
-        console.error('Error checking wallet:', error);
         setIsWalletCreated(false);
       } finally {
         setChecking(false)
@@ -51,7 +51,6 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
     checkWallet();
   }, [isOpen, recipientEmail, transferType]);
 
-  // Reset states when modal opens/closes
   useEffect(() => {
     if (!isOpen) {
       setWalletAddress("");
@@ -73,8 +72,9 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
     onClose();
   };
 
+  // Create embedded wallet through privy if not exist for specific email
   const handleCreateWallet = async () => {
-    setLoading(true); // Set loading to true when the API call starts
+    setLoading(true);
     try {
       const response = await fetch("/api/create-privy-wallet", {
         method: "POST",
@@ -93,12 +93,10 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
         setWalletAddress(walletAccount.address);
         setIsWalletCreated(true);
       } else {
-        console.log("No wallet address found in the response");
+        console.log("Embedded wallet already exists");
       }
-    } catch (error) {
-      console.error("Error creating wallet:", error);
     } finally {
-      setLoading(false); // Set loading to false after the API call finishes
+      setLoading(false);
     }
   };
 
@@ -291,31 +289,35 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   >
                     {tokenAmount} {tokenSymbol} to {recipientEmail}
                   </p>
-                  <div className="item-start font-semibold">Transaction Flow</div>
                   {isContractCall && (
-                    <div
-                      className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
-                        ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
-                        : "text-black border border-[#0052FF]"
-                        }`}
-                    >
-                      <ol className="list-none list-inside">
-                        <li>
-                          <strong>Approve Transaction:</strong> <span className={`item-start font-semibold ${theme === "dark"
-                            ? "text-white   bg-[#272626]"
-                            : "text-black"
-                            }`}>
-                            You will approve <u>{tokenAmount} {tokenSymbol}</u> to Transfer.</span>
-                        </li>
-                        <li>
-                          <strong>Execute Transfer:</strong> <span className={`item-start font-semibold ${theme === "dark"
-                            ? "text-white   bg-[#272626]"
-                            : "text-black"
-                            }`}>
-                            You will transfer the approved token to <u>{recipientEmail}</u></span>
-                        </li>
-                      </ol>
-                    </div>
+                    // <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
+                      <>
+                      <div className="item-start font-semibold">Transaction Flow</div>
+                      <div
+                        className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
+                          ? "text-[#FFE500]   bg-[#272626] border border-[#3EFEFEF]"
+                          : "text-black border border-[#0052FF]"
+                          }`}
+                      >
+                        <ol className="list-none list-inside">
+                          <li>
+                            <strong>Approve Transaction:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                              ? "text-white   bg-[#272626]"
+                              : "text-black"
+                              }`}>
+                              You will approve <u>{tokenAmount} {tokenSymbol}</u> to Transfer.</span>
+                          </li>
+                          <li>
+                            <strong>Execute Transfer:</strong> <span className={`item-start font-semibold ${theme === "dark"
+                              ? "text-white   bg-[#272626]"
+                              : "text-black"
+                              }`}>
+                              You will transfer the approved token to <u>{recipientEmail}</u></span>
+                          </li>
+                        </ol>
+                      </div>
+                      </>
+                    // {/* </div> */}
                   )}
 
                   <div className="item-start font-semibold text-md lg:text-md  md:text-md sm:text-md ">

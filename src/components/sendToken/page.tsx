@@ -30,6 +30,7 @@ import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
 import { isValidEmail } from "../../lib/validation";
 import useOutsideClick from "../../lib/useOutsideClick";
+import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
@@ -96,16 +97,7 @@ const SendToken = () => {
       toast.error("Please fill in all required fields");
       return;
     }
-
-    // if (isValidEmail(recipientEmail)) {
-    // If it's an email, show the popup
-    setIsPopupOpen(true);
-    // } else if (ethers.isAddress(recipientEmail)) {
-    //   // If it's a wallet address, directly call handleSend
-    //   await handleSend(recipientEmail);
-    // } else {
-    //   toast.error("Please enter a valid email or wallet address");
-    // }
+      setIsPopupOpen(true);
   };
 
   useEffect(() => {
@@ -150,6 +142,7 @@ const SendToken = () => {
 
       if (selectedTokenData) {
         const senderIdentifier = getSenderIdentifier(user);
+        let senderEmail = user?.email?.address || user?.wallet?.address || ''
         const emailContent = renderToString(
           <Email
             recipientEmail={recipientEmail}
@@ -174,7 +167,7 @@ const SendToken = () => {
           tokenAmount,
           selectedTokenData.symbol,
           recipientEmail,
-          senderIdentifier
+          senderEmail
         );
         setTokenAmount("");
         setRecipientEmail("");
@@ -251,9 +244,11 @@ const SendToken = () => {
     tokenAmount: string,
     selectedTokenData: string,
     recipientEmail: string,
-    senderIdentifier: string
+    senderEmail: string
   ) => {
     try {
+      const blockExplorerUrl = chainConfig[walletData?.chainId.split(":")[1]].blockexplorer;
+
       const storeResponse = await fetch("/api/store-transaction", {
         method: "POST",
         headers: {
@@ -265,7 +260,7 @@ const SendToken = () => {
           tokenAmount,
           tokenSymbol: selectedTokenData,
           recipientEmail,
-          transactionHash: transactionHash,
+          customizedLink: `${blockExplorerUrl}/${transactionHash}`,
           chainId: walletData?.chainId.split(":")[1],
           senderIdentifier,
         }),

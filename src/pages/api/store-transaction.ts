@@ -1,30 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
-import chainConfig from '../../config/chains';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId, senderIdentifier } = req.body;
-      console.log('Request body:', { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, transactionHash, chainId, senderIdentifier });
+      const { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, customizedLink, chainId, senderEmail } = req.body;
+      console.log('Request body:', { recipientWallet, senderWallet, tokenAmount, tokenSymbol, recipientEmail, chainId, senderEmail });
 
-      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !transactionHash || !chainId || !senderIdentifier) {
+      if (!recipientWallet || !senderWallet || !tokenAmount || !tokenSymbol || !recipientEmail || !chainId || !customizedLink ||!senderEmail) {
         console.log('Missing required fields in request');
         return res.status(400).json({ error: 'Missing required fields' });
-      }
-
-      // Check if the chainId exists in the configuration
-      if (!chainConfig[chainId]) {
-        console.log(`Invalid chainId: ${chainId}`);
-        return res.status(400).json({ error: 'Invalid chainId' });
       }
 
       const client = await clientPromise;
       const db = client.db('transactionDB');
       const collection = db.collection('transactions');
-
-       // Get the block explorer URL for the given chainId
-       const blockExplorerUrl = chainConfig[chainId].blockexplorer;
 
       // Insert the transaction data
       const result = await collection.insertOne({
@@ -33,12 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tokenAmount,
         tokenSymbol,
         recipientEmail,
-        transactionHash,
-        senderIdentifier,
+        senderEmail,
         chainId,
         createdAt: new Date(),
-        customizedLink: `${blockExplorerUrl}/${transactionHash}`,
-        authenticated: false 
+        customizedLink,
       });
 
       console.log('Transaction stored successfully', { transactionId: result.insertedId });
