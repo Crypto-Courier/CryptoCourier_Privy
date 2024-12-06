@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
 import Image from "next/image";
@@ -10,6 +10,8 @@ import { Transaction } from "../types/types";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { isValidEmail } from "../lib/validation";
+import { Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 interface TransactionTableProps {
   viewMode: string;
   selectedChains: number[];
@@ -26,6 +28,43 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { theme } = useTheme();
+
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Toggle search visibility
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+
+    // Focus on input when opened
+    if (!isSearchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+  };
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Ensure the click is outside the search input and toggle button
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('.prevent-search-close')
+      ) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSearchOpen]);
+
 
   const isConnected =
     viewMode === "dashboard" ? true : walletData?.authenticated;
@@ -56,10 +95,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         const data: Transaction[] = await response.json();
 
         setTransactions(data);
+        setAllTransactions(data);
       } catch (err: any) {
         console.error("Error fetching transactions:", err);
         setError(err instanceof Error ? err.message : "An unknown error occurred");
         setTransactions([]);
+        setAllTransactions([]);
       } finally {
         setIsLoading(false);
       }
@@ -73,6 +114,81 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
       clearTimeout(timeoutId);
     };
   }, [activeAddress, viewMode, selectedChains]);
+
+  // Search functionality
+  const performSearch = (term: string) => {
+    if (!term) {
+      setTransactions(allTransactions);
+      return;
+    }
+
+    const lowercaseTerm = term.toLowerCase();
+    const filteredTransactions = allTransactions.filter(tx =>
+      tx.tokenSymbol.toLowerCase().includes(lowercaseTerm) ||
+      tx.recipientEmail.toLowerCase().includes(lowercaseTerm) ||
+      tx.senderWallet.toLowerCase().includes(lowercaseTerm) ||
+      tx.tokenAmount.toString().includes(lowercaseTerm)
+    );
+
+    setTransactions(filteredTransactions);
+  };
+
+  // Handle search term changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    performSearch(value);
+  };
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchTerm('');
+    setTransactions(allTransactions);
+  };
+
+  // Render search input with animation
+  const renderSearchInput = () => {
+    return (
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <div className="relative mt-2">
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search transactions..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className={`w-full px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${theme === "dark"
+                  ? "bg-[#2A2A2A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FE660A]"
+                  : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#0052FF]"
+                  }`}
+              />
+              {searchTerm && (
+                <X
+                  size={20}
+                  onClick={clearSearch}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10 ${theme === "dark" ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
+                    }`}
+                />
+              )}
+              <Search
+                size={20}
+                className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }`}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  };
 
   // Resend email
   const handleResend = async (tx: Transaction, index: number) => {
@@ -135,13 +251,51 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   return (
     <div>
       <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
-        <h3
-          className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-            }`}
-        >
-          Transaction history
-        </h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-3 lg:px-0 md:px-0 sm:px-0 relative">
+          <h3
+            className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+              }`}
+          >
+            Transaction history
+          </h3>
+          {/* Search Toggle for Large Devices */}
+          <div className="prevent-search-close hidden sm:flex items-center space-x-2">
+            {renderSearchInput()}
+            <button
+              onClick={toggleSearch}
+              className={`search-toggle p-2 rounded-full transition-colors duration-300 ${isSearchOpen
+                ? (theme === "dark"
+                  ? "bg-[#FE660A]/20 text-[#FE660A]"
+                  : "bg-[#0052FF]/20 text-[#0052FF]")
+                : (theme === "dark"
+                  ? "hover:bg-[#FE660A]/20 hover:text-[#FE660A]"
+                  : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]")
+                }`}
+            >
+              {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+            </button>
+          </div>
 
+          {/* Search Toggle for Small Devices */}
+          <div className="prevent-search-close sm:hidden w-full">
+            <div className="flex items-center space-x-2 w-full">
+              <button
+                onClick={toggleSearch}
+                className={`search-toggle p-2 rounded-full transition-colors duration-300 ${isSearchOpen
+                  ? (theme === "dark"
+                    ? "bg-[#FE660A]/20 text-[#FE660A]"
+                    : "bg-[#0052FF]/20 text-[#0052FF]")
+                  : (theme === "dark"
+                    ? "hover:bg-[#FE660A]/20 hover:text-[#FE660A]"
+                    : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]")
+                  }`}
+              >
+                {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+              </button>
+            </div>
+            {renderSearchInput()}
+          </div>
+        </div>
         <div className="h-[40vh] overflow-y-auto scroll">
           {isConnected ? (
             isLoading ? (
