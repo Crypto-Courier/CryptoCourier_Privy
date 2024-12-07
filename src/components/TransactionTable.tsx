@@ -10,7 +10,7 @@ import { Transaction } from "../types/types";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { isValidEmail } from "../lib/validation";
-import { Search, X } from "lucide-react";
+import { CheckCircle, Clock, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 interface TransactionTableProps {
   viewMode: string;
@@ -44,6 +44,37 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         searchInputRef.current?.focus();
       }, 100);
     }
+  };
+
+  const renderClaimStatusBadge = (tx: Transaction) => {
+    // Only show for sent transactions with an email recipient
+    if (tx.senderWallet === activeAddress) {
+      return (
+        isValidEmail(tx.recipientEmail) ? <>
+        <div className={`flex items-center space-x-1 ${
+          tx.claimStatus === 'claimed' 
+            ? 'text-green-600' 
+            : 'text-yellow-600'
+        }`}>
+          {tx.claimStatus === 'claimed' ? (
+            <CheckCircle size={16} />
+          ) : (
+            <Clock size={16} />
+          )}
+          <span className="text-[11px] lg:text-[13px]">
+            {tx.claimStatus === 'claimed' ? 'Claimed' : 'Pending'}
+          </span>
+        </div>
+        </> :
+        <div className={"flex items-center space-x-1 text-green-600"}>
+            <CheckCircle size={16} />
+          <span className="text-[11px] lg:text-[13px]">
+            {"claimed"}
+          </span>
+        </div>
+      );
+    }
+    return null;
   };
 
   // Close search when clicking outside
@@ -327,6 +358,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                         >
                           {tx.recipientEmail}
                         </span>
+                        {/* Add claim status badge */}
+                        {renderClaimStatusBadge(tx)}
                       </>
                     ) : (
                       <>

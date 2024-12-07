@@ -63,7 +63,8 @@ export interface Transaction {
   tokenSymbol: string;
   customizedLink: string;
   recipientEmail: string;
-  senderEmail:string
+  senderEmail:string;
+  claimStatus?: 'pending' | 'claimed';
 }
 export interface ApiResponse {
   id: string;
