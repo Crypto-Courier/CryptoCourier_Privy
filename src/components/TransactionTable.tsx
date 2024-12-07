@@ -19,7 +19,7 @@ interface TransactionTableProps {
 
 const TransactionTable: React.FC<TransactionTableProps> = ({
   viewMode,
-  selectedChains
+  selectedChains,
 }) => {
   const { walletData } = useWallet();
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
@@ -53,18 +53,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
       if (
         searchInputRef.current &&
         !searchInputRef.current.contains(event.target as Node) &&
-        !(event.target as Element).closest('.prevent-search-close')
+        !(event.target as Element).closest(".prevent-search-close")
       ) {
         setIsSearchOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSearchOpen]);
-
 
   const isConnected =
     viewMode === "dashboard" ? true : walletData?.authenticated;
@@ -82,7 +81,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
       try {
         const chainsToQuery = selectedChains;
 
-        const chainIdQuery = chainsToQuery.map(id => `chainId=${id}`).join("&");
+        const chainIdQuery = chainsToQuery
+          .map((id) => `chainId=${id}`)
+          .join("&");
 
         const endpoint = `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
 
@@ -98,7 +99,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         setAllTransactions(data);
       } catch (err: any) {
         console.error("Error fetching transactions:", err);
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
         setTransactions([]);
         setAllTransactions([]);
       } finally {
@@ -123,11 +126,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     }
 
     const lowercaseTerm = term.toLowerCase();
-    const filteredTransactions = allTransactions.filter(tx =>
-      tx.tokenSymbol.toLowerCase().includes(lowercaseTerm) ||
-      tx.recipientEmail.toLowerCase().includes(lowercaseTerm) ||
-      tx.senderWallet.toLowerCase().includes(lowercaseTerm) ||
-      tx.tokenAmount.toString().includes(lowercaseTerm)
+    const filteredTransactions = allTransactions.filter(
+      (tx) =>
+        tx.tokenSymbol.toLowerCase().includes(lowercaseTerm) ||
+        tx.recipientEmail.toLowerCase().includes(lowercaseTerm) ||
+        tx.senderWallet.toLowerCase().includes(lowercaseTerm) ||
+        tx.tokenAmount.toString().includes(lowercaseTerm)
     );
 
     setTransactions(filteredTransactions);
@@ -142,7 +146,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
 
   // Clear search
   const clearSearch = () => {
-    setSearchTerm('');
+    setSearchTerm("");
     setTransactions(allTransactions);
   };
 
@@ -153,7 +157,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         {isSearchOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="w-full"
@@ -165,23 +169,18 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                 placeholder="Search transactions..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className={`w-full px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${theme === "dark"
-                  ? "bg-[#2A2A2A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FE660A]"
-                  : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#0052FF]"
-                  }`}
+                className={`lg:w-full md:w-full sm:w-[30%] px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${
+                  theme === "dark"
+                    ? "bg-[#2A2A2A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FE660A]"
+                    : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#0052FF]"
+                }`}
               />
-              {searchTerm && (
-                <X
-                  size={20}
-                  onClick={clearSearch}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer z-10 ${theme === "dark" ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
-                    }`}
-                />
-              )}
+
               <Search
                 size={20}
-                className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
+                className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
               />
             </div>
           </motion.div>
@@ -192,7 +191,6 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
 
   // Resend email
   const handleResend = async (tx: Transaction, index: number) => {
-
     if (!isValidEmail(tx.recipientEmail)) {
       toast.error("Invalid email address to send email");
       return;
@@ -251,10 +249,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   return (
     <div>
       <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-3 lg:px-0 md:px-0 sm:px-0 relative">
+        <div className="flex flex-col sm:flex-col justify-between items-start sm:items-center px-3 lg:px-0 md:px-0 sm:px-0 relative">
           <h3
-            className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-              }`}
+            className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${
+              theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+            }`}
           >
             Transaction history
           </h3>
@@ -263,14 +262,15 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             {renderSearchInput()}
             <button
               onClick={toggleSearch}
-              className={`search-toggle p-2 rounded-full transition-colors duration-300 ${isSearchOpen
-                ? (theme === "dark"
-                  ? "bg-[#FE660A]/20 text-[#FE660A]"
-                  : "bg-[#0052FF]/20 text-[#0052FF]")
-                : (theme === "dark"
+              className={`search-toggle p-2 rounded-full transition-colors duration-300 ${
+                isSearchOpen
+                  ? theme === "dark"
+                    ? "bg-[#FE660A]/20 text-[#FE660A]"
+                    : "bg-[#0052FF]/20 text-[#0052FF]"
+                  : theme === "dark"
                   ? "hover:bg-[#FE660A]/20 hover:text-[#FE660A]"
-                  : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]")
-                }`}
+                  : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]"
+              }`}
             >
               {isSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
@@ -281,14 +281,15 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             <div className="flex items-center space-x-2 w-full">
               <button
                 onClick={toggleSearch}
-                className={`search-toggle p-2 rounded-full transition-colors duration-300 ${isSearchOpen
-                  ? (theme === "dark"
-                    ? "bg-[#FE660A]/20 text-[#FE660A]"
-                    : "bg-[#0052FF]/20 text-[#0052FF]")
-                  : (theme === "dark"
+                className={`search-toggle p-2 rounded-full transition-colors duration-300 ${
+                  isSearchOpen
+                    ? theme === "dark"
+                      ? "bg-[#FE660A]/20 text-[#FE660A]"
+                      : "bg-[#0052FF]/20 text-[#0052FF]"
+                    : theme === "dark"
                     ? "hover:bg-[#FE660A]/20 hover:text-[#FE660A]"
-                    : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]")
-                  }`}
+                    : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]"
+                }`}
               >
                 {isSearchOpen ? <X size={20} /> : <Search size={20} />}
               </button>
@@ -296,7 +297,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             {renderSearchInput()}
           </div>
         </div>
-        <div className="h-[40vh] overflow-y-auto scroll">
+        <div className="h-[40vh] overflow-y-auto scroll overflow-x-hidden">
           {isConnected ? (
             isLoading ? (
               <SkeletonLoader />
@@ -312,17 +313,19 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               transactions.map((tx, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px] ${theme === "dark"
-                    ? "bg-[#000000]/20 border border-[#5C5C5C]"
-                    : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
-                    }`}
+                  className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px] ${
+                    theme === "dark"
+                      ? "bg-[#000000]/20 border border-[#5C5C5C]"
+                      : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
+                  }`}
                 >
                   <div className="flex items-center space-x-3">
                     <span
-                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
-                        ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
-                        : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
-                        }`}
+                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${
+                        theme === "dark"
+                          ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
+                          : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
+                      }`}
                     >
                       {tx.tokenAmount} {tx.tokenSymbol}
                     </span>
@@ -330,10 +333,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       <>
                         <span className="text-[15px]">To</span>
                         <span
-                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${theme === "dark"
-                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                            }`}
+                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${
+                            theme === "dark"
+                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                          }`}
                         >
                           {tx.recipientEmail}
                         </span>
@@ -342,10 +346,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       <>
                         <span className="text-[15px]">From</span>
                         <span
-                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
-                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                            }`}
+                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${
+                            theme === "dark"
+                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                          }`}
                         >
                           {`${tx.senderWallet.slice(
                             0,
@@ -356,22 +361,23 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                     )}
                   </div>
                   <div className="justify-end flex gap-3">
-                    {tx.senderWallet === activeAddress && isValidEmail(tx.recipientEmail) && (
-                      <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
-                        {loadingTxId === index ? (
-                          <div className="tracking-wide text-[15px]">
-                            Sending
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleResend(tx, index)}
-                            className="tracking-wide text-[15px]"
-                          >
-                            Resend
-                          </button>
-                        )}
-                      </div>
-                    )}
+                    {tx.senderWallet === activeAddress &&
+                      isValidEmail(tx.recipientEmail) && (
+                        <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
+                          {loadingTxId === index ? (
+                            <div className="tracking-wide text-[15px]">
+                              Sending
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleResend(tx, index)}
+                              className="tracking-wide text-[15px]"
+                            >
+                              Resend
+                            </button>
+                          )}
+                        </div>
+                      )}
                     <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
                       <Image
                         src={trx}
@@ -393,8 +399,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             )
           ) : (
             <div
-              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                }`}
+              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
+                theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+              }`}
             >
               Connect your wallet to view your transactions.
             </div>

@@ -103,31 +103,6 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        {/* Show Clear All button only when user has made selections */}
-        {userHasSelected && (
-          <button
-            onClick={handleClearAll}
-            className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 transition duration-300 hover:scale-105 ${
-              theme === "dark"
-                ? "bg-[#FFE500] text-[#363535]"
-                : "bg-[#E265FF] text-white"
-            }`}
-          >
-            Clear All
-            <span
-              className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
-                theme === "dark"
-                  ? "bg-[#363535] text-[#FFE500]"
-                  : "bg-white text-[#E265FF]"
-              }`}
-            >
-              {selectedChains.length}
-            </span>
-          </button>
-        )}
-      </div>
-
       {/* Desktop view */}
       <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
         {chains.map((chain) => (
@@ -141,7 +116,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
               <Image
                 src={chain.img}
                 alt={chain.title}
-                className={`w-[24px] h-[25px] block my-0 mx-auto p-[1px] rounded-[15px] ${
+                className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] lg:w-[25px] md:w-[25px] lg:h-[25px] md:h-[25px] ${
                   !userHasSelected || selectedChains.includes(chain.id)
                     ? "opacity-100"
                     : "opacity-40"
@@ -151,30 +126,74 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
           </Tooltip>
         ))}
       </div>
-
-      {/* Mobile view */}
-      {/* Dropdown for small screens */}
-      <div className="md:hidden">
-        <div
-          className={` backdrop-blur-[10px] w-full bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
-            theme === "dark"
-              ? "bg-[#000000]/50 border border-white text-white"
-              : "bg-[#FFFCFC] border border-gray-700 text-black"
-          }`}
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-        >
-          <div className="flex items-center">
-            {/* Display the currently selected chain */}
-            <Image
-              src={sepolia}
-              alt="Selected Chain"
-              className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
-                theme === "dark" ? "bg-white" : "bg-black"
+      <div className=" justify-end items-center hidden sm:hidden lg:flex md:flex ">
+        {/* Show Clear All button only when user has made selections */}
+        {userHasSelected && (
+          <div
+            onClick={handleClearAll}
+            className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
+              theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
+            }`}
+          >
+            Clear All
+            <span
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                theme === "dark"
+                  ? "bg-[#363535] text-[#FFE500]"
+                  : "bg-white text-[#E265FF]"
               }`}
-            />
-            Select chain
+            >
+              {selectedChains.length}
+            </span>
           </div>
-          <span>{dropdownOpen ? "▲" : "▼"}</span>
+        )}
+      </div>
+
+      <div className="md:hidden">
+        <div className="flex justify-between items-center">
+          <div
+            className={`w-[60%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
+              theme === "dark"
+                ? "bg-[#000000]/50 border border-white text-white"
+                : "bg-[#FFFCFC] border border-gray-700 text-black"
+            }`}
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <div className="flex items-center">
+              {/* Display the currently selected chain */}
+              <Image
+                src={sepolia}
+                alt="Selected Chain"
+                className={`w-[24px] h-[24px] block mr-[10px]  p-[1px] rounded-[15px] text-sm ${
+                  theme === "dark" ? "bg-white" : "bg-black"
+                }`}
+              />
+              Select chain
+            </div>
+            <span>{dropdownOpen ? "▲" : "▼"}</span>
+          </div>
+          <div className=" justify-end items-center lg:hidden md:hidden flex sm:flex ">
+            {/* Show Clear All button only when user has made selections */}
+            {userHasSelected && (
+              <div
+                onClick={handleClearAll}
+                className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
+                  theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
+                }`}
+              >
+                Clear All
+                <span
+                  className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                    theme === "dark"
+                      ? "bg-[#363535] text-[#FFE500]"
+                      : "bg-white text-[#E265FF]"
+                  }`}
+                >
+                  {selectedChains.length}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Dropdown options */}
@@ -189,16 +208,31 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
             {chains.map((chain) => (
               <div
                 key={chain.id}
-                className={`flex  px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 `}
+                className={`flex items-center px-6 py-3 cursor-pointer hover:bg-opacity-80 border-b-2 `}
               >
+                <input
+                  type="checkbox"
+                  id={`chain-${chain.id}`}
+                  checked={selectedChains.includes(chain.id)}
+                  onChange={() => handleChainClick(chain.id)}
+                  className={`mr-4 w-4 h-4 border-gray-300 rounded focus:ring-2 
+                    text-yellow-500 ring-yellow-500 
+                    ${
+                      selectedChains.includes(chain.id)
+                        ? "text-yellow-500 ring-yellow-500"
+                        : "text-yellow-500 ring-yellow-500"
+                    }`}
+                />
                 <Image
                   src={chain.img}
                   alt={chain.title}
-                  className={`w-[24px] h-[24px] block mr-[20px]  p-[1px] rounded-[15px] ${
+                  className={`w-[24px] h-[24px] block mr-[20px] p-[1px] rounded-[15px] ${
                     theme === "dark" ? "bg-white" : "bg-black"
                   }`}
                 />
-                {chain.title}
+                <label htmlFor={`chain-${chain.id}`} className="cursor-pointer">
+                  {chain.title}
+                </label>
               </div>
             ))}
           </div>
