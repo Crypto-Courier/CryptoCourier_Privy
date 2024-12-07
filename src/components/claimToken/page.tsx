@@ -54,7 +54,7 @@ function ClaimToken() {
             throw new Error("Failed to update authentication status");
           }
         } catch (error) {
-          console.error("Error updating authentication status:", error);
+          console.error("Error updating/storing authentication data:", error);
         }
 
         router.push(`/history?mode=dashboard&address=${user.wallet.address}`);

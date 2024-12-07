@@ -116,7 +116,57 @@ export const Connect = () => {
       setIsWalletConnected(false);
       setIsEmailConnected(false);
     }
-  }, [authenticated, user]);
+    const storeOrUpdateUserAuthData = async () => {
+      if (!authenticated || !user || !user.email?.address) return;
+  
+      try {
+        const response = await fetch('/api/authentication-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            walletAddress: wallet?.address, // Use wallet address if available
+            email: user.email.address,
+            authStatus: 'pending',
+            operation:'store'
+          })
+        });
+  
+        const data = await response.json();
+  
+        if (!response.ok) {
+          console.error('Authentication data storage failed:', data.error);
+        } else {
+          console.log("Authentication Data Stored Successfully.")
+          const response = await fetch('/api/authentication-data', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              walletAddress: wallet?.address,
+              authStatus: 'authenticated',
+              operation:'update_status'
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            console.error('Authentication data storage failed:', data.error);
+          } else {
+            console.log("Authentication Data Updated Successfully.")
+          }
+        }
+      } catch (error) {
+        console.error('Error storing/updating authentication data:', error);
+      }
+    };
+  
+    // Call the function when user is authenticated or wallet changes
+    if (authenticated && user) {
+      storeOrUpdateUserAuthData();
+    }
+  }, [authenticated, user, wallet]);
 
   useEffect(() => {
     const createEmbeddedWallet = async () => {

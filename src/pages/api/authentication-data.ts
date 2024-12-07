@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb';
 import clientPromise from '../../lib/mongodb';
 import { validateInput } from '../../utils/auth/auth-params-validation'
 import { UserAuthData } from '../../types/authentication-data-types'
+import { ethers } from 'ethers';
 
 enum OperationType {
     STORE = 'store',
@@ -45,7 +46,7 @@ export default async function handler(
         if (operation === OperationType.STORE) {
             validateInput({ walletAddress, email, authStatus });
         } else if (operation === OperationType.UPDATE_STATUS) {
-            if (!walletAddress) {
+            if (!walletAddress || !ethers.isAddress(walletAddress)) {
                 return res.status(400).json({
                     message: 'Validation Error',
                     error: 'Wallet address is required'
