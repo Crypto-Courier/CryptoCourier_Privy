@@ -7,21 +7,21 @@ export const sendEmail = async ({
   subject,
   tokenAmount,
   tokenSymbol,
-  senderIdentifier,
+  senderEmail,
 }: SendEmailParams): Promise<void> => {
   try {
     const htmlContent = renderEmailToString({
       recipientEmail,
       tokenAmount,
       tokenSymbol,
-      senderIdentifier,
+      senderEmail,
     });
 
     const response = await axios.post<{ message: string }>("/api/send-email", {
       recipientEmail,
       subject,
       htmlContent,
-      senderIdentifier
+      senderEmail
     });
 
     if (response.status === 200) {

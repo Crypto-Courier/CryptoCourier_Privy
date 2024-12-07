@@ -39,7 +39,7 @@ export interface EmailProps {
   recipientEmail: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderIdentifier: string;
+  senderEmail: string;
 }
 
 export interface SendEmailParams {
@@ -48,7 +48,7 @@ export interface SendEmailParams {
   htmlContent: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderIdentifier: string;
+  senderEmail: string;
 }
 
 export interface TokenDetails {
@@ -63,7 +63,7 @@ export interface Transaction {
   tokenSymbol: string;
   customizedLink: string;
   recipientEmail: string;
-  senderIdentifier:string
+  senderEmail:string
 }
 export interface ApiResponse {
   id: string;

@@ -5,7 +5,7 @@ const Email: React.FC<EmailProps> = ({
   recipientEmail,
   tokenAmount,
   tokenSymbol,
-  senderIdentifier,
+  senderEmail,
 }) => {
   return (
     <div
@@ -41,7 +41,7 @@ const Email: React.FC<EmailProps> = ({
             <strong>
               {tokenAmount} {tokenSymbol}
             </strong>{" "}
-            Token from {senderIdentifier}
+            Token from {senderEmail}
           </pre>
         </div>
       </div>

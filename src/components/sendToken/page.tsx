@@ -121,7 +121,7 @@ const SendToken = () => {
   }, [activeAddress, transactionStauts, walletData?.chainId]);
 
   // Give sender identity in mail for receiver
-  const getSenderIdentifier = (user: any) => {
+  const getsenderEmail = (user: any) => {
     // If Privy wallet client and email exists, return email
     if (user.wallet?.walletClientType === "privy" && user.email?.address) {
       return user.email.address;
@@ -141,14 +141,13 @@ const SendToken = () => {
       );
 
       if (selectedTokenData) {
-        const senderIdentifier = getSenderIdentifier(user);
-        let senderEmail = user?.email?.address || user?.wallet?.address || ''
+        const senderEmail = getsenderEmail(user);
         const emailContent = renderToString(
           <Email
             recipientEmail={recipientEmail}
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenData.symbol}
-            senderIdentifier={senderIdentifier} // Pass sender identifier to email component
+            senderEmail={senderEmail} // Pass sender identifier to email component
           />
         );
         if (isValidEmail(recipientEmail)) {
@@ -158,8 +157,13 @@ const SendToken = () => {
             htmlContent: emailContent,
             tokenAmount,
             tokenSymbol: selectedTokenData.symbol,
-            senderIdentifier,
+            senderEmail,
           });
+          StoreAuthData(
+            recipientWalletAddress,
+            recipientEmail,
+            "pending"
+          )
         }
         StoreTransactionData(
           recipientWalletAddress,
@@ -169,11 +173,6 @@ const SendToken = () => {
           recipientEmail,
           senderEmail
         );
-        StoreAuthData(
-          recipientWalletAddress,
-          recipientEmail,
-          "pending"
-        )
         setTokenAmount("");
         setRecipientEmail("");
       }
@@ -933,7 +932,7 @@ const SendToken = () => {
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
-            senderIdentifier={""}
+            senderEmail={""}
           /> */}
         </div>
 
