@@ -38,14 +38,16 @@ function ClaimToken() {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         try {
-          const response = await fetch("/api/auth-status", {
+          const response = await fetch("/api/authentication-data", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               walletAddress: user.wallet.address,
-              authenticated: true,
+              email: user.email || '',
+              authStatus: 'authenticated',
+              operation: 'update_status'
             }),
           });
 

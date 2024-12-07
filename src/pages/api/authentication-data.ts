@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient } from 'mongodb';
 import clientPromise from '../../lib/mongodb';
-import { validateInput } from '../../utils/auth/authParamsValidation'
+import { validateInput } from '../../utils/auth/auth-params-validation'
 import { UserAuthData } from '../../types/authentication-data-types'
 
 enum OperationType {
@@ -80,7 +80,7 @@ export default async function handler(
                 // Update authentication status
                 const updateResult = await collection.updateOne(
                     { walletAddress },
-                    { $set: { authStatus } }
+                    { $set: { authStatus, authenticatedAt: new Date() } },
                 );
 
                 if (updateResult.matchedCount === 0) {

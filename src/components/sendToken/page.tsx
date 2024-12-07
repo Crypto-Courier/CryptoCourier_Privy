@@ -169,6 +169,11 @@ const SendToken = () => {
           recipientEmail,
           senderEmail
         );
+        StoreAuthData(
+          recipientWalletAddress,
+          recipientEmail,
+          "pending"
+        )
         setTokenAmount("");
         setRecipientEmail("");
       }
@@ -262,7 +267,7 @@ const SendToken = () => {
           recipientEmail,
           customizedLink: `${blockExplorerUrl}/${transactionHash}`,
           chainId: walletData?.chainId.split(":")[1],
-          senderIdentifier,
+          senderEmail,
         }),
       });
 
@@ -283,6 +288,40 @@ const SendToken = () => {
     }
   };
 
+  // Store Authentication Data
+  const StoreAuthData = async (
+    walletAddress: string,
+    email: string,
+    authStatus: string
+  ) => {
+    try {
+      const storeResponse = await fetch("/api/authentication-data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          walletAddress,
+          email,
+          authStatus,
+          operation: "store", // Specify the operation type
+        }),
+      });
+  
+      if (storeResponse.ok) {
+        const responseData = await storeResponse.json();
+        console.log("User authentication data stored successfully:", responseData);
+      } else if (storeResponse.status === 409) {
+        console.error("Duplicate wallet address or email.");
+      } else {
+        const errorData = await storeResponse.json();
+        console.error("Failed to store authentication data:", errorData);
+      }
+    } catch (error) {
+      console.error("Error storing authentication data:", error);
+    }
+  };
+  
   // Handling the transaction for embedded as well as external wallets
   const handleSend = async (walletAddress: string) => {
     try {
