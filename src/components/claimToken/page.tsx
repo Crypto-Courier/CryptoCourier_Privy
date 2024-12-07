@@ -45,7 +45,6 @@ function ClaimToken() {
             },
             body: JSON.stringify({
               walletAddress: user.wallet.address,
-              email: user.email || '',
               authStatus: 'authenticated',
               operation: 'update_status'
             }),

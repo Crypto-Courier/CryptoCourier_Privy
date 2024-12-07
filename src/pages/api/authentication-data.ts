@@ -41,8 +41,17 @@ export default async function handler(
             operation = OperationType.STORE 
         } = req.body;
 
-        // Validate input
-        validateInput({ walletAddress, email, authStatus });
+        // Validate input based on operation
+        if (operation === OperationType.STORE) {
+            validateInput({ walletAddress, email, authStatus });
+        } else if (operation === OperationType.UPDATE_STATUS) {
+            if (!walletAddress) {
+                return res.status(400).json({
+                    message: 'Validation Error',
+                    error: 'Wallet address is required'
+                });
+            }
+        }
 
         switch (operation) {
             case OperationType.STORE:
