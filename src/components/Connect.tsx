@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, isValidElement } from "react";
 import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
 import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
@@ -28,6 +28,7 @@ import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg";
 import snaxChain from "../assets/snax.png";
 import { useRouter } from "next/navigation"; // Use this for Next.js 13+ with App Router
+import { isValidEmail } from "@/lib/validation";
 
 // import { base, mode, optimism } from "viem/chains";
 
@@ -117,28 +118,8 @@ export const Connect = () => {
       setIsEmailConnected(false);
     }
     const storeOrUpdateUserAuthData = async () => {
-      if (!authenticated || !user || !user.email?.address) return;
-  
-      try {
-        const response = await fetch('/api/authentication-data', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            walletAddress: wallet?.address, // Use wallet address if available
-            email: user.email.address,
-            authStatus: 'pending',
-            operation:'store'
-          })
-        });
-  
-        const data = await response.json();
-  
-        if (!response.ok) {
-          console.error('Authentication data storage failed:', data.error);
-        } else {
-          console.log("Authentication Data Stored Successfully.")
+      if(isValidEmail(user?.email?.address || "")){
+        try {
           const response = await fetch('/api/authentication-data', {
             method: 'POST',
             headers: {
@@ -146,19 +127,39 @@ export const Connect = () => {
             },
             body: JSON.stringify({
               walletAddress: wallet?.address,
-              authStatus: 'authenticated',
-              operation:'update_status'
+              email: user?.email?.address,
+              authStatus: 'pending',
+              operation:'store'
             })
           });
+    
           const data = await response.json();
+    
           if (!response.ok) {
             console.error('Authentication data storage failed:', data.error);
           } else {
-            console.log("Authentication Data Updated Successfully.")
+            console.log("Authentication Data Stored Successfully.")
+            const response = await fetch('/api/authentication-data', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                walletAddress: wallet?.address,
+                authStatus: 'authenticated',
+                operation:'update_status'
+              })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              console.error('Authentication data storage failed:', data.error);
+            } else {
+              console.log("Authentication Data Updated Successfully.")
+            }
           }
+        } catch (error) {
+          console.error('Error storing/updating authentication data:', error);
         }
-      } catch (error) {
-        console.error('Error storing/updating authentication data:', error);
       }
     };
   
