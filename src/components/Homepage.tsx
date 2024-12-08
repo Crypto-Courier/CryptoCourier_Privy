@@ -106,8 +106,8 @@ function Homepage() {
                 />
               )}
             </div>
-            <div className="flex items-center space-y-0">
-              <div className=" lg:hidden md-hidden my-6">
+            <div className="flex items-center space-y-0 mt-5">
+              <div className=" lg:hidden md-hidden ">
                 {theme === "light" ? (
                   <Image
                     src={send2}
@@ -118,7 +118,7 @@ function Homepage() {
                   <Image
                     src={send}
                     alt="send email"
-                    className="w-16 sm:w-16 md:w-20 lg:w-24 inline-flex h-auto"
+                    className="w-16 sm:w-16 md:w-16 lg:w-24 inline-flex h-auto"
                   />
                 )}
               </div>
@@ -127,11 +127,11 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="sec3Bg relative  py-16 flex items-center">
+        <div className="sec3Bg relative   py-10 sm:py-10 md:py-16 lg:py-16 flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
               <button
-                className="hover:scale-110 duration-500 transition 0.3 send px-0 py-0 text-base sm:text-lg md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
+                className="hover:scale-110 duration-500 transition 0.3 send px-0 py-3 text-sm sm:text-sm md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
                 onClick={() => OpenSendToken()}
               >
                 {!activeAddress ? "Connect  Wallet " : "Send"}

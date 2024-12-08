@@ -112,26 +112,27 @@ const LeaderBoard: React.FC = () => {
             <div className="w-full  mx-auto flex justify-end mb-4">
               <button
                 onClick={invite}
-                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 ${theme === "dark"
+                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg ${theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#FFFFFF] text-black"
                   }`}
               >
                 Invite Your Friends
               </button>
+              
             </div>
             <div className="flex flex-col lg:flex-row md:flex-row  justify-between gap-8 items-start">
-              <div className="w-[40%] flex gap-5 flex-col items-center lg:w-1/3 hidden lg:flex md:flex sm:hidden ">
+              <div className="md:w-[40%] lg:w-[40%] sm:w-full w-full flex gap-5 flex-col items-center lg:w-1/3  lg:flex md:flex  ">
                 <div className="flex flex-col border border-[#ffe600ba] py-6 w-[90%] bg-gradient-to-r to-[#000000dc] from-[#0051ff98] rounded-lg shadow-lg backdrop-blur-[20px]">
                   <div className="flex gap-7 items-center justify-evenly ">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="relative">
-                        <Image src={mask} width={100} alt="Rank" />
-                        <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">
+                      <div className="relative flex justify-center">
+                        <Image src={mask}  alt="Rank" className="w-[50%] sm:w-[50%] lg:w-[100%] md:w-[100%]" />
+                        <span className="absolute inset-0 flex items-center justify-center text-white font-bold lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
                           {userDetails?.rank}
                         </span>
                       </div>
-                      <div className="text-lg text-white mb-[15px]">
+                      <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white mb-[15px] ">
                         Your Rank
                       </div>
                     </div>
@@ -139,10 +140,10 @@ const LeaderBoard: React.FC = () => {
                     <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
                       {userDetails ? (
                         <>
-                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748] text-xl font-extrabold">
+                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748] lg:text-xl md:text-xl sm:text-[12px] text-[12px] font-extrabold">
                             {userDetails.invites}
                           </div>
-                          <div className="text-lg text-white">Invited User</div>
+                          <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white">Invited User</div>
                         </>
                       ) : (
                         <div className="flex items-center justify-center">
@@ -162,7 +163,7 @@ const LeaderBoard: React.FC = () => {
                           <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#FFE925] text-xl font-extrabold">
                             {userDetails.claims}
                           </div>
-                          <div className="text-lg text-white">Claimed User</div>
+                          <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white">Claimed User</div>
                         </>
                       ) : (
                         <div className="flex items-center justify-center">
@@ -178,7 +179,7 @@ const LeaderBoard: React.FC = () => {
                   </div>
                 </div>
 
-                <h2 className="text-[#e7d748] text-2xl font-bold ">Top 3</h2>
+                <h2 className="text-[#e7d748] lg:text-2xl text-2xl md:text-2xl sm:text-2xl font-bold ">Top 3</h2>
 
                 <div className="space-y-4 w-[90%]">
                   {topThreeUsers.map((user, index) => (
@@ -216,7 +217,7 @@ const LeaderBoard: React.FC = () => {
                         />
                       )}
                       <div className="flex items-center  flex-col ">
-                        <div className="relative">
+                        <div className="relative ">
                           {/* Conditional image based on rank */}
 
                           <Image
@@ -224,11 +225,11 @@ const LeaderBoard: React.FC = () => {
                             alt={`Rank ${index + 1}`}
                             width={50}
                           />
-                          <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg">
+                          <span className="absolute inset-0 flex items-center justify-center text-white font-bold lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
                             {index + 1}
                           </span>
                         </div>
-                        <div className="text-white font-semibold text-md">
+                        <div className="text-white font-semibold lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
                           {`${user.address.slice(0, 4)}...${user.address.slice(-4)}`}
                         </div>
                       </div>
@@ -237,7 +238,7 @@ const LeaderBoard: React.FC = () => {
                         <div className="text-[#FFE500] font-bold text-lg">
                           {user.invites}
                         </div>
-                        <div className="text-white text-md mt-1">
+                        <div className="text-white lg:text-lg text-[12px] sm:text-[12px] sm:text-lg mt-1">
                           Invited User
                         </div>
                       </div>
@@ -246,7 +247,7 @@ const LeaderBoard: React.FC = () => {
                         <div className="text-[#FFE500] font-bold text-lg">
                           {user.claims}
                         </div>
-                        <div className="mt-1 text-white text-md">
+                        <div className="mt-1 text-white lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
                           Claimed User
                         </div>
                       </div>
@@ -255,7 +256,7 @@ const LeaderBoard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="w-[60%]">
+              <div className="md:w-[60%] lg:w-[60%] w-full sm:w-full">
                 {isLoading ? (
                   <div className="h-40 md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
                     Loading...
@@ -268,7 +269,7 @@ const LeaderBoard: React.FC = () => {
                   <div className="w-full  rounded-3xl">
                     <div className="overflow-hidden rounded-md ">
                       <div
-                        className={`grid grid-cols-4 gap-2 p-3 rounded-md  ${theme === "dark"
+                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-4 gap-2 p-3 rounded-md  ${theme === "dark"
                             ? " bg-black border border-[#FE660A]"
                             : " bg-white border border-[#FFFFFF]"
                           }`}
@@ -336,7 +337,8 @@ const LeaderBoard: React.FC = () => {
                       </div>
                     </div>
                     {/* Conditional Pagination - Only show if more than 10 entries */}
-                    {/* {leaderboardData.length > itemsPerPage && (
+                    
+                     {leaderboardData.length > itemsPerPage && (
                       <div className="flex justify-center items-center mt-4 space-x-2">
                         <button
                           onClick={() => paginate(currentPage - 1)}
@@ -367,7 +369,7 @@ const LeaderBoard: React.FC = () => {
                           Next
                         </button>
                       </div>
-                    )} */}
+                    )} 
                   </div>
                 )}
               </div>
