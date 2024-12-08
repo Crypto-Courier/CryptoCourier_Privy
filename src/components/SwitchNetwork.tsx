@@ -149,7 +149,7 @@ function SwitchNetwork() {
           <div
             className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
               theme === "dark"
-                ? "bg-[#000000]/70 border border-white text-white"
+                ? "bg-[#000000]/50 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
             }`}
           >

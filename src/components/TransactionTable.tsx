@@ -182,23 +182,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     return (
       <AnimatePresence>
         {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="w-full"
-          >
-            <div className="relative mt-2">
+          
+            <div className="relative ">
               <input
                 ref={searchInputRef}
                 type="text"
                 placeholder="Search transactions..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className={`lg:w-full md:w-full sm:w-[30%] px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${theme === "dark"
-                  ? "bg-[#2A2A2A] text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FE660A]"
-                  : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#0052FF]"
+                className={`lg:w-full md:w-full sm:w-[100%] px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${theme === "dark"
+                  ? "bg-[#000000]/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FFE500]"
+                  : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#E265FF]"
                   }`}
               />
 
@@ -208,7 +202,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                   }`}
               />
             </div>
-          </motion.div>
+         
         )}
       </AnimatePresence>
     );
@@ -272,33 +266,38 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   return (
     <div>
       <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
-        <div className="flex flex-col sm:flex-col justify-between items-start sm:items-center px-3 lg:px-0 md:px-0 sm:px-0 relative">
-          <h3
-            className={`font-medium text-[17px] lg:text-[20px] md:text-[20px] sm:text-[20px] px-3 lg:p-0 md:p-0 sm:p-0 ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-              }`}
-          >
-            Transaction history
-          </h3>
-          {/* Search Toggle for Large Devices */}
-          <div className="prevent-search-close hidden sm:flex items-center space-x-2">
-            {renderSearchInput()}
-            <button
-              onClick={toggleSearch}
-              className={`search-toggle p-2 rounded-full transition-colors duration-300 ${isSearchOpen
-                ? theme === "dark"
-                  ? "bg-[#FE660A]/20 text-[#FE660A]"
-                  : "bg-[#0052FF]/20 text-[#0052FF]"
-                : theme === "dark"
-                  ? "hover:bg-[#FE660A]/20 hover:text-[#FE660A]"
-                  : "hover:bg-[#0052FF]/20 hover:text-[#0052FF]"
-                }`}
-            >
-              {isSearchOpen ? <X size={20} /> : <Search size={20} />}
-            </button>
-          </div>
+      
+        <div className={`flex flex-row sm:flex-row  px-3 lg:px-0 md:px-0 sm:px-0 relative 
+    ${isSearchOpen ? "justify-end sm:justify-end lg:justify-between md:justify-between" : "justify-between"}`}>
+        <h3
+    className={`font-medium text-[17px] lg:block md:block lg:text-[20px] md:text-[20px] sm:text-[17px] px-3 lg:p-0 md:p-0 sm:p-0 ${
+      theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+    } ${isSearchOpen ? "hidden sm:hidden" : "sm:block"}`}
+  >
+    Transaction history
+  </h3>
+
+  {/* Search Toggle for Large Devices */}
+  <div className="prevent-search-close sm:flex items-center flex ">
+    {renderSearchInput()}
+    <button
+      onClick={toggleSearch}
+      className={`search-toggle p-2 ml-2 rounded-full transition-colors duration-300 focus-ring-none  ${
+        isSearchOpen
+          ? theme === "dark"
+            ? "bg-[#FFE500]/20 text-[#000000]"
+            : "bg-[#E265FF]/20 text-[#FFFFFF]"
+          : theme === "dark"
+          ? "hover:bg-[#FFE500]/20 hover:text-[000000]"
+          : "hover:bg-[#E265FF]/20 hover:text-[#FFFFFF]"
+      }`}
+    >
+      {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+    </button>
+  </div>
 
           {/* Search Toggle for Small Devices */}
-          <div className="prevent-search-close sm:hidden w-full">
+          {/* <div className="prevent-search-close sm:hidden w-full">
             <div className="flex items-center space-x-2 w-full">
               <button
                 onClick={toggleSearch}
@@ -315,7 +314,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               </button>
             </div>
             {renderSearchInput()}
-          </div>
+          </div> */}
         </div>
         <div className="h-[40vh] overflow-y-auto scroll overflow-x-hidden">
           {isConnected ? (
