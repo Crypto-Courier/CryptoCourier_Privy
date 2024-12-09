@@ -105,45 +105,54 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`${theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
-            }`}
+          className={`${
+            theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
+          }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
             <div className="w-full  mx-auto flex justify-end mb-4">
               <button
                 onClick={invite}
-                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg ${theme === "dark"
+                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg ${
+                  theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#FFFFFF] text-black"
-                  }`}
+                }`}
               >
                 Invite Your Friends
               </button>
-              
             </div>
-            <div className="flex flex-col lg:flex-row md:flex-row  justify-between gap-8 items-start">
-              <div className="md:w-[40%] lg:w-[40%] sm:w-full w-full flex gap-5 flex-col items-center lg:w-1/3  lg:flex md:flex  ">
+            <div className="flex flex-col lg:flex-row md:flex-col  justify-between gap-8 items-start">
+              <div className="md:w-[100%] lg:w-[40%] sm:w-full w-full flex gap-5 flex-col items-center  lg:flex md:flex  ">
                 <div className="flex flex-col border border-[#ffe600ba] py-6 w-[90%] bg-gradient-to-r to-[#000000dc] from-[#0051ff98] rounded-lg shadow-lg backdrop-blur-[20px]">
-                  <div className="flex gap-7 items-center justify-evenly ">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="relative flex justify-center">
-                        <Image src={mask}  alt="Rank" className="w-[50%] sm:w-[50%] lg:w-[100%] md:w-[100%]" />
-                        <span className="absolute inset-0 flex items-center justify-center text-white font-bold lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
+                  <div className="flex flex-row  justify-evenly items-center gap-4">
+                    <div className="flex flex-col items-center gap-2 mb-3">
+                      <div className="relative lg:w-[80px] lg:h-[80px] md:w-[60px] md:h-[60px] sm:w-[60px] sm:h-[60px] ">
+                        <Image
+                          src={mask}
+                          alt="Rank"
+                          className="w-full h-full object-contain"
+                        />
+                        <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm sm:text-lg">
                           {userDetails?.rank}
                         </span>
                       </div>
-                      <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white mb-[15px] ">
+                      <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold">
                         Your Rank
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
+                    <div className="flex flex-col items-center">
                       {userDetails ? (
                         <>
-                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#e7d748] lg:text-xl md:text-xl sm:text-[12px] text-[12px] font-extrabold">
-                            {userDetails.invites}
+                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
+                            <span className="text-yellow-300  font-bold">
+                              {userDetails.invites}
+                            </span>
                           </div>
-                          <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white">Invited User</div>
+                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
+                            Invited User
+                          </div>
                         </>
                       ) : (
                         <div className="flex items-center justify-center">
@@ -157,13 +166,17 @@ const LeaderBoard: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="flex flex-col items-center gap-2 h-[12vh] justify-between">
+                    <div className="flex flex-col items-center">
                       {userDetails ? (
                         <>
-                          <div className="border-2 border-[#cfc45c9b] w-[65px] rounded-full p-4 flex items-center justify-center text-[#FFE925] text-xl font-extrabold">
-                            {userDetails.claims}
+                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
+                            <span className="text-yellow-300 text-lg sm:text-2xl font-bold">
+                              {userDetails.claims}
+                            </span>
                           </div>
-                          <div className="lg:text-lg text-[12px] sm:text-[12px] md:text-lg text-white">Claimed User</div>
+                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
+                            Claimed User
+                          </div>
                         </>
                       ) : (
                         <div className="flex items-center justify-center">
@@ -178,19 +191,23 @@ const LeaderBoard: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                {/* ....... */}
 
-                <h2 className="text-[#e7d748] lg:text-2xl text-2xl md:text-2xl sm:text-2xl font-bold ">Top 3</h2>
+                <h2 className="text-[#e7d748] lg:text-2xl text-2xl md:text-2xl sm:text-2xl font-bold ">
+                  Top 3
+                </h2>
 
                 <div className="space-y-4 w-[90%]">
                   {topThreeUsers.map((user, index) => (
                     <div
                       key={index}
-                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${index === 0
+                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${
+                        index === 0
                           ? "border-[#FF3333]"
                           : index === 1
-                            ? "border-[#FF3333]"
-                            : "border-[#FF3333]"
-                        }`}
+                          ? "border-[#FF3333]"
+                          : "border-[#FF3333]"
+                      }`}
                     >
                       {index === 0 && (
                         <Image
@@ -230,7 +247,9 @@ const LeaderBoard: React.FC = () => {
                           </span>
                         </div>
                         <div className="text-white font-semibold lg:text-lg text-[12px] sm:text-[12px] md:text-lg">
-                          {`${user.address.slice(0, 4)}...${user.address.slice(-4)}`}
+                          {`${user.address.slice(0, 4)}...${user.address.slice(
+                            -4
+                          )}`}
                         </div>
                       </div>
 
@@ -238,7 +257,7 @@ const LeaderBoard: React.FC = () => {
                         <div className="text-[#FFE500] font-bold text-lg">
                           {user.invites}
                         </div>
-                        <div className="text-white lg:text-lg text-[12px] sm:text-[12px] sm:text-lg mt-1">
+                        <div className="text-white lg:text-lg text-[12px] sm:text-[12px] md:text-lg mt-1">
                           Invited User
                         </div>
                       </div>
@@ -256,7 +275,7 @@ const LeaderBoard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="md:w-[60%] lg:w-[60%] w-full sm:w-full">
+              <div className="md:w-[100%] lg:w-[60%] w-full sm:w-full">
                 {isLoading ? (
                   <div className="h-40 md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
                     Loading...
@@ -269,19 +288,21 @@ const LeaderBoard: React.FC = () => {
                   <div className="w-full  rounded-3xl">
                     <div className="overflow-hidden rounded-md ">
                       <div
-                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-4 gap-2 p-3 rounded-md  ${theme === "dark"
+                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-4 gap-2 p-3 rounded-md  ${
+                          theme === "dark"
                             ? " bg-black border border-[#FE660A]"
                             : " bg-white border border-[#FFFFFF]"
-                          }`}
+                        }`}
                       >
                         {["Rank", "Gifter", "Claimer", "Claim Rate"].map(
                           (header, index) => (
                             <div
                               key={index}
-                              className={`text-center font-semibold mb-0 bg-black ${theme === "dark"
+                              className={`text-center font-semibold mb-0 bg-black ${
+                                theme === "dark"
                                   ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
                                   : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                                }`}
+                              }`}
                             >
                               {header}
                             </div>
@@ -292,10 +313,11 @@ const LeaderBoard: React.FC = () => {
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${theme === "dark"
+                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${
+                              theme === "dark"
                                 ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
                                 : "bg-[#FF3333]/40 border border-[#FFFFFF]"
-                              }`}
+                            }`}
                           >
                             {/* Yellow Line */}
                             <div className="h-[70%] bg-[#FFE500] w-[2px]"></div>
@@ -337,24 +359,23 @@ const LeaderBoard: React.FC = () => {
                       </div>
                     </div>
                     {/* Conditional Pagination - Only show if more than 10 entries */}
-                    
-                     {leaderboardData.length > itemsPerPage && (
+
+                    {leaderboardData.length > itemsPerPage && (
                       <div className="flex justify-center items-center mt-4 space-x-2">
                         <button
                           onClick={() => paginate(currentPage - 1)}
                           disabled={currentPage === 1}
                           className={`px-4 py-2 rounded ${
                             currentPage === 1
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : "bg-blue-500 text-white hover:bg-blue-600"
+                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                              : "bg-[#FFE500] text-[#363535]"
                           }`}
                         >
                           Previous
                         </button>
 
-                      
                         <span className="text-white">
-                          Page {currentPage} of {totalPages}
+                          {currentPage} of {totalPages}
                         </span>
 
                         <button
@@ -362,14 +383,14 @@ const LeaderBoard: React.FC = () => {
                           disabled={currentPage === totalPages}
                           className={`px-4 py-2 rounded ${
                             currentPage === totalPages
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : "bg-blue-500 text-white hover:bg-blue-600"
+                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                              : "bg-[#FFE500] text-[#363535]"
                           }`}
                         >
                           Next
                         </button>
                       </div>
-                    )} 
+                    )}
                   </div>
                 )}
               </div>
