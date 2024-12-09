@@ -1,80 +1,122 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../lib/mongodb';
-import { MongoClient } from 'mongodb';
+import { getTransactionCollection, getAuthCollection } from '../../lib/getCollections';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { walletAddress, chainId } = req.query;
+  if (req.method === 'POST') {
+    try {
+      const { 
+        recipientWallet, 
+        senderWallet, 
+        tokenAmount, 
+        tokenSymbol, 
+        recipientEmail, 
+        chainId, 
+        senderEmail,
+        transactionHash 
+      } = req.body;
 
-  console.log('Received GET request for transactions', { walletAddress, chainId });
+      // Validate required fields
+      const requiredFields = [
+        'recipientWallet', 
+        'senderWallet', 
+        'tokenAmount', 
+        'tokenSymbol', 
+        'recipientEmail', 
+        'chainId', 
+        'senderEmail',
+        'transactionHash'
+      ];
 
-  if (!walletAddress && !chainId) {
-    console.log('Wallet address is required');
-    return res.status(400).json({ error: 'Wallet address is required' });
-  }
+      const missingFields = requiredFields.filter(field => !req.body[field]);
+      
+      if (missingFields.length > 0) {
+        console.log('Missing required fields:', missingFields);
+        return res.status(400).json({ 
+          error: 'Missing required fields', 
+          missingFields 
+        });
+      }
 
-  let client: MongoClient;
+      // Get collections
+      const transactionCollection = await getTransactionCollection();
+      const authCollection = await getAuthCollection();
 
-  try {
-    client = await clientPromise;
-    const db = client.db('transactionDB');
-    const authDB = client.db('authenticationDB');
-    const collection = db.collection('transactions');
-    const authCollection = authDB.collection('authentication');
+      // Insert the transaction data
+      const transactionResult = await transactionCollection.insertOne({
+        recipientWallet,
+        senderWallet,
+        tokenAmount,
+        tokenSymbol,
+        recipientEmail,
+        senderEmail,
+        chainId,
+        transactionHash,
+        authenticated: false,
+        claimed: false
+      });
 
-    // Convert chainId to an array if it's not already
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId];
+      // Check if recipient wallet exists in authentication database
+      const recipientAuthData = await authCollection.findOne({ 
+        walletAddress: recipientWallet 
+      });
 
-    // Find transactions where the wallet is either the sender or the recipient and chainId matches any in the list
-    const transactions = await collection.find({
-      $and: [
-        { $or: [{ senderWallet: walletAddress }, { recipientWallet: walletAddress }] },
-        { chainId: { $in: chainIds } }
-      ]
-    }).project({
-      senderWallet: 1,
-      recipientWallet: 1,
-      tokenAmount: 1,
-      tokenSymbol: 1,
-      customizedLink: 1,
-      recipientEmail: 1,
-      senderEmail: 1,
-      chainId: 1
-    }).toArray();
+      // If recipient exists and not already authenticated
+      if (recipientAuthData && !recipientAuthData.authStatus) {
+        // Update recipient's authentication status
+        await authCollection.updateOne(
+          { walletAddress: recipientWallet },
+          { 
+            $set: { 
+              authStatus: true,
+              authenticatedAt: new Date() 
+            } 
+          }
+        );
+      }
 
-    const enrichedTransactions = await Promise.all(transactions.map(async (tx) => {
-      // If it's a transaction sent by the current wallet
-      if (tx.senderWallet === walletAddress) {
-        // For transactions to an email address
-        if (tx.recipientEmail) {
-          // Check authentication status in the auth database
-          const authRecord = await authCollection.findOne({ 
-            email: tx.recipientEmail 
-          });
+      // Update sender's invited users
+      const senderAuthData = await authCollection.findOne({
+        walletAddress: senderWallet
+      });
 
-          return {
-            ...tx,
-            claimStatus: authRecord?.authStatus === 'authenticated' ? 'claimed' : 'pending'
-          };
+      if (senderAuthData) {
+        // Check if recipient is already authenticated
+        const recipientAlreadyAuthenticated = await authCollection.findOne({
+          walletAddress: recipientWallet,
+          authStatus: true
+        });
+
+        // Update only if recipient is not already authenticated
+        if (!recipientAlreadyAuthenticated) {
+          await authCollection.updateOne(
+            { walletAddress: senderWallet },
+            { 
+              $push: { invitedUsers: recipientWallet },
+              $inc: { numberOfInvitedUsers: 1 }
+            }
+          );
         }
       }
-      
-      // For other cases, default to claimed or add your specific logic
-      return {
-        ...tx,
-        claimStatus: 'claimed'
-      };
-    }));
 
-    console.log(`Found ${enrichedTransactions.length} transactions`);
+      console.log('Transaction stored successfully', { 
+        transactionId: transactionResult.insertedId 
+      });
 
-    if (enrichedTransactions.length === 0) {
-      console.log('No transactions found for this wallet with selected chain IDs');
-      return res.status(404).json({ error: 'No transactions found for this wallet with selected chain IDs' });
+      res.status(200).json({ 
+        message: 'Transaction stored successfully', 
+        transactionId: transactionResult.insertedId 
+      });
+
+    } catch (error) {
+      console.error('Failed to store transaction', error);
+      res.status(500).json({ 
+        error: 'Failed to store transaction',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
-
-    res.status(200).json(enrichedTransactions);
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    res.status(500).json({ error: 'Failed to retrieve transactions' });
+  } else {
+    console.error(`Method ${req.method} Not Allowed`);
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
