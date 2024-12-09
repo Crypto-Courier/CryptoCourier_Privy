@@ -320,7 +320,7 @@ const History: React.FC = () => {
               theme === "dark"
                 ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
                 : "bg-white/80 backdrop-blur-[80px]"
-            } `}
+            } rounded-br-[40px] rounded-bl-[40px]`}
           >
             <div className="">
               <SwitchHistory onChainSelect={handleChainSelect} />
