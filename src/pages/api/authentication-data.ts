@@ -1,82 +1,45 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { MongoClient } from 'mongodb';
-import clientPromise from '../../lib/mongodb';
-import { validateInput } from '../../utils/auth/auth-params-validation'
-import { UserAuthData } from '../../types/authentication-data-types'
-import { ethers } from 'ethers';
-
-enum OperationType {
-    STORE = 'store',
-    UPDATE_STATUS = 'update_status'
-}
+import { getAuthCollection } from '../../lib/getCollections'
+import { validateInput, handleError } from '../../utils/auth/auth-params-validation'
+import { UserAuthData, AuthRequestBody } from '../../types/authentication-data-types'
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    // Only allow POST requests
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
+    const allowedMethods = ['POST', 'PUT'];
+    if (!allowedMethods.includes(req.method!)) {
+        return handleError(res, 405, 'Method Not Allowed');
     }
 
-    let client: MongoClient;
-    try {
-        // Ensure database connection
-        client = await clientPromise;
-    } catch (connectionError) {
-        console.error('Database connection error:', connectionError);
-        return res.status(500).json({
-            message: 'Database Connection Error',
-            error: 'Unable to connect to the database'
-        });
-    }
-
-    const db = client.db('authenticationDB');
-    const collection = db.collection('authentication');
+    const collection = await getAuthCollection();
 
     try {
-        const { 
-            walletAddress, 
-            email, 
-            authStatus, 
-            operation = OperationType.STORE 
-        } = req.body;
+        const body: AuthRequestBody = req.body;
+        const { walletAddress, email, authStatus } = body;
 
-        // Validate input based on operation
-        if (operation === OperationType.STORE) {
-            validateInput({ walletAddress, email, authStatus });
-        } else if (operation === OperationType.UPDATE_STATUS) {
-            if (!walletAddress || !ethers.isAddress(walletAddress)) {
-                return res.status(400).json({
-                    message: 'Validation Error',
-                    error: 'Wallet address is required'
-                });
-            }
-        }
+        // Route to appropriate operation handler
+        switch (req.method) {
+            case 'POST':
+                // Store user Data
+                validateInput({ walletAddress }, ['walletAddress']);
 
-        switch (operation) {
-            case OperationType.STORE:
                 // Check for existing record
                 const existingRecord = await collection.findOne({
                     $or: [
                         { walletAddress },
-                        { email }
+                        ...(email ? [{ email }] : []) 
                     ]
                 });
 
                 if (existingRecord) {
-                    return res.status(409).json({
-                        message: 'User already exists',
-                        error: 'Duplicate wallet address or email'
-                    });
+                    return handleError(res, 409, 'User already exists');
                 }
 
-                // Prepare and insert document
-                const userAuthData: UserAuthData = {
+                // Prepare user data
+                const userAuthData: Partial<UserAuthData> = {
                     walletAddress,
-                    email,
-                    authStatus,
-                    createdAt: new Date()
+                    email: email || null
                 };
 
                 const result = await collection.insertOne(userAuthData);
@@ -86,18 +49,22 @@ export default async function handler(
                     insertedId: result.insertedId.toString()
                 });
 
-            case OperationType.UPDATE_STATUS:
-                // Update authentication status
+            case 'PUT':
+                // Update user record
+                validateInput({ walletAddress, authStatus }, ['walletAddress', 'authStatus'])
+
                 const updateResult = await collection.updateOne(
                     { walletAddress },
-                    { $set: { authStatus, authenticatedAt: new Date() } },
+                    {
+                        $set: {
+                            authStatus,
+                            authenticatedAt: new Date()
+                        }
+                    }
                 );
 
                 if (updateResult.matchedCount === 0) {
-                    return res.status(404).json({
-                        message: 'User not found',
-                        error: 'No user with the given wallet address exists'
-                    });
+                    return handleError(res, 404, 'User not found');
                 }
 
                 return res.status(200).json({
@@ -106,25 +73,16 @@ export default async function handler(
                 });
 
             default:
-                return res.status(400).json({
-                    message: 'Invalid operation type',
-                    error: 'Supported operations are: store, update_status'
-                });
+                return handleError(res, 405, 'Unsupported HTTP method');
         }
     } catch (error) {
         // Comprehensive error handling
         console.error('Authentication process error:', error);
 
         if (error instanceof Error) {
-            return res.status(400).json({
-                message: 'Validation Error',
-                error: error.message
-            });
+            return handleError(res, 400, 'Validation Error', error.message);
         }
 
-        return res.status(500).json({
-            message: 'Internal Server Error',
-            error: 'An unexpected error occurred'
-        });
+        return handleError(res, 500, 'Internal Server Error');
     }
 }

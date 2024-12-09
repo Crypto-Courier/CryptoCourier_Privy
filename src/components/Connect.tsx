@@ -118,7 +118,6 @@ export const Connect = () => {
       setIsEmailConnected(false);
     }
     const storeOrUpdateUserAuthData = async () => {
-      if(isValidEmail(user?.email?.address || "")){
         try {
           const response = await fetch('/api/authentication-data', {
             method: 'POST',
@@ -127,41 +126,15 @@ export const Connect = () => {
             },
             body: JSON.stringify({
               walletAddress: wallet?.address,
-              email: user?.email?.address,
-              authStatus: 'pending',
-              operation:'store'
+              email: user?.email?.address || null,
             })
           });
     
-          const data = await response.json();
-    
-          if (!response.ok) {
-            console.error('Authentication data storage failed:', data.error);
-          } else {
-            console.log("Authentication Data Stored Successfully.")
-            const response = await fetch('/api/authentication-data', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                walletAddress: wallet?.address,
-                authStatus: 'authenticated',
-                operation:'update_status'
-              })
-            });
-            const data = await response.json();
-            if (!response.ok) {
-              console.error('Authentication data storage failed:', data.error);
-            } else {
-              console.log("Authentication Data Updated Successfully.")
-            }
-          }
+          // const data = await response.json();
         } catch (error) {
           console.error('Error storing/updating authentication data:', error);
         }
-      }
-    };
+      };
   
     // Call the function when user is authenticated or wallet changes
     if (authenticated && user) {
