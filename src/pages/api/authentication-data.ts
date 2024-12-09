@@ -22,13 +22,13 @@ export default async function handler(
         switch (req.method) {
             case 'POST':
                 // Store user Data
-                validateInput({ walletAddress, email }, ['walletAddress', 'email']);
+                validateInput({ walletAddress }, ['walletAddress']);
 
                 // Check for existing record
                 const existingRecord = await collection.findOne({
                     $or: [
                         { walletAddress },
-                        { email }
+                        ...(email ? [{ email }] : []) 
                     ]
                 });
 
@@ -39,7 +39,7 @@ export default async function handler(
                 // Prepare user data
                 const userAuthData: Partial<UserAuthData> = {
                     walletAddress,
-                    email
+                    email: email || null
                 };
 
                 const result = await collection.insertOne(userAuthData);

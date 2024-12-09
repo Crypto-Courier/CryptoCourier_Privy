@@ -1,6 +1,6 @@
 export interface UserAuthData {
     walletAddress: string;
-    email?: string;
+    email?: string|null;
     authStatus?: boolean;
     authenticatedAt?: Date;
     invitedUsers?: string[];
