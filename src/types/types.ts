@@ -40,6 +40,7 @@ export interface EmailProps {
   tokenAmount: string;
   tokenSymbol: string;
   senderEmail: string;
+  transactionHash: string; 
 }
 
 export interface SendEmailParams {
@@ -49,6 +50,7 @@ export interface SendEmailParams {
   tokenAmount: string;
   tokenSymbol: string;
   senderEmail: string;
+  transactionHash: string;
 }
 
 export interface TokenDetails {

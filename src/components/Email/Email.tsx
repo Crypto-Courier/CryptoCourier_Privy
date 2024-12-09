@@ -6,7 +6,9 @@ const Email: React.FC<EmailProps> = ({
   tokenAmount,
   tokenSymbol,
   senderEmail,
+  transactionHash,
 }) => {
+  const claimLink = `https://courierbycryptocoutrier.vercel.app/claim-token?transactionHash=${transactionHash}`;
   return (
     <div
       style={{
@@ -70,7 +72,7 @@ const Email: React.FC<EmailProps> = ({
 
       <div style={{ textAlign: "center" }}>
         <a
-          href="https://courierbycryptocoutrier.vercel.app/claim-token"
+          href={claimLink}
           target="_blank"
           rel="noopener noreferrer"
           style={{

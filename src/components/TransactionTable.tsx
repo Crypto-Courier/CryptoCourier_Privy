@@ -222,6 +222,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
         senderEmail: tx.senderEmail,
+        transactionHash: tx.recipientEmail
       });
 
       await sendEmail({
@@ -231,6 +232,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
         senderEmail: tx.senderEmail,
+        transactionHash: tx.senderEmail
       });
       toast.success("Email resent successfully!");
     } catch (error) {

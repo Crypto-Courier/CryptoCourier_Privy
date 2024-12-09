@@ -4,7 +4,7 @@ import NewNavbar from "../newNavbar";
 import Footer from "../Footer";
 import { useTheme } from "next-themes";
 import { usePrivy } from "@privy-io/react-auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import spin from "../../assets/spinner.gif";
 import Image from "next/image";
 import { Wallet } from "ethers";
@@ -15,7 +15,10 @@ function ClaimToken() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showTooltip, setShowTooltip] = useState(false); // Tooltip visibility state
+
+  const transactionHash = searchParams?.get('transactionHash');
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
