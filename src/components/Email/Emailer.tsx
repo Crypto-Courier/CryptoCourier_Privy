@@ -8,6 +8,7 @@ export const sendEmail = async ({
   tokenAmount,
   tokenSymbol,
   senderEmail,
+  transactionHash,
 }: SendEmailParams): Promise<void> => {
   try {
     const htmlContent = renderEmailToString({
@@ -15,13 +16,15 @@ export const sendEmail = async ({
       tokenAmount,
       tokenSymbol,
       senderEmail,
+      transactionHash,
     });
 
     const response = await axios.post<{ message: string }>("/api/send-email", {
       recipientEmail,
       subject,
       htmlContent,
-      senderEmail
+      senderEmail,
+      transactionHash,
     });
 
     if (response.status === 200) {

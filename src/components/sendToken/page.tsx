@@ -148,6 +148,7 @@ const SendToken = () => {
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenData.symbol}
             senderEmail={senderEmail} // Pass sender identifier to email component
+            transactionHash={transactionHash}
           />
         );
         if (isValidEmail(recipientEmail)) {
@@ -158,6 +159,7 @@ const SendToken = () => {
             tokenAmount,
             tokenSymbol: selectedTokenData.symbol,
             senderEmail,
+            transactionHash: transactionHash
           });
           StoreAuthData(
             recipientWalletAddress,
