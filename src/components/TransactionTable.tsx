@@ -12,6 +12,9 @@ import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { isValidEmail } from "../lib/validation";
 import { CheckCircle, Clock, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react"; // Assuming you're using Lucide icons
+import { Tooltip } from "antd";
+
 interface TransactionTableProps {
   viewMode: string;
   selectedChains: number[];
@@ -28,11 +31,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { theme } = useTheme();
+  const [expandedTxIndex, setExpandedTxIndex] = useState(null);
 
   const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Toggle expand/collapse for a specific transaction
+  const toggleTransactionExpand = (index: any) => {
+    setExpandedTxIndex(expandedTxIndex === index ? null : index);
+  };
 
   // Toggle search visibility
   const toggleSearch = () => {
@@ -49,28 +58,35 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const renderClaimStatusBadge = (tx: Transaction) => {
     // Only show for sent transactions with an email recipient
     if (tx.senderWallet === activeAddress) {
-      return (
-        isValidEmail(tx.recipientEmail) ? <>
-        <div className={`flex items-center space-x-1 ${
-          tx.claimStatus === 'claimed' 
-            ? 'text-green-600' 
-            : 'text-yellow-600'
-        }`}>
-          {tx.claimStatus === 'claimed' ? (
-            <CheckCircle size={16} />
-          ) : (
-            <Clock size={16} />
-          )}
-          <span className="text-[11px] lg:text-[13px]">
-            {tx.claimStatus === 'claimed' ? 'Claimed' : 'Pending'}
-          </span>
-        </div>
-        </> :
+      return isValidEmail(tx.recipientEmail) ? (
+        <>
+          <div
+            className={`flex items-center space-x-1 ${
+              tx.claimStatus === "claimed"
+                ? "text-green-600"
+                : "text-yellow-600"
+            }`}
+          >
+            {tx.claimStatus === "claimed" ? (
+              <Tooltip title="Claimed">
+                <CheckCircle size={16} />
+              </Tooltip>
+            ) : (
+              <Tooltip title="pending">
+                <Clock size={16} />
+              </Tooltip>
+            )}
+            {/* <span className="text-[11px] lg:text-[13px]">
+              {tx.claimStatus === "claimed" ? "Claimed" : "Pending"}
+            </span> */}
+          </div>
+        </>
+      ) : (
         <div className={"flex items-center space-x-1 text-green-600"}>
+          <Tooltip title="Claimed">
             <CheckCircle size={16} />
-          <span className="text-[11px] lg:text-[13px]">
-            {"claimed"}
-          </span>
+          </Tooltip>
+          {/* <span className="text-[11px] lg:text-[13px]">{"claimed"}</span> */}
         </div>
       );
     }
@@ -182,27 +198,27 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     return (
       <AnimatePresence>
         {isSearchOpen && (
-          
-            <div className="relative ">
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search transactions..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className={`lg:w-full md:w-full sm:w-[100%] px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${theme === "dark"
+          <div className="relative ">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search transactions..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className={`lg:w-full md:w-full sm:w-[100%] px-10 py-2 rounded-lg focus:outline-none transition-all duration-300 ${
+                theme === "dark"
                   ? "bg-[#000000]/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-[#FFE500]"
                   : "bg-gray-100 text-black placeholder-gray-500 focus:ring-2 focus:ring-[#E265FF]"
-                  }`}
-              />
+              }`}
+            />
 
-              <Search
-                size={20}
-                className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-              />
-            </div>
-         
+            <Search
+              size={20}
+              className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
+          </div>
         )}
       </AnimatePresence>
     );
@@ -268,35 +284,40 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   return (
     <div>
       <div className="space-y-3 text-[12px] lg:text-[13px] md:text-[13px] sm:text-[13px]">
-      
-        <div className={`flex flex-row sm:flex-row  px-3 lg:px-0 md:px-0 sm:px-0 relative 
-    ${isSearchOpen ? "justify-end sm:justify-end lg:justify-between md:justify-between" : "justify-between"}`}>
-        <h3
-    className={`font-medium text-[17px] lg:block md:block lg:text-[20px] md:text-[20px] sm:text-[17px] px-3 lg:p-0 md:p-0 sm:p-0 ${
-      theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-    } ${isSearchOpen ? "hidden sm:hidden" : "sm:block"}`}
-  >
-    Transaction history
-  </h3>
+        <div
+          className={`flex flex-row sm:flex-row  px-3 lg:px-0 md:px-0 sm:px-0 relative 
+    ${
+      isSearchOpen
+        ? "justify-end sm:justify-end lg:justify-between md:justify-between"
+        : "justify-between"
+    }`}
+        >
+          <h3
+            className={`font-medium text-[17px] lg:block md:block lg:text-[20px] md:text-[20px] sm:text-[17px] px-3 lg:p-0 md:p-0 sm:p-0 ${
+              theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+            } ${isSearchOpen ? "hidden sm:hidden" : "sm:block"}`}
+          >
+            Transaction history
+          </h3>
 
-  {/* Search Toggle for Large Devices */}
-  <div className="prevent-search-close sm:flex items-center flex ">
-    {renderSearchInput()}
-    <button
-      onClick={toggleSearch}
-      className={`search-toggle p-2 ml-2 rounded-full transition-colors duration-300 focus-ring-none  ${
-        isSearchOpen
-          ? theme === "dark"
-            ? "bg-[#FFE500]/20 text-[#000000]"
-            : "bg-[#E265FF]/20 text-[#FFFFFF]"
-          : theme === "dark"
-          ? "hover:bg-[#FFE500]/20 hover:text-[000000]"
-          : "hover:bg-[#E265FF]/20 hover:text-[#FFFFFF]"
-      }`}
-    >
-      {isSearchOpen ? <X size={20} /> : <Search size={20} />}
-    </button>
-  </div>
+          {/* Search Toggle for Large Devices */}
+          <div className="prevent-search-close sm:flex items-center flex ">
+            {renderSearchInput()}
+            <button
+              onClick={toggleSearch}
+              className={`search-toggle p-2 ml-2 rounded-full transition-colors duration-300 focus-ring-none  ${
+                isSearchOpen
+                  ? theme === "dark"
+                    ? "bg-[#FFE500]/20 text-[#000000]"
+                    : "bg-[#E265FF]/20 text-[#FFFFFF]"
+                  : theme === "dark"
+                  ? "hover:bg-[#FFE500]/20 hover:text-[000000]"
+                  : "hover:bg-[#E265FF]/20 hover:text-[#FFFFFF]"
+              }`}
+            >
+              {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+            </button>
+          </div>
 
           {/* Search Toggle for Small Devices */}
           {/* <div className="prevent-search-close sm:hidden w-full">
@@ -334,17 +355,48 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               transactions.map((tx, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col lg:flex-row md:flex-row sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-[20px] lg:gap-0 md:gap-0 sm:gap-[20px] ${theme === "dark"
-                    ? "bg-[#000000]/20 border border-[#5C5C5C]"
-                    : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
-                    }`}
+                  className={`relative flex flex-col lg:flex-row md:flex-col sm:flex-col justify-between items-start bg-opacity-50 p-3 rounded-xl mt-2 mx-3 gap-0 ${
+                    theme === "dark"
+                      ? "bg-[#000000]/20 border border-[#5C5C5C]"
+                      : "bg-[#FFFCFC]/20 border border-[#FFFFFF]"
+                  }`}
+                  onClick={() => toggleTransactionExpand(index)}
                 >
-                  <div className="flex items-center space-x-3">
-                    <span
-                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
-                        ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
-                        : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
+                  <div className="absolute top-0 left-0">
+                    <Image
+                      src={trx}
+                      alt=""
+                      width={30}
+                      height={30}
+                      className="w-7 h-7"
+                    />
+                    <div className="absolute top-0 left-4 bg-black rounded-full">
+                      {renderClaimStatusBadge(tx)}
+                    </div>
+                  </div>
+                  {/* Dropdown Arrow */}
+                  <div className="block md:block sm:block absolute top-2 right-0 p-2 lg:hidden">
+                    {expandedTxIndex === index ? (
+                      <ChevronUp
+                        className={`w-5 h-5 ${
+                          theme === "dark" ? "text-white" : "text-black"
                         }`}
+                      />
+                    ) : (
+                      <ChevronDown
+                        className={`w-5 h-5 ${
+                          theme === "dark" ? "text-white" : "text-black"
+                        }`}
+                      />
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-3 ml-8">
+                    <span
+                      className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[11px] ${
+                        theme === "dark"
+                          ? "border border-[#FE660A] text-[#FE660A] bg-[#181818] py-1 px-2"
+                          : "border border-[#FE660A] text-[#FE660A] bg-white py-1 px-2"
+                      }`}
                     >
                       {tx.tokenAmount} {tx.tokenSymbol}
                     </span>
@@ -352,34 +404,43 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       <>
                         <span className="text-[15px]">To</span>
                         <span
-                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${theme === "dark"
-                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                            }`}
+                          className={`rounded-[10px] text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] tracking-wide ${
+                            theme === "dark"
+                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                          }`}
                         >
-                          {tx.recipientEmail}
+                          {isValidEmail(tx.recipientEmail)
+                            ? tx.recipientEmail
+                            : `${tx.recipientWallet.slice(
+                                0,
+                                8
+                              )}...${tx.recipientWallet.slice(-8)}`}
                         </span>
-                        {/* Add claim status badge */}
-                        {renderClaimStatusBadge(tx)}
                       </>
                     ) : (
                       <>
                         <span className="text-[15px]">From</span>
                         <span
-                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${theme === "dark"
-                            ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
-                            : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
-                            }`}
+                          className={`rounded-[10px] tracking-wide text-[11px] lg:text-[15px] md:text-[15px] sm:text-[13px] ${
+                            theme === "dark"
+                              ? "border border-[#E265FF] text-[#E265FF] bg-[#181818] py-1 px-2"
+                              : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
+                          }`}
                         >
-                          {isValidEmail(tx.senderEmail) ? tx.senderEmail : `${tx.senderWallet.slice(
-                            0,
-                            6
-                          )}...${tx.senderWallet.slice(-4)}`}
+                          {isValidEmail(tx.senderEmail)
+                            ? tx.senderEmail
+                            : `${tx.senderWallet.slice(
+                                0,
+                                6
+                              )}...${tx.senderWallet.slice(-4)}`}
                         </span>
                       </>
                     )}
                   </div>
-                  <div className="justify-end flex gap-3">
+
+                  {/* Buttons always visible on large screens */}
+                  <div className="hidden justify-end gap-3  lg:flex md:hidden sm:hidden">
                     {tx.senderWallet === activeAddress &&
                       isValidEmail(tx.recipientEmail) && (
                         <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
@@ -389,7 +450,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                             </div>
                           ) : (
                             <button
-                              onClick={() => handleResend(tx, index)}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent toggle when clicking button
+                                handleResend(tx, index);
+                              }}
                               className="tracking-wide text-[15px]"
                             >
                               Resend
@@ -405,12 +469,62 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       />
                       <button
                         className="tracking-wide text-[15px]"
-                        onClick={() =>
-                          openTransactionReciept(tx.customizedLink)
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent toggle when clicking button
+                          openTransactionReciept(tx.customizedLink);
+                        }}
                       >
                         View Tx
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Collapsible section for md and sm screens */}
+                  <div
+                    className={`w-full transition-all duration-300 ease-in-out overflow-hidden ${
+                      expandedTxIndex === index
+                        ? "max-h-40 opacity-100 mt-4"
+                        : "max-h-0 opacity-0 mt-0"
+                    } lg:hidden sm:block md:block`}
+                  >
+                    {/* Existing button layout for smaller screens */}
+                    <div className="flex justify-start gap-3 ml-8 items-center">
+                      {tx.senderWallet === activeAddress &&
+                        isValidEmail(tx.recipientEmail) && (
+                          <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-4 py-2 rounded-full text-[10px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
+                            {loadingTxId === index ? (
+                              <div className="tracking-wide text-[12px] lg:text-[15px] md:text-[15px]">
+                                Sending
+                              </div>
+                            ) : (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent toggle when clicking button
+                                  handleResend(tx, index);
+                                }}
+                                className="tracking-wide text-[12px] lg:text-[15px] md:text-[15px]"
+                              >
+                                Resend
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-4 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
+                        <Image
+                          src={trx}
+                          alt=""
+                          className="w-4 h-4 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4"
+                        />
+                        <button
+                          className="tracking-wide text-[12px] lg:text-[15px] md:text-[15px]"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent toggle when clicking button
+                            openTransactionReciept(tx.customizedLink);
+                          }}
+                        >
+                          View Tx
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -418,8 +532,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             )
           ) : (
             <div
-              className={`text-center  lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-                }`}
+              className={`text-center lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
+                theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+              }`}
             >
               Connect your wallet to view your transactions.
             </div>

@@ -116,7 +116,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
               <Image
                 src={chain.img}
                 alt={chain.title}
-                className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] lg:w-[25px] md:w-[25px] lg:h-[25px] md:h-[25px] ${
+                className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] lg:w-[25px] md:w-[20px] lg:h-[25px] md:h-[20px] ${
                   !userHasSelected || selectedChains.includes(chain.id)
                     ? "opacity-100"
                     : "opacity-40"
