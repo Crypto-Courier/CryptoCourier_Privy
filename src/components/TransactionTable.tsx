@@ -62,12 +62,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         <>
           <div
             className={`flex items-center space-x-1 ${
-              tx.claimStatus === "claimed"
+              tx.claimed === true
                 ? "text-green-600"
                 : "text-yellow-600"
             }`}
           >
-            {tx.claimStatus === "claimed" ? (
+            {tx.claimed === true ? (
               <Tooltip title="Claimed">
                 <CheckCircle size={16} />
               </Tooltip>
@@ -132,7 +132,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
           .map((id) => `chainId=${id}`)
           .join("&");
 
-        const endpoint = `/api/get-transactions?walletAddress=${activeAddress}&${chainIdQuery}`;
+        const endpoint = `/api/transaction-history-table?walletAddress=${activeAddress}&${chainIdQuery}`;
 
         const response = await fetch(endpoint);
 

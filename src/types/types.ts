@@ -66,7 +66,8 @@ export interface Transaction {
   customizedLink: string;
   recipientEmail: string;
   senderEmail:string;
-  claimStatus?: 'pending' | 'claimed';
+  claimed?: boolean;
+  authenticated?: boolean;
 }
 export interface ApiResponse {
   id: string;
