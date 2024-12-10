@@ -7,74 +7,49 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const allowedMethods = ['POST', 'PUT'];
-    if (!allowedMethods.includes(req.method!)) {
+    // Only allow POST method
+    if (req.method !== 'POST') {
         return handleError(res, 405, 'Method Not Allowed');
     }
 
     const collection = await getAuthCollection();
 
     try {
-        const body: AuthRequestBody = req.body;
-        const { walletAddress, email, authStatus } = body;
+        const { walletAddress, email }: AuthRequestBody = req.body;
 
-        // Route to appropriate operation handler
-        switch (req.method) {
-            case 'POST':
-                // Store user Data
-                validateInput({ walletAddress }, ['walletAddress']);
-
-                // Check for existing record
-                const existingRecord = await collection.findOne({
-                    $or: [
-                        { walletAddress },
-                        ...(email ? [{ email }] : []) 
-                    ]
-                });
-
-                if (existingRecord) {
-                    return handleError(res, 409, 'User already exists');
-                }
-
-                // Prepare user data
-                const userAuthData: Partial<UserAuthData> = {
-                    walletAddress,
-                    email: email || null
-                };
-
-                const result = await collection.insertOne(userAuthData);
-
-                return res.status(201).json({
-                    message: 'User authentication data stored successfully',
-                    insertedId: result.insertedId.toString()
-                });
-
-            case 'PUT':
-                // Update user record
-                validateInput({ walletAddress, authStatus }, ['walletAddress', 'authStatus'])
-
-                const updateResult = await collection.updateOne(
-                    { walletAddress },
-                    {
-                        $set: {
-                            authStatus,
-                            authenticatedAt: new Date()
-                        }
-                    }
-                );
-
-                if (updateResult.matchedCount === 0) {
-                    return handleError(res, 404, 'User not found');
-                }
-
-                return res.status(200).json({
-                    message: 'User authentication status updated successfully',
-                    updatedCount: updateResult.modifiedCount
-                });
-
-            default:
-                return handleError(res, 405, 'Unsupported HTTP method');
+        // Validate wallet address input
+        if(email !== null){
+            validateInput({walletAddress, email},['walletAddress', 'email'])
         }
+        
+        validateInput({ walletAddress }, ['walletAddress']);
+
+        // Check for existing record
+        const existingRecord = await collection.findOne({
+            $or: [
+                { walletAddress },
+                ...(email ? [{ email }] : []) 
+            ]
+        });
+
+        if (existingRecord) {
+            return handleError(res, 409, 'User already exists');
+        }
+
+        // Prepare user data
+        const userAuthData: Partial<UserAuthData> = {
+            walletAddress,
+            email: email || null
+        };
+
+        // Insert new user record
+        const result = await collection.insertOne(userAuthData);
+
+        return res.status(201).json({
+            message: 'User authentication data stored successfully',
+            insertedId: result.insertedId.toString()
+        });
+
     } catch (error) {
         // Comprehensive error handling
         console.error('Authentication process error:', error);
