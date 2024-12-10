@@ -117,7 +117,7 @@ function SwitchNetwork() {
       <div className="md:hidden">
         <div
           ref={dropdownRef}
-          className={`w-[60%] backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
+          className={`w-[100%] backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
             theme === "dark"
               ? "bg-[#000000]/50 border border-white text-white"
               : "bg-[#FFFCFC] border border-gray-700 text-black"

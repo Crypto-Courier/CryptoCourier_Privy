@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import useOutsideClick from "../lib/useOutsideClick";
 import { Tooltip } from "antd";
 import { chains } from "../utils/chainIdToLogo";
 import sepolia from "../assets/sepolia.webp";
@@ -11,7 +12,8 @@ interface SwitchHistoryProps {
 
 function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(dropdownRef, () => setDropdownOpen(false));
   const { theme } = useTheme();
   const [userHasSelected, setUserHasSelected] = useState(false);
   const [selectedChains, setSelectedChains] = useState<number[]>([
@@ -86,6 +88,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         {/* Show Clear All button only when user has made selections */}
         {userHasSelected && (
           <div
+            ref={dropdownRef}
             onClick={handleClearAll}
             className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
               theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
@@ -105,10 +108,10 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         )}
       </div>
 
-      <div className="md:hidden">
+      <div className="md:hidden" ref={dropdownRef}>
         <div className="flex justify-between items-center">
           <div
-            className={`w-[60%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
+            className={`w-[100%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
               theme === "dark"
                 ? "bg-[#000000]/50 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
@@ -137,7 +140,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
                   theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
                 }`}
               >
-                Clear All
+                Clear
                 <span
                   className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
                     theme === "dark"
@@ -155,7 +158,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-full rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
+            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
               theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
