@@ -68,6 +68,7 @@ export interface Transaction {
   senderEmail:string;
   claimed?: boolean;
   authenticated?: boolean;
+  chainId : number;
 }
 export interface ApiResponse {
   id: string;

@@ -14,7 +14,7 @@ import { CheckCircle, Clock, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react"; // Assuming you're using Lucide icons
 import { Tooltip } from "antd";
-
+import { chainLogos } from "../utils/chainIdToLogo";
 interface TransactionTableProps {
   viewMode: string;
   selectedChains: number[];
@@ -364,7 +364,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                 >
                   <div className="absolute top-0 left-0">
                     <Image
-                      src={trx}
+                      src={chainLogos[tx.chainId]}
                       alt=""
                       width={30}
                       height={30}
