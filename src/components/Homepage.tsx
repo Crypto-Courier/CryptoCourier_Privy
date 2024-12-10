@@ -127,7 +127,7 @@ function Homepage() {
           </div>
         </div>
 
-        <div className="sec3Bg relative   py-10 sm:py-10 md:py-16 lg:py-16 flex items-center">
+        <div className="sec3Bg relative   h-[35vh] flex items-center">
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
               <button

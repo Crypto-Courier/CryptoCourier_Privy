@@ -62,9 +62,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         <>
           <div
             className={`flex items-center space-x-1 ${
-              tx.claimed === true
-                ? "text-green-600"
-                : "text-yellow-600"
+              tx.claimed === true ? "text-green-600" : "text-yellow-600"
             }`}
           >
             {tx.claimed === true ? (
@@ -238,7 +236,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
         senderEmail: tx.senderEmail,
-        transactionHash: tx.recipientEmail
+        transactionHash: tx.recipientEmail,
       });
 
       await sendEmail({
@@ -248,7 +246,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
         senderEmail: tx.senderEmail,
-        transactionHash: tx.senderEmail
+        transactionHash: tx.senderEmail,
       });
       toast.success("Email resent successfully!");
     } catch (error) {

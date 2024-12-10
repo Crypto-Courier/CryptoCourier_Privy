@@ -181,7 +181,10 @@ const History: React.FC = () => {
                 }`}
               ></div>
             </div>
-            <span className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+            <span
+              className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] cursor-pointer"
+              onClick={() => handleCopy(dashboardAddress || "")}
+            >
               {dashboardAddress
                 ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
                     -4
@@ -252,13 +255,24 @@ const History: React.FC = () => {
             }`}
           ></div>
         </div>
-        <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+        <span
+          onClick={() => handleCopy(activeAddress || "")}
+          className="cursor-pointer hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]"
+        >
           {activeAddress
             ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
             : "Connect or Login"}
         </span>
       </div>
     );
+  };
+  const handleCopy = (address: string) => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+      toast.success("Address copied to clipboard!");
+    } else {
+      toast.error("No address available to copy.");
+    }
   };
 
   return (
@@ -271,8 +285,7 @@ const History: React.FC = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
-            {renderWalletAddress()}
-
+            <Tooltip title="Copy on click">{renderWalletAddress()}</Tooltip>
             <div className="text-right flex items-end">
               <div className="gap-4 flex">
                 <Tooltip title="Leaderboard">
