@@ -17,37 +17,45 @@ export default async function handler(
     try {
         const { walletAddress, email }: AuthRequestBody = req.body;
 
-        // Validate wallet address input
-        if(email !== null){
-            validateInput({walletAddress, email},['walletAddress', 'email'])
+        // Validate inputs
+        if (email !== null) {
+            validateInput({ walletAddress, email }, ['walletAddress', 'email'])
+        } else {
+            validateInput({ walletAddress }, ['walletAddress']);
         }
-        
-        validateInput({ walletAddress }, ['walletAddress']);
 
-        // Check for existing record
-        const existingRecord = await collection.findOne({
+        // Prepare the update operation
+        const filter = {
             $or: [
                 { walletAddress },
-                ...(email ? [{ email }] : []) 
+                ...(email ? [{ email }] : [])
             ]
-        });
-
-        if (existingRecord) {
-            return handleError(res, 409, 'User already exists');
-        }
-
-        // Prepare user data
-        const userAuthData: Partial<UserAuthData> = {
-            walletAddress,
-            email: email || null
         };
 
-        // Insert new user record
-        const result = await collection.insertOne(userAuthData);
+        const update = {
+            $set: {
+                walletAddress,
+                email: email || null,
+                lastConnectedAt: new Date()
+            },
+            $setOnInsert: {
+                createdAt: new Date()
+            }
+        };
 
-        return res.status(201).json({
-            message: 'User authentication data stored successfully',
-            insertedId: result.insertedId.toString()
+        // Use findOneAndUpdate with upsert to either update existing record or insert new
+        const result = await collection.findOneAndUpdate(
+            filter, 
+            update, 
+            { 
+                upsert: true,  // Create new document if no match found
+                returnDocument: 'after' // Return the updated/inserted document
+            }
+        );
+
+        return res.status(200).json({
+            message: 'User authentication data updated successfully',
+            userId: result?._id?.toString()
         });
 
     } catch (error) {

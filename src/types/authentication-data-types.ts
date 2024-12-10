@@ -5,6 +5,8 @@ export interface UserAuthData {
     authenticatedAt?: Date;
     invitedUsers?: string[];
     numberOfInvitedUsers?: number;
+    createdAt?: Date;
+    lastConnectedAt?: Date;
 }
 
 export interface AuthRequestBody {
