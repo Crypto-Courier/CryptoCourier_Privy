@@ -41,21 +41,15 @@ function ClaimToken() {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         try {
-          const response = await fetch("/api/authentication-data", {
-            method: "POST",
+          const response = await fetch("/api/authentication-operation", {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              walletAddress: user.wallet.address,
-              authStatus: 'authenticated',
-              operation: 'update_status'
+              transactionHash : transactionHash
             }),
           });
-
-          if (!response.ok) {
-            throw new Error("Failed to update authentication status");
-          }
         } catch (error) {
           console.error("Error updating/storing authentication data:", error);
         }

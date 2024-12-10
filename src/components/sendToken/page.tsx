@@ -161,12 +161,12 @@ const SendToken = () => {
             senderEmail,
             transactionHash: transactionHash
           });
-          StoreAuthData(
-            recipientWalletAddress,
-            recipientEmail,
-            "pending"
-          )
         }
+        const validEmail = isValidEmail(recipientEmail) ? recipientEmail : null;
+        StoreAuthData(
+          recipientWalletAddress,
+          validEmail,
+        )
         StoreTransactionData(
           recipientWalletAddress,
           activeAddress as `0x${string}`,
@@ -253,8 +253,6 @@ const SendToken = () => {
     senderEmail: string
   ) => {
     try {
-      const blockExplorerUrl = chainConfig[walletData?.chainId.split(":")[1]].blockexplorer;
-
       const storeResponse = await fetch("/api/store-transaction", {
         method: "POST",
         headers: {
@@ -266,7 +264,7 @@ const SendToken = () => {
           tokenAmount,
           tokenSymbol: selectedTokenData,
           recipientEmail,
-          customizedLink: `${blockExplorerUrl}/${transactionHash}`,
+          transactionHash: transactionHash,
           chainId: walletData?.chainId.split(":")[1],
           senderEmail,
         }),
@@ -292,8 +290,7 @@ const SendToken = () => {
   // Store Authentication Data
   const StoreAuthData = async (
     walletAddress: string,
-    email: string,
-    authStatus: string
+    email: string | null,
   ) => {
     try {
       const storeResponse = await fetch("/api/authentication-data", {
@@ -304,8 +301,6 @@ const SendToken = () => {
         body: JSON.stringify({
           walletAddress,
           email,
-          authStatus,
-          operation: "store", // Specify the operation type
         }),
       });
   
