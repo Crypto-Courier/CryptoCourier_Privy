@@ -366,7 +366,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       alt=""
                       width={30}
                       height={30}
-                      className="w-7 h-7"
+                      className={`w-7 h-7 rounded-full
+                      } ${theme === "dark" ? "bg-white" : "bg-black"}`}
                     />
                     <div className="absolute top-0 left-4 bg-black rounded-full">
                       {renderClaimStatusBadge(tx)}
