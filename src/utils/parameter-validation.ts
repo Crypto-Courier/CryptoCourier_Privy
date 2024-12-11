@@ -1,7 +1,7 @@
-import { NextApiResponse } from 'next';
-import { UserAuthData } from '../../types/authentication-data-types'
+import { UserAuthData } from '../types/authentication-data-types'
 import { ethers } from 'ethers';
 
+// Validate Input for Authentication Data
 export function validateInput(data: Partial<UserAuthData>, requiredFields: string[]): void {
     const { walletAddress, email, authStatus } = data;
 
@@ -11,7 +11,7 @@ export function validateInput(data: Partial<UserAuthData>, requiredFields: strin
     }
 
     // Email validation
-    if (requiredFields.includes('email') && (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+    if (requiredFields.includes('email') && (!email || !isValidEmail(email))) {
         throw new Error('Invalid email address');
     }
 
@@ -21,7 +21,8 @@ export function validateInput(data: Partial<UserAuthData>, requiredFields: strin
     }
 }
 
-export const handleError = (res: NextApiResponse, status: number, message: string, error?: any) => {
-    console.error(message, error);
-    return res.status(status).json({ message, error });
+// For validate email with return type bool
+export const isValidEmail = (input: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(input);
 };

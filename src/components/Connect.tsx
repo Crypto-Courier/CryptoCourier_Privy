@@ -28,7 +28,7 @@ import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg";
 import snaxChain from "../assets/snax.png";
 import { useRouter } from "next/navigation"; // Use this for Next.js 13+ with App Router
-import { isValidEmail } from "@/lib/validation";
+import { isValidEmail } from "../utils/parameter-validation";
 
 // import { base, mode, optimism } from "viem/chains";
 

@@ -9,7 +9,7 @@ import { renderEmailToString } from "./Email/renderEmailToString";
 import { Transaction } from "../types/types";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import { isValidEmail } from "../lib/validation";
+import { isValidEmail } from "../utils/parameter-validation";
 import { CheckCircle, Clock, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react"; // Assuming you're using Lucide icons
