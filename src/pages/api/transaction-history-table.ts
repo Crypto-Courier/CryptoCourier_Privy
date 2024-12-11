@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getTransactionCollection } from '../../lib/getCollections';
 import chainConfig from '../../config/chains';
-import { handleError } from '../../utils/parameter-validation';
+import { handleError } from '../../utils/api-error-handler';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { walletAddress, chainId } = req.query;
