@@ -294,7 +294,7 @@ const LeaderBoard: React.FC = () => {
                             : " bg-white border border-[#FFFFFF]"
                         }`}
                       >
-                        {["Rank", "Gifter", "Claimer", "Claim Rate"].map(
+                        {["Rank", "Inviter", "Claimer", "Claim Rate"].map(
                           (header, index) => (
                             <div
                               key={index}

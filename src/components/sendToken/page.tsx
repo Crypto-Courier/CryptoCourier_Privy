@@ -97,7 +97,7 @@ const SendToken = () => {
       toast.error("Please fill in all required fields");
       return;
     }
-      setIsPopupOpen(true);
+    setIsPopupOpen(true);
   };
 
   useEffect(() => {
@@ -159,14 +159,11 @@ const SendToken = () => {
             tokenAmount,
             tokenSymbol: selectedTokenData.symbol,
             senderEmail,
-            transactionHash: transactionHash
+            transactionHash: transactionHash,
           });
         }
         const validEmail = isValidEmail(recipientEmail) ? recipientEmail : null;
-        StoreAuthData(
-          recipientWalletAddress,
-          validEmail,
-        )
+        StoreAuthData(recipientWalletAddress, validEmail);
         StoreTransactionData(
           recipientWalletAddress,
           activeAddress as `0x${string}`,
@@ -288,10 +285,7 @@ const SendToken = () => {
   };
 
   // Store Authentication Data
-  const StoreAuthData = async (
-    walletAddress: string,
-    email: string | null,
-  ) => {
+  const StoreAuthData = async (walletAddress: string, email: string | null) => {
     try {
       const storeResponse = await fetch("/api/authentication-data", {
         method: "POST",
@@ -303,10 +297,13 @@ const SendToken = () => {
           email,
         }),
       });
-  
+
       if (storeResponse.ok) {
         const responseData = await storeResponse.json();
-        console.log("User authentication data stored successfully:", responseData);
+        console.log(
+          "User authentication data stored successfully:",
+          responseData
+        );
       } else if (storeResponse.status === 409) {
         console.error("Duplicate wallet address or email.");
       } else {
@@ -317,7 +314,7 @@ const SendToken = () => {
       console.error("Error storing authentication data:", error);
     }
   };
-  
+
   // Handling the transaction for embedded as well as external wallets
   const handleSend = async (walletAddress: string) => {
     try {
@@ -786,7 +783,10 @@ const SendToken = () => {
                           Max
                         </button>
                       </div>
-                      <div className="relative sm:w-[100%] lg:w-[30%] md:w-[30%]">
+                      <div
+                        className="relative sm:w-[100%] lg:w-[30%] md:w-[30%]"
+                        ref={dropdownRef}
+                      >
                         <div
                           className={`flex-grow bg-opacity-50 rounded-xl p-3 mb-3 flex justify-between items-center  outline-none   ${
                             theme === "dark"
@@ -803,7 +803,6 @@ const SendToken = () => {
 
                         {isDropdownOpen && (
                           <div
-                            ref={dropdownRef}
                             className={`absolute top-12 left-0 lg:w-[150px] md:w-[150px] sm:w-full w-full rounded-md shadow-lg z-10 max-h-[300px] overflow-x-hidden scroll ${
                               theme === "dark"
                                 ? "bg-[#1C1C1C] text-white border border-white"
