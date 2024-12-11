@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuthCollection } from '../../lib/getCollections'
-import { validateInput, handleError } from '../../utils/auth/auth-params-validation'
+import { validateInput } from '../../utils/parameter-validation'
+import { handleError } from '../../utils/api-error-handler';
 import { UserAuthData, AuthRequestBody } from '../../types/authentication-data-types'
 
 export default async function handler(

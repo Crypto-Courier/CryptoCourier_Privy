@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrivyClient } from "@privy-io/server-auth";
-import { WalletAccount } from "../../types/check-privy-wallet-api-types" 
+import { WalletAccount } from "../../types/check-privy-wallet-api-types"
+import { handleError } from "../../utils/api-error-handler"; 
+import { isValidEmail } from "../../utils/parameter-validation";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,13 +10,13 @@ export default async function handler(
 ) {
   // Only allow POST requests
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return handleError(res, 405, "Method Not Allowed");
   }
 
   // Validate email in the request body
   const { email } = req.body;
-  if (!email || typeof email !== "string") {
-    return res.status(400).json({ error: "Invalid email provided" });
+  if ((!email || typeof email !== "string") && !(isValidEmail(email))) {
+    return handleError(res, 400, "Invalid email provided")
   }
 
   try {
@@ -35,6 +37,6 @@ export default async function handler(
     return res.status(200).json(walletAccount?.address);
   } catch (error) {
     console.error("Error checking Privy wallet:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return handleError(res, 500, "Internal Server Error");
   }
 }

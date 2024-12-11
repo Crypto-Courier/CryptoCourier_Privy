@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getTransactionCollection } from '../../lib/getCollections';
-import chainConfig from '../../config/chains'; // Update the import path
+import chainConfig from '../../config/chains';
+import { handleError } from '../../utils/parameter-validation';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { walletAddress, chainId } = req.query;
@@ -8,15 +9,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('Received GET request for transactions', { walletAddress, chainId });
 
   if (!walletAddress && !chainId) {
-    console.log('Wallet address is required');
-    return res.status(400).json({ error: 'Wallet address is required' });
+    return handleError(res, 400, 'Wallet address and ChainId is required');
   }
 
   const collection = getTransactionCollection();
 
   try {
 
-    // Convert chainId to an array if it's not already
+    // Convert chainId to an array for multiple chainId
     const chainIds = Array.isArray(chainId) ? chainId : [chainId];
 
     // Find transactions where the wallet is either the sender or the recipient and chainId matches any in the list
@@ -37,30 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       claimed: 1
     }).toArray();
 
-    // const enrichedTransactions = await Promise.all(transactions.map(async (tx) => {
-    //   // If it's a transaction sent by the current wallet
-    //   if (tx.senderWallet === walletAddress) {
-    //     // For transactions to an email address
-    //     if (tx.recipientEmail) {
-    //       // Check authentication status in the auth database
-    //       const authRecord = await authCollection.findOne({ 
-    //         email: tx.recipientEmail 
-    //       });
-
-    //       return {
-    //         ...tx,
-    //         claimStatus: authRecord?.authStatus === 'authenticated' ? 'claimed' : 'pending'
-    //       };
-    //     }
-    //   }
-
-    //   // For other cases, default to claimed or add your specific logic
-    //   return {
-    //     ...tx,
-    //     claimStatus: 'claimed'
-    //   };
-    // }));
-
     const enrichedTransactions = transactions.map((tx) => {
       const chainInfo = chainConfig[tx.chainId];
       const customizedLink = chainInfo
@@ -72,16 +48,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         customizedLink,
       };
     });
+
     console.log(`Found ${enrichedTransactions.length} transactions`);
 
     if (enrichedTransactions.length === 0) {
-      console.log('No transactions found for this wallet with selected chain IDs');
-      return res.status(404).json({ error: 'No transactions found for this wallet with selected chain IDs' });
+      return handleError(res, 404, 'No transactions found for this wallet with selected chain IDs');
     }
 
     res.status(200).json(enrichedTransactions);
   } catch (error) {
-    console.error('Error fetching transactions:', error);
-    res.status(500).json({ error: 'Failed to retrieve transactions' });
+    return handleError(res, 500, 'Failed to retrieve transactions')
   }
 }

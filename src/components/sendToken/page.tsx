@@ -28,7 +28,7 @@ import { Contract, ethers } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
-import { isValidEmail } from "../../lib/validation";
+import { isValidEmail } from "../../utils/parameter-validation";
 import useOutsideClick from "../../lib/useOutsideClick";
 import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
