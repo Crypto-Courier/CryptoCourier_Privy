@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../lib/mongodb';
+import dbConnect from '../../lib/dbConnect';
 import { ethers } from 'ethers';
 import chainConfig from '../../config/chains';
-import ERC20_ABI from '../../abis/ERC-20.json'; // Adjust the path if necessary
+import ERC20_ABI from '../../abis/ERC-20.json';
+import {TokenConfig} from '../../types/types'
 
 const NATIVE_CURRENCY_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -24,8 +25,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db('tokenDatabase');
+    await dbConnect();
+    const mongoose = require('mongoose');
+    const db = mongoose.connection.db;
     
     const tokens = await db.collection('tokens').find({ chainId: chainIdNumber }).toArray();
 
@@ -35,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Unsupported chain ID' });
     }
 
-    const tokenBalances = await Promise.all(tokens.map(async (token) => {
+    const tokenBalances = await Promise.all(tokens.map(async (token: TokenConfig) => {
       try {
         if (token.contractAddress.toLowerCase() === NATIVE_CURRENCY_ADDRESS.toLowerCase()) {
           const balance = await provider.getBalance(address);
