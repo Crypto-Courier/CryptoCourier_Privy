@@ -27,13 +27,11 @@ export default async function handler(
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db("tokenDatabase");
-
-    const tokens = await db
-      .collection("tokens")
-      .find({ chainId: chainIdNumber })
-      .toArray();
+    await dbConnect();
+    const mongoose = require('mongoose');
+    const db = mongoose.connection.db;
+    
+    const tokens = await db.collection('tokens').find({ chainId: chainIdNumber }).toArray();
 
     const provider = new ethers.JsonRpcProvider(
       chainConfig[chainIdNumber].rpcUrl
@@ -43,57 +41,37 @@ export default async function handler(
       return res.status(400).json({ error: "Unsupported chain ID" });
     }
 
-    const tokenBalances = await Promise.all(
-      tokens.map(async (token) => {
-        try {
-          if (
-            token.contractAddress.toLowerCase() ===
-            NATIVE_CURRENCY_ADDRESS.toLowerCase()
-          ) {
-            const balance = await provider.getBalance(address);
-            const formattedBalance = ethers.formatUnits(
-              balance,
-              chainConfig[chainIdNumber].nativeCurrency.decimals
-            );
-
-            if (balance > BigInt(0)) {
-              // Using BigInt() constructor instead of literal
-              return {
-                ...token,
-                balance: formattedBalance,
-                rawBalance: balance.toString(),
-              };
-            }
-          } else {
-            const contract = new ethers.Contract(
-              token.contractAddress,
-              ERC20_ABI,
-              provider
-            );
-            const balance = await contract.balanceOf(address);
-
-            if (balance > BigInt(0)) {
-              // Using BigInt() constructor instead of literal
-              const formattedBalance = ethers.formatUnits(
-                balance,
-                token.decimals
-              );
-              return {
-                ...token,
-                balance: formattedBalance,
-                rawBalance: balance.toString(),
-              };
-            }
+    const tokenBalances = await Promise.all(tokens.map(async (token: TokenConfig) => {
+      try {
+        if (token.contractAddress.toLowerCase() === NATIVE_CURRENCY_ADDRESS.toLowerCase()) {
+          const balance = await provider.getBalance(address);
+          const formattedBalance = ethers.formatUnits(balance, chainConfig[chainIdNumber].nativeCurrency.decimals);
+          
+          if (balance > BigInt(0)) { // Using BigInt() constructor instead of literal
+            return {
+              ...token,
+              balance: formattedBalance,
+              rawBalance: balance.toString(),
+            };
           }
-        } catch (error) {
-          console.error(
-            `Error fetching balance for token ${token.contractAddress}:`,
-            error
-          );
+        } else {
+          const contract = new ethers.Contract(token.contractAddress, ERC20_ABI, provider);
+          const balance = await contract.balanceOf(address);
+          
+          if (balance > BigInt(0)) { // Using BigInt() constructor instead of literal
+            const formattedBalance = ethers.formatUnits(balance, token.decimals);
+            return {
+              ...token,
+              balance: formattedBalance,
+              rawBalance: balance.toString(),
+            };
+          }
         }
-        return null;
-      })
-    );
+      } catch (error) {
+        console.error(`Error fetching balance for token ${token.contractAddress}:`, error);
+      }
+      return null;
+    }));
 
     const filteredTokenBalances = tokenBalances.filter(
       (token) => token !== null

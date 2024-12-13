@@ -33,14 +33,14 @@ export const validateTransactionInput = (data: any) => {
   }
 
   // Validate email addresses
-  if (!emailRegex.test(claimerEmail)) errors.push('Invalid claimer email address');
-  if (!emailRegex.test(gifterEmail)) errors.push('Invalid gifter email address');
+  if (!emailRegex.test(claimerEmail) && !ethers.isAddress(claimerEmail)) errors.push('Invalid claimer email address');
+  if (!emailRegex.test(gifterEmail) && !ethers.isAddress(gifterEmail)) errors.push('Invalid gifter email address');
 
   // Validate chain ID
   if (!chainId) errors.push('Chain ID is required');
 
   // Validate transaction hash
-  if (!/^0x[a-fA-F0-9]{64}$/.test(transactionHash)) errors.push('Invalid transaction hash format');
+  if (!/^0x.+$/.test(transactionHash)) errors.push('Invalid transaction hash format');
 
   return errors;
 };

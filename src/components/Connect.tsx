@@ -117,29 +117,6 @@ export const Connect = () => {
       setIsWalletConnected(false);
       setIsEmailConnected(false);
     }
-    const storeOrUpdateUserAuthData = async () => {
-        try {
-          const response = await fetch('/api/authentication-data', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              walletAddress: wallet?.address,
-              email: user?.email?.address || null,
-            })
-          });
-    
-          // const data = await response.json();
-        } catch (error) {
-          console.error('Error storing/updating authentication data:', error);
-        }
-      };
-  
-    // Call the function when user is authenticated or wallet changes
-    if (authenticated && user) {
-      storeOrUpdateUserAuthData();
-    }
   }, [authenticated, user, wallet]);
 
   useEffect(() => {
