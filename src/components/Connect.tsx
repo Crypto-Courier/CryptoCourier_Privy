@@ -3,59 +3,8 @@ import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
 import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
 import { Tooltip } from "antd";
-
-// Import chain images
-import base from "../assets/base.png";
-import celo from "../assets/celo.jpeg";
-import orderly from "../assets/orderly.jpeg";
-import cyfer from "../assets/cyfer.webp";
-import fraxtal from "../assets/fraxtal.webp";
-import kroma from "../assets/kroma.webp";
-import mode from "../assets/mode.webp";
-import optimism from "../assets/op.png";
-import zora from "../assets/zora.png";
-import lisk from "../assets/lisk.webp";
-import sepolia from "../assets/sepolia.webp";
-import worldChain from "../assets/worldChain.webp";
-import boba from "../assets/boba.webp";
-import mint from "../assets/mint.png";
-import redstone from "../assets/redstone.webp";
-import ancient from "../assets/ancient.webp";
-import shape from "../assets/shape.jpeg";
-import swan from "../assets/swan.webp";
-import superlumio from "../assets/superlumio.jpeg";
-import metalL2 from "../assets/metalL2.webp";
-import hamchain from "../assets/hamChain.jpeg";
-import snaxChain from "../assets/snax.png";
-import { useRouter } from "next/navigation"; // Use this for Next.js 13+ with App Router
-import { isValidEmail } from "../utils/parameter-validation";
-
-// import { base, mode, optimism } from "viem/chains";
-
-const chainImages: { [key: number]: any } = {
-  8453: base,
-  291: orderly,
-  7560: cyfer,
-  7777777: zora,
-  42220: celo,
-  34443: mode,
-  1135: lisk,
-  255: kroma,
-  10: optimism,
-  252: fraxtal,
-  11155111: sepolia,
-  480: worldChain,
-  288: boba,
-  185: mint,
-  690: redstone,
-  360: shape,
-  254: swan,
-  8866: superlumio,
-  1750: metalL2,
-  5112: hamchain,
-  2192: snaxChain,
-  888888888: ancient,
-};
+import { chainLogos } from "../utils/chainIdToLogo"
+import { useRouter } from "next/navigation";
 
 const chainNames: { [key: number]: string } = {
   8453: "Base",
@@ -270,9 +219,9 @@ export const Connect = () => {
                 : "Chain"
             }
           >
-            {selectedChain && chainImages[selectedChain] ? (
+            {selectedChain && chainLogos[selectedChain] ? (
               <img
-                src={chainImages[selectedChain].src} // Use .src if using StaticImageData
+                src={chainLogos[selectedChain].src} // Use .src if using StaticImageData
                 alt={`Chain ${selectedChain}`}
                 className={`w-[24px] h-[24px] block my-0 mx-auto p-[1px] rounded-[15px] ${
                   theme === "dark" ? "bg-white" : "bg-black"
