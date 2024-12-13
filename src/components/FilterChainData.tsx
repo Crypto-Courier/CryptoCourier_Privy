@@ -10,7 +10,7 @@ interface SwitchHistoryProps {
   onChainSelect: (selectedChains: number[]) => void;
 }
 
-function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
+function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => setDropdownOpen(false));
@@ -60,54 +60,63 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
   };
 
   return (
-    <div>
+    <div
+      className={` items-center rounded-md backdrop-blur-[20px] mb-2 py-1 ${
+        theme === "dark"
+          ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
+          : "bg-[#FF3333]/40 border border-[#FFFFFF]"
+      }`}
+    >
       {/* Desktop view */}
-      <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
-        {chains.map((chain) => (
-          <Tooltip title={chain.title} key={chain.id}>
-            <div
-              onClick={() => handleChainClick(chain.id)}
-              className={`border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md ${
-                selectedChains.includes(chain.id) ? "scale-110" : ""
-              }`}
-            >
-              <Image
-                src={chain.img}
-                alt={chain.title}
-                className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] lg:w-[25px] md:w-[20px] lg:h-[25px] md:h-[20px] ${
-                  !userHasSelected || selectedChains.includes(chain.id)
-                    ? "opacity-100"
-                    : "opacity-40"
-                } ${theme === "dark" ? "bg-white" : "bg-black"}`}
-              />
-            </div>
-          </Tooltip>
-        ))}
-      </div>
-      <div className=" justify-end items-center hidden sm:hidden lg:flex md:flex ">
-        {/* Show Clear All button only when user has made selections */}
-        {userHasSelected && (
-          <div
-            ref={dropdownRef}
-            onClick={handleClearAll}
-            className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
-              theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
-            }`}
-          >
-            Clear All
-            <span
-              className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
-                theme === "dark"
-                  ? "bg-[#363535] text-[#FFE500]"
-                  : "bg-white text-[#E265FF]"
-              }`}
-            >
-              {selectedChains.length}
-            </span>
-          </div>
-        )}
-      </div>
+      <div className="">
+        <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 ">
+          {chains.map((chain) => (
+            <Tooltip title={chain.title} key={chain.id}>
+              <div
+                onClick={() => handleChainClick(chain.id)}
+                className={`border-0 cursor-pointer p-[6px_0px] relative bg-transparent shadow-none shrink-0 rounded-md ${
+                  selectedChains.includes(chain.id) ? "scale-110" : ""
+                }`}
+              >
+                <Image
+                  src={chain.img}
+                  alt={chain.title}
+                  className={`w-[20px] h-[20px] block my-0 mx-auto p-[1px] rounded-[15px] lg:w-[25px] md:w-[20px] lg:h-[25px] md:h-[20px] ${
+                    !userHasSelected || selectedChains.includes(chain.id)
+                      ? "opacity-100"
+                      : "opacity-40"
+                  } ${theme === "dark" ? "bg-white" : "bg-black"}`}
+                />
+              </div>
+            </Tooltip>
+          ))}
 
+          <div className=" justify-end items-center hidden sm:hidden lg:flex md:flex ">
+            {/* Show Clear All button only when user has made selections */}
+
+            <div
+              ref={dropdownRef}
+              onClick={handleClearAll}
+              className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
+                theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
+              }`}
+            >
+              Clear All
+              {userHasSelected && (
+                <span
+                  className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
+                    theme === "dark"
+                      ? "bg-[#363535] text-[#FFE500]"
+                      : "bg-white text-[#E265FF]"
+                  }`}
+                >
+                  {selectedChains.length}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="md:hidden" ref={dropdownRef}>
         <div className="flex justify-between items-center">
           <div
@@ -201,4 +210,4 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
   );
 }
 
-export default SwitchHistory;
+export default FilterChainData;

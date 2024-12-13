@@ -20,6 +20,7 @@ import path2 from "../../assets/path2.png";
 import path3 from "../../assets/path3.png";
 import loader from "../../assets/processing.gif";
 import SwitchHistory from "../SwitchHistory";
+import FilterChainData from "../FilterChainData";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
@@ -106,7 +107,7 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`${
+          className={`h-[100vh] ${
             theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
           }`}
         >
@@ -114,7 +115,7 @@ const LeaderBoard: React.FC = () => {
             <div className="w-full  mx-auto flex justify-end mb-4">
               <button
                 onClick={invite}
-                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg ${
+                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
                   theme === "dark"
                     ? "bg-[#FFE500] text-[#363535]"
                     : "bg-[#FFFFFF] text-black"
@@ -287,6 +288,12 @@ const LeaderBoard: React.FC = () => {
                   </div>
                 ) : (
                   <div className="w-full  rounded-3xl">
+                    <FilterChainData
+                      onChainSelect={function (selectedChains: number[]): void {
+                        throw new Error("Function not implemented.");
+                      }}
+                    />
+
                     <div className="overflow-hidden rounded-md ">
                       <div
                         className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-4 gap-2 p-3 rounded-md  ${
@@ -310,18 +317,11 @@ const LeaderBoard: React.FC = () => {
                           )
                         )}
                       </div>{" "}
-                      <SwitchHistory
-                        onChainSelect={function (
-                          selectedChains: number[]
-                        ): void {
-                          throw new Error("Function not implemented.");
-                        }}
-                      />
                       <div className="mt-2 ">
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px]  ${
+                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${
                               theme === "dark"
                                 ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
                                 : "bg-[#FF3333]/40 border border-[#FFFFFF]"
