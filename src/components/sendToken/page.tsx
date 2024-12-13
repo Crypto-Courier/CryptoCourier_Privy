@@ -163,7 +163,6 @@ const SendToken = () => {
           });
         }
         const validEmail = isValidEmail(recipientEmail) ? recipientEmail : null;
-        StoreAuthData(recipientWalletAddress, validEmail);
         StoreTransactionData(
           recipientWalletAddress,
           activeAddress as `0x${string}`,
@@ -281,37 +280,6 @@ const SendToken = () => {
     } catch (error) {
       console.error("Error storing transaction:", error);
       toast.error("Failed to store transaction data");
-    }
-  };
-
-  // Store Authentication Data
-  const StoreAuthData = async (walletAddress: string, email: string | null) => {
-    try {
-      const storeResponse = await fetch("/api/authentication-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          walletAddress,
-          email,
-        }),
-      });
-
-      if (storeResponse.ok) {
-        const responseData = await storeResponse.json();
-        console.log(
-          "User authentication data stored successfully:",
-          responseData
-        );
-      } else if (storeResponse.status === 409) {
-        console.error("Duplicate wallet address or email.");
-      } else {
-        const errorData = await storeResponse.json();
-        console.error("Failed to store authentication data:", errorData);
-      }
-    } catch (error) {
-      console.error("Error storing authentication data:", error);
     }
   };
 
