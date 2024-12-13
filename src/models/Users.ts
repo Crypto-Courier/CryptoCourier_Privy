@@ -1,41 +1,51 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-  walletAddress: {
+  claimerWallet: {
     type: String,
     required: true,
-    unique: true,
-    index: true,
+    trim: true,
+    lowercase: true
   },
-  email: {
+  claimerEmail: {
     type: String,
-    sparse: true,
-    index: true,
+    required: true,
+    trim: true,
+    lowercase: true
   },
-  authStatus: {
-    type: Boolean,
-    default: false,
-  },
-  authenticatedAt: {
-    type: Date,
-  },
-  invitedUsers: [{
-    type: String,
-  }],
-  numberOfInvitedUsers: {
-    type: Number,
-    default: 0,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  lastConnectedAt: {
-    type: Date,
-    default: Date.now,
-  },
+  authData: {
+    type: Map,
+    of: {
+      authStatus: {
+        type: Boolean,
+        default: false
+      },
+      gifterAddress: {
+        type: String,
+        trim: true,
+        lowercase: true
+      },
+      universalDepth: {
+        type: Map,
+        of: Number,
+        default: {}
+      },
+      localDepth: {
+        type: Map,
+        of: Number,
+        default: {}
+      }
+    },
+    default: {}
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 });
 
-export default mongoose.models.UserData || mongoose.model('UserData', UserSchema, 'Users'); 
+// Ensure unique index on claimerAddress
+UserSchema.index({ claimerWallet: 1 }, { unique: true });
+
+// Ensure unique index on claimerEmail
+UserSchema.index({ claimerEmail: 1 }, { unique: true });
+
+export default mongoose.models.UserData || mongoose.model('UserData', UserSchema, 'Users');

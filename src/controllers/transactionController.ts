@@ -20,7 +20,7 @@ export const validateTransactionInput = (data: any) => {
   // Validate wallet addresses
   if (!ethers.isAddress(claimerWallet)) errors.push('Invalid claimer wallet address');
   if (!ethers.isAddress(gifterWallet)) errors.push('Invalid gifter wallet address');
-  if (claimerWallet.toLowerCase() === gifterWallet.toLowerCase()) errors.push('Sender and recipient wallets cannot be the same');
+  if (claimerWallet.toLowerCase() === gifterWallet.toLowerCase()) errors.push('Claimer and Gifter wallets cannot be the same');
 
   // Validate token amount
   if (!tokenAmount || isNaN(parseFloat(tokenAmount)) || parseFloat(tokenAmount) <= 0) {

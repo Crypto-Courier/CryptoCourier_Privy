@@ -2,7 +2,7 @@ import dbConnect from './mongoose';
 import UserData from '../models/Users';
 import TransactionData from '../models/Transactions';
 
-export const getAuthCollection = async () => {
+export const getUserCollection = async () => {
     try {
         await dbConnect();
         return UserData;
