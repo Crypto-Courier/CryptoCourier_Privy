@@ -1,9 +1,11 @@
-import clientPromise from "./mongodb";
+import dbConnect from './mongoose';
+import UserData from '../models/Users';
+import TransactionData from '../models/Transactions';
 
-export const getAuthCollection = async () => {
+export const getUserCollection = async () => {
     try {
-        const client = await clientPromise;
-        return client.db('authenticationDB').collection('authentication');
+        await dbConnect();
+        return UserData;
     } catch (error) {
         throw new Error('Database connection error');
     }
@@ -11,8 +13,8 @@ export const getAuthCollection = async () => {
 
 export const getTransactionCollection = async () => {
     try {
-        const client = await clientPromise;
-        return client.db('transactionDB').collection('transactions');
+        await dbConnect();
+        return TransactionData;
     } catch (error) {
         throw new Error('Database connection error');
     }
