@@ -39,6 +39,7 @@ const LeaderBoard: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeButton, setActiveButton] = useState("Global"); // Default active button
 
   const activeAddress = walletData?.address;
 
@@ -101,6 +102,8 @@ const LeaderBoard: React.FC = () => {
     router.push("/send-token");
   };
 
+  // Filter data
+
   return (
     <div className="main">
       <Navbar />
@@ -108,11 +111,42 @@ const LeaderBoard: React.FC = () => {
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
           className={`h-[100vh] ${
-            theme === "dark" ? " py-[30px]  h-full" : " py-[30px]  h-full"
+            theme === "dark" ? " py-[30px] " : " py-[30px]  "
           }`}
         >
-          <div className=" mx-auto  px-4 sm:px-6 lg:px-8">
-            <div className="w-full  mx-auto flex justify-end mb-4">
+          <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh]">
+            <div className="w-[60%]  mr-0 ml-auto flex justify-between mb-4">
+              <div>
+                <button
+                  onClick={() => setActiveButton("Global")}
+                  className={`invite px-[30px] py-[10px] rounded-sm text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
+                    activeButton === "Global"
+                      ? theme === "dark"
+                        ? "bg-[#363535] text-[#FFE500]"
+                        : "bg-black text-white"
+                      : theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#FFFFFF] text-black"
+                  }`}
+                >
+                  Global
+                </button>
+                <button
+                  onClick={() => setActiveButton("Monthly")}
+                  className={`invite px-[30px] py-[10px] rounded-sm text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
+                    activeButton === "Monthly"
+                      ? theme === "dark"
+                        ? "bg-[#363535] text-[#FFE500]"
+                        : "bg-black text-white"
+                      : theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#FFFFFF] text-black"
+                  }`}
+                >
+                  Monthly
+                </button>
+              </div>
+
               <button
                 onClick={invite}
                 className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${

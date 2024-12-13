@@ -1,27 +1,29 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../lib/dbConnect';
-import { ethers } from 'ethers';
-import chainConfig from '../../config/chains';
-import ERC20_ABI from '../../abis/ERC-20.json';
-import {TokenConfig} from '../../types/types'
+import { NextApiRequest, NextApiResponse } from "next";
+import clientPromise from "../../lib/mongoose";
+import { ethers } from "ethers";
+import chainConfig from "../../config/chains";
+import ERC20_ABI from "../../abis/ERC-20.json"; // Adjust the path if necessary
 
-const NATIVE_CURRENCY_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+const NATIVE_CURRENCY_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { address, chainId } = req.query;
 
-  if (!address || typeof address !== 'string') {
-    return res.status(400).json({ error: 'Valid address is required' });
+  if (!address || typeof address !== "string") {
+    return res.status(400).json({ error: "Valid address is required" });
   }
 
-  if (!chainId || typeof chainId !== 'string') {
-    return res.status(400).json({ error: 'Valid chainId is required' });
+  if (!chainId || typeof chainId !== "string") {
+    return res.status(400).json({ error: "Valid chainId is required" });
   }
 
   const chainIdNumber = parseInt(chainId);
 
   if (!chainConfig[chainIdNumber]) {
-    return res.status(400).json({ error: 'Unsupported chain ID' });
+    return res.status(400).json({ error: "Unsupported chain ID" });
   }
 
   try {
@@ -31,10 +33,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     const tokens = await db.collection('tokens').find({ chainId: chainIdNumber }).toArray();
 
-    const provider = new ethers.JsonRpcProvider(chainConfig[chainIdNumber].rpcUrl);
+    const provider = new ethers.JsonRpcProvider(
+      chainConfig[chainIdNumber].rpcUrl
+    );
 
     if (!provider) {
-      return res.status(400).json({ error: 'Unsupported chain ID' });
+      return res.status(400).json({ error: "Unsupported chain ID" });
     }
 
     const tokenBalances = await Promise.all(tokens.map(async (token: TokenConfig) => {
@@ -69,10 +73,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return null;
     }));
 
-    const filteredTokenBalances = tokenBalances.filter(token => token !== null);
+    const filteredTokenBalances = tokenBalances.filter(
+      (token) => token !== null
+    );
 
     const nativeBalance = await provider.getBalance(address);
-    const formattedNativeBalance = ethers.formatUnits(nativeBalance, chainConfig[chainIdNumber].nativeCurrency.decimals);
+    const formattedNativeBalance = ethers.formatUnits(
+      nativeBalance,
+      chainConfig[chainIdNumber].nativeCurrency.decimals
+    );
 
     const responseData = {
       tokens: filteredTokenBalances,
@@ -86,6 +95,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json(responseData);
   } catch (error) {
     console.error("Error in token fetching process:", error);
-    return res.status(500).json({ error: 'Failed to fetch tokens' });
+    return res.status(500).json({ error: "Failed to fetch tokens" });
   }
 }
