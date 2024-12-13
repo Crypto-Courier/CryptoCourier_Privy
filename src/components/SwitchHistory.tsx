@@ -62,7 +62,7 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
   return (
     <div>
       {/* Desktop view */}
-      <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 border border-gray-500">
+      <div className="hidden md:flex justify-evenly gap-y-4 gap-x-0 flex-nowrap flex-row rounded-sm w-full basis-full shrink-0 ">
         {chains.map((chain) => (
           <Tooltip title={chain.title} key={chain.id}>
             <div

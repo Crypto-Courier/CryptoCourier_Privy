@@ -19,6 +19,7 @@ import path1 from "../../assets/path1.png";
 import path2 from "../../assets/path2.png";
 import path3 from "../../assets/path3.png";
 import loader from "../../assets/processing.gif";
+import SwitchHistory from "../SwitchHistory";
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
@@ -308,12 +309,19 @@ const LeaderBoard: React.FC = () => {
                             </div>
                           )
                         )}
-                      </div>
-                      <div className="mt-2">
+                      </div>{" "}
+                      <SwitchHistory
+                        onChainSelect={function (
+                          selectedChains: number[]
+                        ): void {
+                          throw new Error("Function not implemented.");
+                        }}
+                      />
+                      <div className="mt-2 ">
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px] ${
+                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[20px]  ${
                               theme === "dark"
                                 ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
                                 : "bg-[#FF3333]/40 border border-[#FFFFFF]"
