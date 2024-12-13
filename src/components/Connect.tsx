@@ -83,7 +83,7 @@ const chainNames: { [key: number]: string } = {
 };
 
 export const Connect = () => {
-  const { setWalletData, selectedChain } = useWallet(); // Get selectedChain from context
+  const { setWalletData, selectedChain, walletData } = useWallet(); // Get selectedChain from context
   const router = useRouter(); // Initialize the router
   const { wallets } = useWallets();
   const wallet = wallets[0];
@@ -285,10 +285,10 @@ export const Connect = () => {
 
           {/* Wallet Address */}
           <Tooltip title="Disconnect on click">
-            {mainWallet ? (
+            {walletData?.address ? (
               <>
-                {mainWallet.address.slice(0, 6)}...
-                {mainWallet.address.slice(-4)}
+                {walletData?.address.slice(0, 6)}...
+                {walletData?.address.slice(-4)}
               </>
             ) : (
               "Connected"
