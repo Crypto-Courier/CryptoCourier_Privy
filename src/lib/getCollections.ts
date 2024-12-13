@@ -1,4 +1,4 @@
-import dbConnect from './mongoose';
+import dbConnect from './dbConnect';
 import UserData from '../models/Users';
 import TransactionData from '../models/Transactions';
 import LeaderboardPointsData from '../models/LeaderboardPoint';
