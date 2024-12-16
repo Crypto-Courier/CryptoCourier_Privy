@@ -154,19 +154,19 @@ const History: React.FC = () => {
     if (viewMode === "dashboard") {
       return (
         <div
-          className="relative"
+          className="relative w-full lg:w-[30%] md:w-[30%]"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           ref={dropdownRef}
         >
           <div
-            className={`flex items-center space-x-3 p-2 rounded-[10px] ${
+            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0  ${
               theme === "dark"
                 ? "bg-[#1C1C1C] border border-[#A2A2A2]"
                 : "bg-[#F4F3F3] border border-[#C6C6C6]"
             }`}
           >
-            <div
+            {/* <div
               className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
                 theme === "dark"
                   ? "border-white bg-transparent"
@@ -180,9 +180,9 @@ const History: React.FC = () => {
                     : "bg-[#E265FF] text-white"
                 }`}
               ></div>
-            </div>
-            <span
-              className="font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] cursor-pointer"
+            </div> */}
+            <div
+              className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px] cursor-pointer"
               onClick={() => handleCopy(dashboardAddress || "")}
             >
               {dashboardAddress
@@ -190,7 +190,7 @@ const History: React.FC = () => {
                     -4
                   )}`
                 : "Connect Wallet"}
-            </span>
+            </div>
             <ChevronDown size={20} />
           </div>
 
@@ -203,7 +203,7 @@ const History: React.FC = () => {
                     : "bg-white text-black border border-[#C6C6C6]"
                 }`}
               >
-                <div className="p-2">
+                <div className="p-2 ">
                   <button
                     onClick={handleExportWallet}
                     className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
@@ -281,12 +281,12 @@ const History: React.FC = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px]">
           <div
-            className={`flex justify-end sm:justify-end md:justify-between lg:justify-between border-black border-b-0 p-[30px] shadow-lg ${
+            className={`p-0 flex flex-col-reverse sm:flex-col-reverse md:flex-row lg:flex-row justify-end sm:justify-between md:justify-between lg:justify-between border-black border-b-0 lg:p-[30px] shadow-lg md:p-[30px] sm:p-0 ${
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
             <Tooltip title="Copy on click">{renderWalletAddress()}</Tooltip>
-            <div className="text-right flex items-end">
+            <div className="text-right flex justify-end w-full p-[30px] sm:p-[30px] lg:p-0 md:p-0 ">
               <div className="gap-4 flex">
                 <Tooltip title="Leaderboard">
                   <button

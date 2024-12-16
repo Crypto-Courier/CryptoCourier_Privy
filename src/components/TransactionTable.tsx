@@ -16,6 +16,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react"; // Assuming you're using Lucide icons
 import { Tooltip } from "antd";
 import { chainLogos } from "../utils/chainIdToLogo";
+import resend from "../assets/resend.png";
+
 interface TransactionTableProps {
   viewMode: string;
   selectedChains: number[];
@@ -340,7 +342,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             {renderSearchInput()}
           </div> */}
         </div>
-        <div className="h-[40vh] overflow-y-auto scroll overflow-x-hidden">
+        <div className="h-[45vh]  lg:h-[40vh] md:h-[40vh] overflow-y-auto scroll overflow-x-hidden">
           {isConnected ? (
             isLoading ? (
               <SkeletonLoader />
@@ -401,8 +403,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                             ? tx.claimerEmail
                             : `${tx.claimerWallet.slice(
                                 0,
-                                8
-                              )}...${tx.claimerWallet.slice(-8)}`}
+                                10
+                              )}...${tx.claimerWallet.slice(-10)}`}
                         </span>
                       </>
                     ) : (
@@ -419,8 +421,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                             ? tx.gifterEmail
                             : `${tx.gifterWallet.slice(
                                 0,
-                                6
-                              )}...${tx.gifterWallet.slice(-4)}`}
+                                10
+                              )}...${tx.gifterWallet.slice(-10)}`}
                         </span>
                       </>
                     )}
@@ -434,15 +436,22 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                               Sending
                             </div>
                           ) : (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent toggle when clicking button
-                                handleResend(tx, index);
-                              }}
-                              className="tracking-wide text-[15px]"
-                            >
-                              Resend
-                            </button>
+                            <>
+                              <Image
+                                src={resend}
+                                alt=""
+                                className="w-4 h-4 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4"
+                              />
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent toggle when clicking button
+                                  handleResend(tx, index);
+                                }}
+                                className="tracking-wide text-[15px]"
+                              >
+                                Resend
+                              </button>
+                            </>
                           )}
                         </div>
                       )}
@@ -484,16 +493,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                               : "border border-[#0052FF] text-[#0052FF] bg-white py-2 px-2"
                           }`}
                         >
-                          {/* {isValidEmail(tx.claimerEmail)
+                          {isValidEmail(tx.claimerEmail)
                             ? tx.claimerEmail
                             : `${tx.claimerWallet.slice(
                                 0,
-                                8
-                              )}...${tx.claimerWallet.slice(-8)}`} */}
-                          {isValidEmail(tx.claimerEmail)
-                            ? tx.claimerEmail
-                            : `${tx.claimerWallet}
-                              `}
+                                10
+                              )}...${tx.claimerWallet.slice(-10)}`}
                         </span>
                       </>
                     ) : (
@@ -508,7 +513,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                         >
                           {isValidEmail(tx.gifterEmail)
                             ? tx.gifterEmail
-                            : `${tx.gifterWallet}
+                            : `${tx.gifterWallet.slice(
+                                0,
+                                10
+                              )}...${tx.gifterWallet.slice(-10)}
                        `}
                         </span>
                       </>
@@ -518,23 +526,31 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                   <div className="flex justify-end gap-3 lg:hidden md:flex sm:flex w-full ">
                     {tx.gifterWallet === activeAddress &&
                       isValidEmail(tx.claimerEmail) && (
-                        <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
+                        <div className="resend bg-none border border-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                           {loadingTxId === index ? (
                             <div className="tracking-wide ">Sending</div>
                           ) : (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent toggle when clicking button
-                                handleResend(tx, index);
-                              }}
-                              className="tracking-wide "
-                            >
-                              Resend
-                            </button>
+                            <>
+                              {" "}
+                              <Image
+                                src={resend}
+                                alt=""
+                                className="w-4 h-4 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-4 sm:h-4"
+                              />
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent toggle when clicking button
+                                  handleResend(tx, index);
+                                }}
+                                className="tracking-wide "
+                              >
+                                Resend
+                              </button>
+                            </>
                           )}
                         </div>
                       )}
-                    <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
+                    <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
                       <Image
                         src={trx}
                         alt=""

@@ -27,6 +27,7 @@ import superlumio from "../assets/superlumio.jpeg";
 import metalL2 from "../assets/metalL2.webp";
 import hamchain from "../assets/hamChain.jpeg";
 import snaxChain from "../assets/snax.png";
+import { ChevronDown } from "lucide-react";
 
 function SwitchNetwork() {
   const { wallets } = useWallets();
@@ -140,7 +141,7 @@ function SwitchNetwork() {
                 "Select chain"}
             </span>
           </div>
-          <span>{dropdownOpen ? "▲" : "▼"}</span>
+          <ChevronDown size={20} />
         </div>
 
         {/* Dropdown options */}
