@@ -2,10 +2,10 @@ import React from "react";
 import { EmailProps } from "../../types/types";
 
 const Email: React.FC<EmailProps> = ({
-  recipientEmail,
+  claimerEmail,
   tokenAmount,
   tokenSymbol,
-  senderEmail,
+  gifterEmail,
   transactionHash,
 }) => {
   const claimLink = `https://courierbycryptocoutrier.vercel.app/claim-token?transactionHash=${transactionHash}`;
@@ -43,7 +43,7 @@ const Email: React.FC<EmailProps> = ({
             <strong>
               {tokenAmount} {tokenSymbol}
             </strong>{" "}
-            Token from {senderEmail}
+            Token from {gifterEmail}
           </pre>
         </div>
       </div>

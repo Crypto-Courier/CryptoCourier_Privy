@@ -3,27 +3,27 @@ import { renderEmailToString } from "./renderEmailToString";
 import { SendEmailParams } from "../../types/types";
 
 export const sendEmail = async ({
-  recipientEmail,
+  claimerEmail,
   subject,
   tokenAmount,
   tokenSymbol,
-  senderEmail,
+  gifterEmail,
   transactionHash,
 }: SendEmailParams): Promise<void> => {
   try {
     const htmlContent = renderEmailToString({
-      recipientEmail,
+      claimerEmail,
       tokenAmount,
       tokenSymbol,
-      senderEmail,
+      gifterEmail,
       transactionHash,
     });
 
     const response = await axios.post<{ message: string }>("/api/send-email", {
-      recipientEmail,
+      claimerEmail,
       subject,
       htmlContent,
-      senderEmail,
+      gifterEmail,
       transactionHash,
     });
 

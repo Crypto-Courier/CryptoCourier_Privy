@@ -16,15 +16,15 @@ export default async function handler(
     return res.status(405).json({ message: 'Only POST requests are allowed' });
   }
 
-  const { recipientEmail, subject, htmlContent } = req.body;
+  const { claimerEmail, subject, htmlContent } = req.body;
 
-  if (!recipientEmail || !subject || !htmlContent) {
+  if (!claimerEmail || !subject || !htmlContent) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
   try {
     const msg = {
-      to: recipientEmail,
+      to: claimerEmail,
       from: `CryptoCourier <${process.env.SENDGRID_VERIFIED_SENDER}>`,
       subject: subject,
       html: htmlContent,

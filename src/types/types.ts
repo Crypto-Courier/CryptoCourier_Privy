@@ -36,20 +36,20 @@ export interface WalletProps {
 }
 
 export interface EmailProps {
-  recipientEmail: string;
+  claimerEmail: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderEmail: string;
+  gifterEmail: string;
   transactionHash: string; 
 }
 
 export interface SendEmailParams {
-  recipientEmail: string;
+  claimerEmail: string;
   subject: string;
   htmlContent: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderEmail: string;
+  gifterEmail: string;
   transactionHash: string;
 }
 

@@ -49,8 +49,8 @@ const SendToken = () => {
   const [selectedToken, setSelectedToken] = useState<string>("");
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>("");
   const [tokenAmount, setTokenAmount] = useState("");
-  const [recipientEmail, setRecipientEmail] = useState("");
-  const [recipientWalletAddress, setRecipientWalletAddress] = useState("");
+  const [claimerEmail, setClaimerEmail] = useState("");
+  const [claimerWallet, setClaimerWallet] = useState("");
   const [showAddTokenForm, setShowAddTokenForm] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { theme } = useTheme();
@@ -60,14 +60,14 @@ const SendToken = () => {
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [transactionStauts, setTransactionStatus] = useState(false);
   const [isContractCall, setIsContractCall] = useState(false);
-  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
+  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);``
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
   const [senderWallet, setsenderWallet] = useState("");
   const { user } = usePrivy();
 
   const isConnected = walletData?.authenticated;
-  const activeAddress = walletData?.address;
+  const gifterAddress = walletData?.address;
   const isEmailConnected = walletData?.isEmailConnected;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -83,7 +83,7 @@ const SendToken = () => {
 
   // Add this handler function
   const handleQRScan = (address: string): void => {
-    setRecipientEmail(address);
+    setClaimerEmail(address);
     setShowQRScanner(false);
   };
 
@@ -93,7 +93,7 @@ const SendToken = () => {
 
   // Modify the button click handler
   const handleButtonClick = async () => {
-    if (!tokenAmount || !recipientEmail || !selectedToken) {
+    if (!tokenAmount || !claimerEmail || !selectedToken) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -108,28 +108,26 @@ const SendToken = () => {
       setSelectedTokenSymbol(selectedTokenData.symbol);
     }
 
-    if (!(selectedToken === "native") && isValidEmail(recipientEmail)) {
+    if (!(selectedToken === "native") && isValidEmail(claimerEmail)) {
       setIsContractCall(true);
     }
-  }, [tokens, selectedToken, recipientEmail]);
+  }, [tokens, selectedToken, claimerEmail]);
 
   // For fetch token from database
   useEffect(() => {
-    if (activeAddress || transactionStauts === true || walletData?.chainId) {
+    if (gifterAddress || transactionStauts === true || walletData?.chainId) {
       fetchTokens();
     }
-  }, [activeAddress, transactionStauts, walletData?.chainId]);
+  }, [gifterAddress, transactionStauts, walletData?.chainId]);
 
   // Give sender identity in mail for receiver
-  const getsenderEmail = (user: any) => {
+  const getGifterEmail = (user: any) => {
     // If Privy wallet client and email exists, return email
     if (user.wallet?.walletClientType === "privy" && user.email?.address) {
       return user.email.address;
     }
     if (user.wallet?.address) {
-      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(
-        -4
-      )}`;
+      return user.wallet.address;
     }
   };
 
@@ -141,38 +139,37 @@ const SendToken = () => {
       );
 
       if (selectedTokenData) {
-        const senderEmail = getsenderEmail(user);
+        const gifterEmail = getGifterEmail(user);
         const emailContent = renderToString(
           <Email
-            recipientEmail={recipientEmail}
+            claimerEmail={claimerEmail}
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenData.symbol}
-            senderEmail={senderEmail} // Pass sender identifier to email component
+            gifterEmail={gifterEmail}
             transactionHash={transactionHash}
           />
         );
-        if (isValidEmail(recipientEmail)) {
+        if (isValidEmail(claimerEmail)) {
           sendEmail({
-            recipientEmail,
+            claimerEmail,
             subject: "Hooray! You got some crypto coin 🪙",
             htmlContent: emailContent,
             tokenAmount,
             tokenSymbol: selectedTokenData.symbol,
-            senderEmail,
+            gifterEmail,
             transactionHash: transactionHash,
           });
         }
-        const validEmail = isValidEmail(recipientEmail) ? recipientEmail : null;
         StoreTransactionData(
-          recipientWalletAddress,
-          activeAddress as `0x${string}`,
+          claimerWallet,
+          gifterAddress as `0x${string}`,
           tokenAmount,
           selectedTokenData.symbol,
-          recipientEmail,
-          senderEmail
+          claimerEmail,
+          gifterEmail
         );
         setTokenAmount("");
-        setRecipientEmail("");
+        setClaimerEmail("");
       }
     }
   }, [transactionHash, transactionStauts]);
@@ -190,7 +187,7 @@ const SendToken = () => {
 
   // Fetch token details for available token from database
   const fetchTokens = async () => {
-    if (!activeAddress) {
+    if (!gifterAddress) {
       console.error("No address available");
       return;
     }
@@ -198,7 +195,7 @@ const SendToken = () => {
     setIsTokenLoading(true);
     try {
       const response = await fetch(
-        `/api/get-tokens?address=${activeAddress}&chainId=${
+        `/api/get-tokens?address=${gifterAddress}&chainId=${
           walletData?.chainId.split(":")[1]
         }`
       );
@@ -241,12 +238,12 @@ const SendToken = () => {
 
   // Store txn data to show txn history
   const StoreTransactionData = async (
-    walletAddress: string,
-    address: string,
+    claimerWallet: string,
+    gifterWallet: string,
     tokenAmount: string,
     selectedTokenData: string,
-    recipientEmail: string,
-    senderEmail: string
+    claimerEmail: string,
+    gifterEmail: string
   ) => {
     try {
       const storeResponse = await fetch("/api/store-transaction", {
@@ -255,14 +252,14 @@ const SendToken = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          recipientWallet: walletAddress,
-          senderWallet: address,
+          claimerWallet: claimerWallet,
+          gifterWallet: gifterWallet,
           tokenAmount,
           tokenSymbol: selectedTokenData,
-          recipientEmail,
+          claimerEmail,
           transactionHash: transactionHash,
           chainId: walletData?.chainId.split(":")[1],
-          senderEmail,
+          gifterEmail,
         }),
       });
 
@@ -316,7 +313,7 @@ const SendToken = () => {
         if (isEmailConnected) {
           // Embedded wallet is connected and native token is selected
 
-          if (!isValidEmail(recipientEmail)) {
+          if (!isValidEmail(claimerEmail)) {
             // Sending through EOA or Scanning
             const tx = await privySendTransaction({
               to: walletAddress,
@@ -342,7 +339,7 @@ const SendToken = () => {
         } else if (walletData?.authenticated && walletClient) {
           // External wallet is connected and native token is selected
 
-          if (!isValidEmail(recipientEmail)) {
+          if (!isValidEmail(claimerEmail)) {
             // Sending through EOA or Scanning
             const tx = await sendTransaction(wagmiConfig, {
               to: walletAddress as `0x${string}`,
@@ -394,7 +391,7 @@ const SendToken = () => {
         if (isEmailConnected) {
           // Embedded wallet is connected and non-native token is selected
 
-          if (isValidEmail(recipientEmail)) {
+          if (isValidEmail(claimerEmail)) {
             // Sedning through Email or Inviting
 
             // Sends a transaction to approve the Transactions contract to spend a specified non-native token amount on behalf of the sender.
@@ -448,7 +445,7 @@ const SendToken = () => {
         } else if (walletData?.authenticated && walletClient) {
           // External wallet is connected and non-native token is selected
 
-          if (isValidEmail(recipientEmail)) {
+          if (isValidEmail(claimerEmail)) {
             // Sedning through Email or Inviting
 
             if (approveAsync) {
@@ -530,7 +527,7 @@ const SendToken = () => {
         }
       }
 
-      setRecipientWalletAddress(walletAddress);
+      setClaimerWallet(walletAddress);
     } catch (error) {
       setTxStatus("error");
       toast.dismiss();
@@ -613,8 +610,8 @@ const SendToken = () => {
                 ></div>
               </div>
               <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-                {activeAddress
-                  ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
+                {gifterAddress
+                  ? `${gifterAddress.slice(0, 6)}...${gifterAddress.slice(-4)}`
                   : "Connect or Login"}
               </span>
             </div>
@@ -825,8 +822,8 @@ const SendToken = () => {
                     </label>
                     <input
                       type="email"
-                      value={recipientEmail}
-                      onChange={(e) => setRecipientEmail(e.target.value)}
+                      value={claimerEmail}
+                      onChange={(e) => setClaimerEmail(e.target.value)}
                       placeholder="recipient's email or address"
                       className={`w-full bg-opacity-50 rounded-xl p-3 mb-3 r  outline-none${
                         theme === "dark"
@@ -880,9 +877,9 @@ const SendToken = () => {
             onClose={() => setIsPopupOpen(false)}
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenSymbol}
-            recipientEmail={recipientEmail}
+            recipientEmail={claimerEmail}
             onConfirm={handleSend}
-            transferType={isValidEmail(recipientEmail) ? "email" : "eoa"}
+            transferType={isValidEmail(claimerEmail) ? "email" : "eoa"}
             isContractCall={isContractCall}
           />
           {/* <TransactionPopup

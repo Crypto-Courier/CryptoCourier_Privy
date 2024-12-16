@@ -2,10 +2,10 @@ import ReactDOMServer from "react-dom/server";
 import Email from "./Email";
 
 export function renderEmailToString(props: {
-  recipientEmail: string;
+  claimerEmail: string;
   tokenAmount: string;
   tokenSymbol: string;
-  senderEmail:string;
+  gifterEmail:string;
   transactionHash: string,
 }): string {
   const emailContent = ReactDOMServer.renderToStaticMarkup(
