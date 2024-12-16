@@ -108,10 +108,10 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         )}
       </div>
 
-      <div className="md:hidden" ref={dropdownRef}>
+      <div className="md:hidden">
         <div className="flex justify-between items-center">
           <div
-            className={`w-[100%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
+            className={`w-[100%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none  ${
               theme === "dark"
                 ? "bg-[#000000]/50 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
@@ -158,7 +158,8 @@ function SwitchHistory({ onChainSelect }: SwitchHistoryProps) {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
+            ref={dropdownRef}
+            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[53vh] scroll ${
               theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"
