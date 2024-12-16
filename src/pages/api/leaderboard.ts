@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../lib/mongoose";
+import { getLeaderboardPointsCollection } from "../../lib/getCollections";
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,20 +7,19 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const client = await clientPromise;
-      const db = client.db("transactionDB");
-      const collection = db.collection("transactions");
+      
+      const collection = await getLeaderboardPointsCollection();
 
       // Extract query parameters
       const { activeAddress } = req.query;
 
       // Fetch all transactions
-      const transactions = await collection.find({}).toArray();
+      const transactions = await collection.find({});
 
       // Process the data
       const senderData = new Map();
 
-      transactions.forEach((transaction) => {
+      transactions.forEach((transaction: any) => {
         const { senderWallet, recipientWallet, recipientEmail, authenticated } =
           transaction;
 

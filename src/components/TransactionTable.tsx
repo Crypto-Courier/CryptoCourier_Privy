@@ -6,7 +6,8 @@ import Image from "next/image";
 import trx from "../assets/trx.png";
 import { sendEmail } from "./Email/Emailer";
 import { renderEmailToString } from "./Email/renderEmailToString";
-import { Transaction } from "../types/types";
+// import { Transaction } from "../types/types";
+import { EnrichedTransaction } from "@/pages/api/transaction-history-table";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { isValidEmail } from "../utils/parameter-validation";
@@ -29,11 +30,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const [loadingTxId, setLoadingTxId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<EnrichedTransaction[]>([]);
   const { theme } = useTheme();
   const [expandedTxIndex, setExpandedTxIndex] = useState(null);
 
-  const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
+  const [allTransactions, setAllTransactions] = useState<EnrichedTransaction[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -55,10 +56,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     }
   };
 
-  const renderClaimStatusBadge = (tx: Transaction) => {
+  const renderClaimStatusBadge = (tx: EnrichedTransaction) => {
     // Only show for sent transactions with an email recipient
-    if (tx.senderWallet === activeAddress) {
-      return isValidEmail(tx.recipientEmail) ? (
+    if (tx.gifterWallet === activeAddress) {
+      return isValidEmail(tx.claimerEmail) ? (
         <>
           <div
             className={`flex items-center space-x-1 ${
@@ -138,7 +139,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
           throw new Error("Failed to fetch transactions");
         }
 
-        const data: Transaction[] = await response.json();
+        const data: EnrichedTransaction[] = await response.json();
 
         console.log("Give me data first then you can set data", data);
         setTransactions(data);
@@ -175,10 +176,10 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     const filteredTransactions = allTransactions.filter(
       (tx) =>
         tx.tokenSymbol.toLowerCase().includes(lowercaseTerm) ||
-        tx.recipientEmail.toLowerCase().includes(lowercaseTerm) ||
-        tx.senderWallet.toLowerCase().includes(lowercaseTerm) ||
+        tx.claimerEmail.toLowerCase().includes(lowercaseTerm) ||
+        tx.gifterWallet.toLowerCase().includes(lowercaseTerm) ||
         tx.tokenAmount.toString().includes(lowercaseTerm) ||
-        tx.senderEmail?.toString().includes(lowercaseTerm)
+        tx.gifterEmail?.toString().includes(lowercaseTerm)
     );
 
     setTransactions(filteredTransactions);
@@ -223,8 +224,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   };
 
   // Resend email
-  const handleResend = async (tx: Transaction, index: number) => {
-    if (!isValidEmail(tx.recipientEmail)) {
+  const handleResend = async (tx: EnrichedTransaction, index: number) => {
+    if (!isValidEmail(tx.claimerEmail)) {
       return;
     }
     setLoadingTxId(index);
@@ -232,21 +233,21 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
       const subject =
         "Nothing to worry! Your Crypto token is in your inbox again 📩";
       const htmlContent = renderEmailToString({
-        recipientEmail: tx.recipientEmail,
+        claimerEmail: tx.claimerEmail,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
-        senderEmail: tx.senderEmail,
-        transactionHash: tx.recipientEmail,
+        gifterEmail: tx.gifterEmail,
+        transactionHash: tx.transactionHash,
       });
 
       await sendEmail({
-        recipientEmail: tx.recipientEmail,
+        claimerEmail: tx.claimerEmail,
         subject,
         htmlContent,
         tokenAmount: tx.tokenAmount,
         tokenSymbol: tx.tokenSymbol,
-        senderEmail: tx.senderEmail,
-        transactionHash: tx.senderEmail,
+        gifterEmail: tx.gifterEmail,
+        transactionHash: tx.transactionHash,
       });
       toast.success("Email resent successfully!");
     } catch (error) {
@@ -362,7 +363,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                 >
                   <div className="absolute top-0 left-0">
                     <Image
-                      src={chainLogos[tx.chainId]}
+                      src={chainLogos[parseInt(tx.chainId)]}
                       alt=""
                       width={30}
                       height={30}
@@ -399,7 +400,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                     >
                       {tx.tokenAmount} {tx.tokenSymbol}
                     </span>
-                    {tx.senderWallet === activeAddress ? (
+                    {tx.gifterWallet === activeAddress ? (
                       <>
                         <span className="text-[15px]">To</span>
                         <span
@@ -409,12 +410,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                               : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
                           }`}
                         >
-                          {isValidEmail(tx.recipientEmail)
-                            ? tx.recipientEmail
-                            : `${tx.recipientWallet.slice(
+                          {isValidEmail(tx.claimerEmail)
+                            ? tx.claimerEmail
+                            : `${tx.claimerWallet.slice(
                                 0,
                                 8
-                              )}...${tx.recipientWallet.slice(-8)}`}
+                              )}...${tx.claimerWallet.slice(-8)}`}
                         </span>
                       </>
                     ) : (
@@ -427,12 +428,12 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                               : "border border-[#0052FF] text-[#0052FF] bg-white py-1 px-2"
                           }`}
                         >
-                          {isValidEmail(tx.senderEmail)
-                            ? tx.senderEmail
-                            : `${tx.senderWallet.slice(
+                          {isValidEmail(tx.gifterEmail)
+                            ? tx.gifterEmail
+                            : `${tx.gifterWallet.slice(
                                 0,
                                 6
-                              )}...${tx.senderWallet.slice(-4)}`}
+                              )}...${tx.gifterWallet.slice(-4)}`}
                         </span>
                       </>
                     )}
@@ -440,8 +441,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
 
                   {/* Buttons always visible on large screens */}
                   <div className="hidden justify-end gap-3  lg:flex md:hidden sm:hidden">
-                    {tx.senderWallet === activeAddress &&
-                      isValidEmail(tx.recipientEmail) && (
+                    {tx.gifterWallet === activeAddress &&
+                      isValidEmail(tx.claimerEmail) && (
                         <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                           {loadingTxId === index ? (
                             <div className="tracking-wide text-[15px]">
@@ -488,8 +489,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                   >
                     {/* Existing button layout for smaller screens */}
                     <div className="flex justify-start gap-3 ml-8 items-center">
-                      {tx.senderWallet === activeAddress &&
-                        isValidEmail(tx.recipientEmail) && (
+                      {tx.gifterWallet === activeAddress &&
+                        isValidEmail(tx.claimerEmail) && (
                           <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-4 py-2 rounded-full text-[10px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                             {loadingTxId === index ? (
                               <div className="tracking-wide text-[12px] lg:text-[15px] md:text-[15px]">

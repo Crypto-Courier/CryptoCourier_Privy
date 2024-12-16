@@ -1,50 +1,91 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+// import dbConnect from '../../lib/dbConnect';
+// import TransactionModel from '../../models/TransactionSchema'; // Adjust path as needed
 import { getTransactionCollection } from '../../lib/getCollections';
 import chainConfig from '../../config/chains';
 import { handleError } from '../../utils/api-error-handler';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+// Interface for enriched transaction
+export interface EnrichedTransaction {
+  _id: string;
+  claimerWallet: string;
+  gifterWallet: string;
+  tokenAmount: string;
+  tokenSymbol: string;
+  transactionHash: string;
+  claimerEmail: string;
+  gifterEmail: string;
+  chainId: string;
+  claimed: boolean;
+  customizedLink: string;
+}
+
+export default async function handler(
+  req: NextApiRequest, 
+  res: NextApiResponse
+) {
+  // Handle only GET requests
+  if (req.method !== 'GET') {
+    return handleError(res, 405, 'Method not allowed');
+  }
+
   const { walletAddress, chainId } = req.query;
 
   console.log('Received GET request for transactions', { walletAddress, chainId });
 
-  if (!walletAddress && !chainId) {
-    return handleError(res, 400, 'Wallet address and ChainId is required');
+  // Validate input
+  if (!walletAddress || !chainId) {
+    return handleError(res, 400, 'Wallet address and ChainId are required');
   }
 
-  const collection = getTransactionCollection();
-
   try {
+    // Establish database connection
+    const TransactionModel = await getTransactionCollection();
 
-    // Convert chainId to an array for multiple chainId
-    const chainIds = Array.isArray(chainId) ? chainId : [chainId];
+    // Convert chainId to an array for multiple chainIds
+    const chainIds = Array.isArray(chainId) 
+      ? chainId.map(String) 
+      : [String(chainId)];
 
-    // Find transactions where the wallet is either the sender or the recipient and chainId matches any in the list
-    const transactions = await (await collection).find({
+    // Find transactions where the wallet is either the claimer or gifter and chainId matches
+    const transactions = await TransactionModel.find({
       $and: [
-        { $or: [{ senderWallet: walletAddress }, { recipientWallet: walletAddress }] },
+        { 
+          $or: [
+            { claimerWallet: walletAddress }, 
+            { gifterWallet: walletAddress }
+          ] 
+        },
         { chainId: { $in: chainIds } }
       ]
-    }).project({
-      senderWallet: 1,
-      recipientWallet: 1,
+    }).select({
+      claimerWallet: 1,
+      gifterWallet: 1,
       tokenAmount: 1,
       tokenSymbol: 1,
       transactionHash: 1,
-      recipientEmail: 1,
-      senderEmail: 1,
+      claimerEmail: 1,
+      gifterEmail: 1,
       chainId: 1,
       claimed: 1
-    }).toArray();
+    });
 
-    const enrichedTransactions = transactions.map((tx) => {
+    // Enrich transactions with block explorer links
+    const enrichedTransactions: EnrichedTransaction[] = transactions.map((tx) => {
       const chainInfo = chainConfig[tx.chainId];
-      const customizedLink = chainInfo
-        ? `${chainInfo.blockexplorer}/${tx.transactionHash}`
-        : null;
+      const customizedLink = `${chainInfo.blockexplorer}/${tx.transactionHash}`;
 
       return {
-        ...tx,
+        _id: tx._id.toString(),
+        claimerWallet: tx.claimerWallet,
+        gifterWallet: tx.gifterWallet,
+        tokenAmount: tx.tokenAmount,
+        tokenSymbol: tx.tokenSymbol,
+        transactionHash: tx.transactionHash,
+        claimerEmail: tx.claimerEmail,
+        gifterEmail: tx.gifterEmail,
+        chainId: tx.chainId,
+        claimed: tx.claimed,
         customizedLink,
       };
     });
@@ -57,6 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(enrichedTransactions);
   } catch (error) {
-    return handleError(res, 500, 'Failed to retrieve transactions')
+    console.error('Transaction fetch error:', error);
+    return handleError(res, 500, 'Failed to retrieve transactions');
   }
 }
