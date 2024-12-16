@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
@@ -5,13 +6,21 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    unique: true,
+    validate: {
+      validator: function(v) {
+        return ethers.isAddress(v); // Ensure it's a valid Ethereum address
+      },
+      message: props => `${props.value} is not a valid Ethereum address!`
+    }
   },
   claimerEmail: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    unique: true
   },
   authData: {
     type: Map,
