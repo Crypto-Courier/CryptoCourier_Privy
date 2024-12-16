@@ -40,9 +40,7 @@ export const validateUserInput = (data: UserInput) => {
   // Validate claimer email
   if (!claimerEmail) {
     errors.push('Claimer email is required');
-  } else if (!emailRegex.test(claimerEmail)) {
-    errors.push('Invalid email address format');
-  }
+  } 
 
   // Optional: Validate authData structure if provided
   if (authData) {
@@ -180,7 +178,7 @@ export const authenticateUserByTransactionHash = async (
   }
 
   // Add new entries to local depth
-  localDepth[normalizedGifterWallet] = 0;
+  localDepth[normalizedGifterWallet] = 1;
   localDepth[normalizedClaimerWallet] = 0;
 
   // If previous transactions exist, increment depths
