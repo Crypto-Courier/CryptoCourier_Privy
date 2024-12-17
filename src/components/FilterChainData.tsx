@@ -63,7 +63,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
     <div
       className={` items-center rounded-md backdrop-blur-[20px] mb-2 py-1 ${
         theme === "dark"
-          ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
+          ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
           : "bg-[#FF3333]/40 border border-[#FFFFFF]"
       }`}
     >
@@ -167,7 +167,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] ${
+            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] scroll ${
               theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"

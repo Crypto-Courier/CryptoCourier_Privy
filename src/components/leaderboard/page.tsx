@@ -115,7 +115,7 @@ const LeaderBoard: React.FC = () => {
           }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh]">
-            <div className="w-[60%]  mr-0 ml-auto flex justify-between mb-4">
+            <div className="w-[60%]  mr-0 ml-auto flex justify-end mb-4">
               <div>
                 <button
                   onClick={() => setActiveButton("Global")}
@@ -147,7 +147,7 @@ const LeaderBoard: React.FC = () => {
                 </button>
               </div>
 
-              <button
+              {/* <button
                 onClick={invite}
                 className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
                   theme === "dark"
@@ -156,7 +156,7 @@ const LeaderBoard: React.FC = () => {
                 }`}
               >
                 Invite Your Friends
-              </button>
+              </button> */}
             </div>
             <div className="flex flex-col lg:flex-row md:flex-col  justify-between gap-8 items-start">
               <div className="md:w-[100%] lg:w-[40%] sm:w-full w-full flex gap-5 flex-col items-center  lg:flex md:flex  ">
