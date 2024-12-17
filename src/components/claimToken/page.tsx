@@ -41,8 +41,8 @@ function ClaimToken() {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         try {
-          const response = await fetch("/api/authentication-operation", {
-            method: "PUT",
+          const response = await fetch("/api/user-data", {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
@@ -50,7 +50,15 @@ function ClaimToken() {
               transactionHash: transactionHash,
             }),
           });
+
+          // Check if the response is successful
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Authentication failed');
+          }
+
         } catch (error) {
+          setIsRedirecting(false);
           console.error("Error updating/storing authentication data:", error);
         }
 
@@ -85,24 +93,21 @@ function ClaimToken() {
       <div className="txbgg flex justify-center items-center ">
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
-            className={`rounded-[10px] max-w-[40rem] w-full mx-3 relative ${
-              theme === "dark"
+            className={`rounded-[10px] max-w-[40rem] w-full mx-3 relative ${theme === "dark"
                 ? "bg-[#000000] border-red-500 border backdrop-blur-[10px]"
                 : "bg-[#FFFCFC] border border-[#FE005B]/60"
-            }`}
+              }`}
           >
             <div
-              className={`flex justify-center items-center p-6 rounded-tr-[10px] rounded-tl-[10px] ${
-                theme === "dark"
+              className={`flex justify-center items-center p-6 rounded-tr-[10px] rounded-tl-[10px] ${theme === "dark"
                   ? "bg-[#171717] border-b-2 border-red-500"
                   : "bg-white border-b-2 border-[#FE005B]"
-              }`}
+                }`}
             >
               <div className="flex items-center flex-col">
                 <h2
-                  className={`text-xl font-bold ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
+                  className={`text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"
+                    }`}
                 >
                   Sign-UP to Claim Tokens
                 </h2>
@@ -111,20 +116,18 @@ function ClaimToken() {
 
             <div className="px-6 py-[3rem]">
               <h3
-                className={`text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px] mb-4 text-center font-semibold ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
+                className={`text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px] mb-4 text-center font-semibold ${theme === "dark" ? "text-white" : "text-black"
+                  }`}
               >
                 Your crypto adventure begins here.😍
               </h3>
 
               <button
                 onClick={handleClaim}
-                className={`${
-                  theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
-                } login w-[50%] text-white py-2 rounded-[10px] flex items-center justify-center mb-6 mx-auto relative text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px]`}
-                // onMouseEnter={() => setShowTooltip(true)} // Show tooltip on hover
-                // onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when not hovering
+                className={`${theme === "dark" ? "bg-[#FF336A]" : "bg-[#0052FF]"
+                  } login w-[50%] text-white py-2 rounded-[10px] flex items-center justify-center mb-6 mx-auto relative text-[12px] lg:text-[18px] md:text-[18px]  sm:text-[15px]`}
+              // onMouseEnter={() => setShowTooltip(true)} // Show tooltip on hover
+              // onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when not hovering
               >
                 {isAuthenticated ? `Go to Dashboard` : `Login to Claim Tokens`}
               </button>
