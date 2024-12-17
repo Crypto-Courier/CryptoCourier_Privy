@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { getUserCollection, getTransactionCollection } from '../lib/getCollections';
+import { createOrUpdateLeaderboardPoints } from '../controllers/leaderboardPointsController';
 
 interface DepthEntry {
   [address: string]: number;
@@ -153,7 +154,7 @@ export const createUser = async (userData: UserInput) => {
 //     console.log('User already exists with this claimer address and chain ID');
 //     return existingUser;
 //   }
-  
+
 //   // Find existing users for both gifter and claimer
 //   const existingGifterUser = await UserModel.findOne({
 //     claimerWallet: normalizedGifterWallet
@@ -306,14 +307,14 @@ export const authenticateUserByTransactionHash = async (
     // Check if gifter user exists and has auth data for this chain
     if (existingGifterUser && existingGifterUser.authData) {
       const existingChainAuthData = existingGifterUser.authData.get(normalizedChainId);
-      
+
       // Copy and increment Universal Depth
       if (existingChainAuthData?.universalDepth) {
         existingChainAuthData.universalDepth.forEach((depth: number, addr: string) => {
           universalDepth.set(addr, Number(depth) + 1);
         });
       }
-      
+
       // If no universal depth from existing data, set gifter address depth
       if (universalDepth.size === 0) {
         universalDepth.set(normalizedGifterWallet, 2);
@@ -325,12 +326,12 @@ export const authenticateUserByTransactionHash = async (
           localDepth.set(addr, Number(depth) + 1);
         });
       }
-      
+
       // Ensure local depth has gifter and claimer addresses
       if (localDepth.size === 0) {
         localDepth.set(normalizedGifterWallet, 1);
       }
-      
+
       // Always add claimer wallet with 0 depth
       localDepth.set(normalizedClaimerWallet, 0);
     } else {
@@ -350,6 +351,49 @@ export const authenticateUserByTransactionHash = async (
 
   // Prepare chain-specific auth data
   const chainSpecificAuthData = prepareAuthData();
+
+  // Calculate Leaderboard Points
+  const calculateLeaderboardPoints = () => {
+    const leaderboardPoints: { [key: string]: number } = {};
+
+    // Iterate through local depth to calculate points
+    chainSpecificAuthData.localDepth.forEach((depth, address) => {
+      // Only calculate points for addresses with depth >= 1
+      if (depth >= 1 && depth < 11) {
+        // Calculate points as 2^(11 - local depth)
+        // Add constant 1 to ensure minimum points
+        const points = Math.pow(2, 11 - depth);
+
+        leaderboardPoints[address] = points;
+      } else if (depth >= 11){
+        const points = 1;
+        leaderboardPoints[address] = points;
+      }
+    });
+
+    return leaderboardPoints;
+  };
+
+  // Calculate and prepare leaderboard points
+  const leaderboardPointsData = calculateLeaderboardPoints();
+  const leaderboardPointsToSave = Object.entries(leaderboardPointsData).map(([gifterWallet, pointValue]) => ({
+    chain: normalizedChainId,
+    points: pointValue
+  }));
+
+  // Save leaderboard points for each address in local depth
+  await Promise.all(
+    Object.keys(leaderboardPointsData).map(async (gifterWallet) => {
+      await createOrUpdateLeaderboardPoints({
+        gifterWallet,
+        points: [{
+          chain: normalizedChainId,
+          chainId: normalizedChainId,  // Add both chain and chainId
+          points: leaderboardPointsData[gifterWallet]
+        }]
+      });
+    })
+  );
 
   // Find existing user for the claimer
   const existingClaimerUser = await UserModel.findOne({

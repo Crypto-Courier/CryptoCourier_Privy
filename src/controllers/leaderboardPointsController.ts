@@ -33,30 +33,95 @@ export const validateLeaderboardPointsInput = (data: any) => {
   return errors;
 };
 
+// export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: any) => {
+//   const LeaderboardPointsModel = await getLeaderboardPointsCollection();
+
+//   // Normalize wallet address
+//   const normalizedWallet = leaderboardPointsData.gifterWallet.toLowerCase();
+
+//   // Find existing entry for the wallet
+//   let existingEntry = await LeaderboardPointsModel.findOne({ 
+//     gifterWallet: normalizedWallet 
+//   });
+
+//   if (existingEntry) {
+//     // Update existing entry
+//     // Merge and update points for existing and new chains
+//     const updatedPoints = [...existingEntry.points];
+
+//     leaderboardPointsData.points.forEach((newPointEntry: any) => {
+//       const existingChainIndex = updatedPoints.findIndex(
+//         (p) => p.chain.toLowerCase() === newPointEntry.chain.toLowerCase()
+//       );
+
+//       if (existingChainIndex !== -1) {
+//         // Update existing chain points (take the maximum of existing and new points)
+//         updatedPoints[existingChainIndex].points = Math.max(
+//           updatedPoints[existingChainIndex].points, 
+//           newPointEntry.points
+//         );
+//       } else {
+//         // Add new chain points
+//         updatedPoints.push({
+//           chain: newPointEntry.chain,
+//           points: newPointEntry.points
+//         });
+//       }
+//     });
+
+//     existingEntry.points = updatedPoints;
+//     return existingEntry.save();
+//   } else {
+//     // Create new entry
+//     const leaderboardPoints = new LeaderboardPointsModel({
+//       gifterWallet: normalizedWallet,
+//       points: leaderboardPointsData.points
+//     });
+//     return leaderboardPoints.save();
+//   }
+// };
+
 export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: any) => {
   const LeaderboardPointsModel = await getLeaderboardPointsCollection();
 
+  // Normalize wallet address
+  const normalizedWallet = leaderboardPointsData.gifterWallet.toLowerCase();
+
+  // Ensure points have both chain and chainId
+  const processedPoints = leaderboardPointsData.points.map((point: any) => ({
+    chain: point.chain || point.chainId,
+    chainId: point.chain || point.chainId,
+    points: point.points
+  }));
+
   // Find existing entry for the wallet
-  let existingEntry = await LeaderboardPointsModel.findOne({ 
-    gifterWallet: leaderboardPointsData.gifterWallet 
+  let existingEntry = await LeaderboardPointsModel.findOne({
+    gifterWallet: normalizedWallet
   });
 
   if (existingEntry) {
     // Update existing entry
-    // Merge and update points for existing and new chains
     const updatedPoints = [...existingEntry.points];
 
-    leaderboardPointsData.points.forEach((newPointEntry: any) => {
+    processedPoints.forEach((newPointEntry: any) => {
       const existingChainIndex = updatedPoints.findIndex(
-        (p) => p.chain.toLowerCase() === newPointEntry.chain.toLowerCase()
+        (p) => (p.chain?.toLowerCase() === newPointEntry.chain?.toLowerCase() ||
+          p.chainId?.toLowerCase() === newPointEntry.chainId?.toLowerCase())
       );
 
       if (existingChainIndex !== -1) {
-        // Update existing chain points
-        updatedPoints[existingChainIndex].points += newPointEntry.points;
+        // Update existing chain points (take the maximum of existing and new points)
+        updatedPoints[existingChainIndex].points = Math.max(
+          updatedPoints[existingChainIndex].points,
+          newPointEntry.points
+        );
       } else {
         // Add new chain points
-        updatedPoints.push(newPointEntry);
+        updatedPoints.push({
+          chain: newPointEntry.chain,
+          chainId: newPointEntry.chainId,
+          points: newPointEntry.points
+        });
       }
     });
 
@@ -64,24 +129,76 @@ export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: any
     return existingEntry.save();
   } else {
     // Create new entry
-    const leaderboardPoints = new LeaderboardPointsModel(leaderboardPointsData);
+    const leaderboardPoints = new LeaderboardPointsModel({
+      gifterWallet: normalizedWallet,
+      points: processedPoints
+    });
     return leaderboardPoints.save();
   }
 };
 
+// export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: any) => {
+//   const LeaderboardPointsModel = await getLeaderboardPointsCollection();
+
+//   // Normalize wallet address
+//   const normalizedWallet = leaderboardPointsData.gifterWallet.toLowerCase();
+
+//   // Find existing entry for the wallet
+//   let existingEntry = await LeaderboardPointsModel.findOne({ 
+//     gifterWallet: normalizedWallet 
+//   });
+
+//   if (existingEntry) {
+//     // Update existing entry
+//     // Merge and update points for existing and new chains
+//     const updatedPoints = [...existingEntry.points];
+
+//     leaderboardPointsData.points.forEach((newPointEntry: any) => {
+//       const existingChainIndex = updatedPoints.findIndex(
+//         (p) => p.chain.toLowerCase() === newPointEntry.chain.toLowerCase()
+//       );
+
+//       if (existingChainIndex !== -1) {
+//         // Update existing chain points (take the maximum of existing and new points)
+//         updatedPoints[existingChainIndex].points = Math.max(
+//           updatedPoints[existingChainIndex].points, 
+//           newPointEntry.points
+//         );
+//       } else {
+//         // Add new chain points
+//         updatedPoints.push({
+//           chain: newPointEntry.chain,
+//           points: newPointEntry.points
+//         });
+//       }
+//     });
+
+//     existingEntry.points = updatedPoints;
+//     return existingEntry.save();
+//   } else {
+//     // Create new entry
+//     const leaderboardPoints = new LeaderboardPointsModel({
+//       gifterWallet: normalizedWallet,
+//       points: leaderboardPointsData.points
+//     });
+//     return leaderboardPoints.save();
+//   }
+// };
 export const getLeaderboardPointsByWallet = async (gifterWallet: string) => {
   const LeaderboardPointsModel = await getLeaderboardPointsCollection();
-  return LeaderboardPointsModel.findOne({ gifterWallet });
+  return LeaderboardPointsModel.findOne({
+    gifterWallet: gifterWallet.toLowerCase()
+  });
 };
 
 export const getTopLeaderboardPoints = async (limit: number = 10, chain?: string) => {
   const LeaderboardPointsModel = await getLeaderboardPointsCollection();
-  
+
   let aggregationPipeline: any[] = [
     // Unwind the points array
     { $unwind: '$points' },
     // Group by wallet and sum points
-    { 
+    {
       $group: {
         _id: '$gifterWallet',
         totalPoints: { $sum: '$points.points' }
