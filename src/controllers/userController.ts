@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { getUserCollection, getTransactionCollection } from '../lib/getCollections';
-import { createOrUpdateLeaderboardPoints } from '../controllers/leaderboardPointsController';
+import { createOrUpdateLeaderboardPoints, getLeaderboardPointsByWallet } from '../controllers/leaderboardPointsController';
 
 interface DepthEntry {
   [address: string]: number;
@@ -257,6 +257,240 @@ export const createUser = async (userData: UserInput) => {
 //   return claimerUser;
 // };
 
+// export const authenticateUserByTransactionHash = async (
+//   transactionHash: string,
+// ) => {
+//   // Get transaction and user collections
+//   const TransactionModel = await getTransactionCollection();
+//   const UserModel = await getUserCollection();
+
+//   // Find the transaction by hash
+//   const transaction = await TransactionModel.findOne({ transactionHash });
+
+//   if (!transaction) {
+//     throw new Error('Transaction not found');
+//   }
+
+//   const {
+//     claimerWallet,
+//     gifterWallet,
+//     chainId,
+//     claimerEmail
+//   } = transaction;
+
+//   // Validate essential fields
+//   if (!claimerWallet) {
+//     throw new Error('Claimer wallet address is required');
+//   }
+
+//   if (!claimerEmail) {
+//     throw new Error('Claimer email is missing from transaction data');
+//   }
+
+//   // Normalize addresses to lowercase
+//   const normalizedClaimerWallet = claimerWallet.toLowerCase();
+//   const normalizedClaimerEmail = claimerEmail.toLowerCase();
+//   const normalizedGifterWallet = gifterWallet.toLowerCase();
+//   const normalizedChainId = chainId;
+
+//   // Find existing user for the gifter
+//   const existingGifterUser = await UserModel.findOne({
+//     claimerWallet: normalizedGifterWallet
+//   });
+
+//   // Prepare the authentication data
+//   const prepareAuthData = () => {
+//     // Prepare universal depth and local depth
+//     const universalDepth = new Map<string, number>();
+//     const localDepth = new Map<string, number>();
+
+//     // Check if gifter user exists and has auth data for this chain
+//     if (existingGifterUser && existingGifterUser.authData) {
+//       const existingChainAuthData = existingGifterUser.authData.get(normalizedChainId);
+
+//       // Copy and increment Universal Depth
+//       if (existingChainAuthData?.universalDepth) {
+//         existingChainAuthData.universalDepth.forEach((depth: number, addr: string) => {
+//           universalDepth.set(addr, Number(depth) + 1);
+//         });
+//       }
+
+//       // If no universal depth from existing data, set gifter address depth
+//       if (universalDepth.size === 0) {
+//         universalDepth.set(normalizedGifterWallet, 2);
+//       }
+
+//       // Copy and increment Local Depth
+//       if (existingChainAuthData?.localDepth) {
+//         existingChainAuthData.localDepth.forEach((depth: number, addr: string) => {
+//           localDepth.set(addr, Number(depth) + 1);
+//         });
+//       }
+
+//       // Ensure local depth has gifter and claimer addresses
+//       if (localDepth.size === 0) {
+//         localDepth.set(normalizedGifterWallet, 1);
+//       }
+
+//       // Always add claimer wallet with 0 depth
+//       localDepth.set(normalizedClaimerWallet, 0);
+//     } else {
+//       // If no existing gifter user, set initial depths
+//       universalDepth.set(normalizedGifterWallet, 2);
+//       localDepth.set(normalizedGifterWallet, 1);
+//       localDepth.set(normalizedClaimerWallet, 0);
+//     }
+
+//     return {
+//       authStatus: true,
+//       gifterAddress: normalizedGifterWallet,
+//       universalDepth,
+//       localDepth
+//     };
+//   };
+
+//   // Prepare chain-specific auth data
+//   const chainSpecificAuthData = prepareAuthData();
+
+//   // Enhanced Leaderboard Points Calculation
+//   const calculateLeaderboardPoints = async () => {
+//     const leaderboardPointsToSave: { 
+//       gifterWallet: string, 
+//       points: { chain: string, chainId: string, points: number }[] 
+//     }[] = [];
+
+//     // Iterate through local depth to calculate points
+//     for (const [address, depth] of chainSpecificAuthData.localDepth.entries()) {
+//       let points = 1; // Minimum points
+
+//       // Calculate points dynamically based on depth
+//       if (depth >= 1 && depth < 11) {
+//         points = Math.pow(2, 11 - depth);
+//       }
+
+//       // Find existing leaderboard entry to compare points
+//       const existingLeaderboardEntry = await getLeaderboardPointsByWallet(address);
+      
+//       let finalPoints = points;
+//       if (existingLeaderboardEntry) {
+//         // Find points for the specific chain
+//         const existingChainPoints = existingLeaderboardEntry.points.find(
+//           (p: any) => p.chain.toLowerCase() === normalizedChainId.toLowerCase()
+//         );
+
+//         // Compare and take the maximum points
+//         if (existingChainPoints) {
+//           finalPoints = Math.max(existingChainPoints.points, points);
+//         }
+//       }
+
+//       leaderboardPointsToSave.push({
+//         gifterWallet: address,
+//         points: [{
+//           chain: normalizedChainId,
+//           chainId: normalizedChainId,
+//           points: finalPoints
+//         }]
+//       });
+//     }
+
+//     return leaderboardPointsToSave;
+//   };
+
+//   // Calculate and save leaderboard points
+//   const leaderboardPointsToSave = await calculateLeaderboardPoints();
+
+//   // Calculate Leaderboard Points
+//   // const calculateLeaderboardPoints = () => {
+//   //   const leaderboardPoints: { [key: string]: number } = {};
+
+//   //   // Iterate through local depth to calculate points
+//   //   chainSpecificAuthData.localDepth.forEach((depth, address) => {
+//   //     // Only calculate points for addresses with depth >= 1
+//   //     if (depth >= 1 && depth < 11) {
+//   //       // Calculate points as 2^(11 - local depth)
+//   //       // Add constant 1 to ensure minimum points
+//   //       const points = Math.pow(2, 11 - depth);
+
+//   //       leaderboardPoints[address] = points;
+//   //     } else if (depth >= 11){
+//   //       const points = 1;
+//   //       leaderboardPoints[address] = points;
+//   //     }
+//   //   });
+
+//   //   return leaderboardPoints;
+//   // };
+
+//   // Calculate and prepare leaderboard points
+//   // const leaderboardPointsData = calculateLeaderboardPoints();
+//   // const leaderboardPointsToSave = Object.entries(leaderboardPointsData).map(([gifterWallet, pointValue]) => ({
+//   //   chain: normalizedChainId,
+//   //   points: pointValue
+//   // }));
+
+//   // Save leaderboard points for each address in local depth
+//   await Promise.all(
+//     leaderboardPointsToSave.map(async (pointData) => {
+//       await createOrUpdateLeaderboardPoints(pointData);
+//     })
+//   );
+
+//   // Save leaderboard points for each address in local depth
+//   // await Promise.all(
+//   //   Object.keys(leaderboardPointsData).map(async (gifterWallet) => {
+//   //     await createOrUpdateLeaderboardPoints({
+//   //       gifterWallet,
+//   //       points: [{
+//   //         chain: normalizedChainId,
+//   //         chainId: normalizedChainId,  // Add both chain and chainId
+//   //         points: leaderboardPointsData[gifterWallet]
+//   //       }]
+//   //     });
+//   //   })
+//   // );
+
+//   // Find existing user for the claimer
+//   const existingClaimerUser = await UserModel.findOne({
+//     claimerWallet: normalizedClaimerWallet
+//   });
+
+//   // Prepare update operation
+//   const updateOperation: any = {
+//     $set: {
+//       claimerEmail: normalizedClaimerEmail,
+//       [`authData.${normalizedChainId}`]: chainSpecificAuthData
+//     }
+//   };
+
+//   // If no existing user, ensure claimer wallet is set
+//   if (!existingClaimerUser) {
+//     updateOperation.$set.claimerWallet = normalizedClaimerWallet;
+//   }
+
+//   // Update or create user
+//   const claimerUser = await UserModel.findOneAndUpdate(
+//     { claimerWallet: normalizedClaimerWallet },
+//     updateOperation,
+//     {
+//       new: true,
+//       upsert: true,
+//       runValidators: true
+//     }
+//   );
+
+//   // Mark transaction as authenticated
+//   await TransactionModel.findOneAndUpdate(
+//     { transactionHash },
+//     {
+//       authenticated: true,
+//       authenticatedAt: new Date()
+//     }
+//   );
+
+//   return claimerUser;
+// };
+
 export const authenticateUserByTransactionHash = async (
   transactionHash: string,
 ) => {
@@ -301,8 +535,8 @@ export const authenticateUserByTransactionHash = async (
   // Prepare the authentication data
   const prepareAuthData = () => {
     // Prepare universal depth and local depth
-    const universalDepth = new Map<string, number>();
-    const localDepth = new Map<string, number>();
+    const universalDepth: { [key: string]: number } = {};
+    const localDepth: { [key: string]: number } = {};
 
     // Check if gifter user exists and has auth data for this chain
     if (existingGifterUser && existingGifterUser.authData) {
@@ -310,35 +544,45 @@ export const authenticateUserByTransactionHash = async (
 
       // Copy and increment Universal Depth
       if (existingChainAuthData?.universalDepth) {
-        existingChainAuthData.universalDepth.forEach((depth: number, addr: string) => {
-          universalDepth.set(addr, Number(depth) + 1);
+        // Handle both Map and object cases
+        const universalDepthSource = existingChainAuthData.universalDepth instanceof Map
+          ? Object.fromEntries(existingChainAuthData.universalDepth)
+          : existingChainAuthData.universalDepth;
+
+        Object.entries(universalDepthSource).forEach(([addr, depth]) => {
+          universalDepth[addr] = Number(depth) + 1;
         });
       }
 
       // If no universal depth from existing data, set gifter address depth
-      if (universalDepth.size === 0) {
-        universalDepth.set(normalizedGifterWallet, 2);
+      if (Object.keys(universalDepth).length === 0) {
+        universalDepth[normalizedGifterWallet] = 2;
       }
 
       // Copy and increment Local Depth
       if (existingChainAuthData?.localDepth) {
-        existingChainAuthData.localDepth.forEach((depth: number, addr: string) => {
-          localDepth.set(addr, Number(depth) + 1);
+        // Handle both Map and object cases
+        const localDepthSource = existingChainAuthData.localDepth instanceof Map
+          ? Object.fromEntries(existingChainAuthData.localDepth)
+          : existingChainAuthData.localDepth;
+
+        Object.entries(localDepthSource).forEach(([addr, depth]) => {
+          localDepth[addr] = Number(depth) + 1;
         });
       }
 
       // Ensure local depth has gifter and claimer addresses
-      if (localDepth.size === 0) {
-        localDepth.set(normalizedGifterWallet, 1);
+      if (Object.keys(localDepth).length === 0) {
+        localDepth[normalizedGifterWallet] = 1;
       }
 
       // Always add claimer wallet with 0 depth
-      localDepth.set(normalizedClaimerWallet, 0);
+      localDepth[normalizedClaimerWallet] = 0;
     } else {
       // If no existing gifter user, set initial depths
-      universalDepth.set(normalizedGifterWallet, 2);
-      localDepth.set(normalizedGifterWallet, 1);
-      localDepth.set(normalizedClaimerWallet, 0);
+      universalDepth[normalizedGifterWallet] = 2;
+      localDepth[normalizedGifterWallet] = 1;
+      localDepth[normalizedClaimerWallet] = 0;
     }
 
     return {
@@ -352,46 +596,147 @@ export const authenticateUserByTransactionHash = async (
   // Prepare chain-specific auth data
   const chainSpecificAuthData = prepareAuthData();
 
-  // Calculate Leaderboard Points
-  const calculateLeaderboardPoints = () => {
-    const leaderboardPoints: { [key: string]: number } = {};
+  // Enhanced Leaderboard Points Calculation
+  // const calculateLeaderboardPoints = async () => {
+  //   const leaderboardPointsToSave: { 
+  //     gifterWallet: string, 
+  //     points: { chain: string, chainId: string, points: number }[] 
+  //   }[] = [];
 
-    // Iterate through local depth to calculate points
-    chainSpecificAuthData.localDepth.forEach((depth, address) => {
-      // Only calculate points for addresses with depth >= 1
-      if (depth >= 1 && depth < 11) {
-        // Calculate points as 2^(11 - local depth)
-        // Add constant 1 to ensure minimum points
-        const points = Math.pow(2, 11 - depth);
+  //   // Iterate through local depth to calculate points
+  //   Object.entries(chainSpecificAuthData.localDepth).forEach(async ([address, depth]) => {
+  //     let points = 1; // Minimum points
 
-        leaderboardPoints[address] = points;
-      } else if (depth >= 11){
-        const points = 1;
-        leaderboardPoints[address] = points;
+  //     // Calculate points dynamically based on depth
+  //     if (depth >= 1 && depth < 11) {
+  //       points = Math.pow(2, 11 - depth);
+  //     }
+
+  //     // Find existing leaderboard entry to compare points
+  //     const existingLeaderboardEntry = await getLeaderboardPointsByWallet(address);
+      
+  //     let finalPoints = points;
+  //     if (existingLeaderboardEntry) {
+  //       // Find points for the specific chain
+  //       const existingChainPoints = existingLeaderboardEntry.points.find(
+  //         (p:any) => p.chain.toLowerCase() === normalizedChainId.toLowerCase()
+  //       );
+
+  //       // Compare and take the maximum points
+  //       if (existingChainPoints) {
+  //         finalPoints = Math.max(existingChainPoints.points, points);
+  //       }
+  //     }
+
+  //     leaderboardPointsToSave.push({
+  //       gifterWallet: address,
+  //       points: [{
+  //         chain: normalizedChainId,
+  //         chainId: normalizedChainId,
+  //         points: finalPoints
+  //       }]
+  //     });
+  //   });
+
+  //   return leaderboardPointsToSave;
+  // };
+
+  // const calculateLeaderboardPoints = async () => {
+  //   const leaderboardPointsToSave: { 
+  //     gifterWallet: string, 
+  //     points: { chain: string, chainId: string, points: number }[] 
+  //   }[] = [];
+  
+  //   console.log('Local Depth:', chainSpecificAuthData.localDepth);
+  
+  //   for (const [address, depth] of Object.entries(chainSpecificAuthData.localDepth)) {
+  //     console.log(`Processing address: ${address}, depth: ${depth}`);
+  
+  //     let points = 1; // Minimum points
+  
+  //     if (depth >= 1 && depth < 11) {
+  //       points = Math.pow(2, 11 - depth);
+  //     }
+  
+  //     console.log(`Calculated points for ${address}: ${points}`);
+  
+  //     const existingLeaderboardEntry = await getLeaderboardPointsByWallet(address);
+  //     console.log(`Existing Leaderboard Entry for ${address}:`, existingLeaderboardEntry);
+  
+  //     let finalPoints = points;
+  //     if (existingLeaderboardEntry) {
+  //       const existingChainPoints = existingLeaderboardEntry.points.find(
+  //         (p:any) => p.chain.toLowerCase() === normalizedChainId.toLowerCase()
+  //       );
+  
+  //       console.log(`Existing Chain Points for ${address}:`, existingChainPoints);
+  
+  //       if (existingChainPoints) {
+  //         finalPoints = Math.max(existingChainPoints.points, points);
+  //       }
+  //     }
+  
+  //     const pointEntry = {
+  //       gifterWallet: address,
+  //       points: [{
+  //         chain: normalizedChainId,
+  //         chainId: normalizedChainId,
+  //         points: finalPoints
+  //       }]
+  //     };
+  
+  //     console.log('Point Entry:', pointEntry);
+  //     leaderboardPointsToSave.push(pointEntry);
+  //   }
+  
+  //   return leaderboardPointsToSave;
+  // };
+
+  const calculateLeaderboardPoints = async () => {
+    const leaderboardPointsToSave: { 
+      gifterWallet: string, 
+      points: { chain: string, chainId: string, points: number }[] 
+    }[] = [];
+  
+    for (const [address, depth] of Object.entries(chainSpecificAuthData.localDepth)) {
+      let points = 1; // Base points
+      if( depth > 0 && depth < 11 ) {
+        points = Math.pow(2, 11 - depth);
+      } else if( depth >= 11) {
+        points = 1;
+      } else if ( depth <= 0) {
+        points = 0;
       }
-    });
-
-    return leaderboardPoints;
+      // More nuanced point calculation
+      // if (depth === 1) points = 1024; // First level gets 2 points
+      // else if (depth === 2) points = 512; // Second level gets 4 points
+      // else if (depth === 3) points = 256; // Third level gets 8 points
+      // else if (depth === 4) points = 128; // Fourth level gets 16 points
+      // else if (depth >= 5 && depth < 11) {
+      //   // For depths 5-10, use exponential calculation
+      // }
+  
+      // Always add the point entry for the specific chain
+      leaderboardPointsToSave.push({
+        gifterWallet: address,
+        points: [{
+          chain: normalizedChainId,
+          chainId: normalizedChainId,
+          points: points
+        }]
+      });
+    }
+  
+    return leaderboardPointsToSave;
   };
 
-  // Calculate and prepare leaderboard points
-  const leaderboardPointsData = calculateLeaderboardPoints();
-  const leaderboardPointsToSave = Object.entries(leaderboardPointsData).map(([gifterWallet, pointValue]) => ({
-    chain: normalizedChainId,
-    points: pointValue
-  }));
+  // Calculate and save leaderboard points
+  const leaderboardPointsToSave = await calculateLeaderboardPoints();
 
   // Save leaderboard points for each address in local depth
   await Promise.all(
-    Object.keys(leaderboardPointsData).map(async (gifterWallet) => {
-      await createOrUpdateLeaderboardPoints({
-        gifterWallet,
-        points: [{
-          chain: normalizedChainId,
-          chainId: normalizedChainId,  // Add both chain and chainId
-          points: leaderboardPointsData[gifterWallet]
-        }]
-      });
+    leaderboardPointsToSave.map(async (pointData) => {
+      await createOrUpdateLeaderboardPoints(pointData);
     })
   );
 
