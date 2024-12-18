@@ -29,10 +29,10 @@ const LeaderBoard: React.FC = () => {
   const { theme } = useTheme();
   const { walletData } = useWallet();
 
-  // Expanded state to track different loading phases
-  const [loadingPhase, setLoadingPhase] = useState<
-    'initial' | 'user_data' | 'top_three' | 'all_users' | 'complete'
-  >('initial');
+  // // Expanded state to track different loading phases
+  // const [loadingPhase, setLoadingPhase] = useState<
+  //   'initial' | 'user_data' | 'top_three' | 'all_users' | 'complete'
+  // >('initial');
 
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [topThreeUsers, setTopThreeUsers] = useState<LeaderboardEntry[]>([]);
@@ -48,26 +48,12 @@ const LeaderBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const showPointsBreakdown = (points?: { total: number, byChain: PointsEntry[] }) => {
-    if (!points) return null;
-  
-    return (
-      <div className="mt-2 text-sm text-white">
-        <strong>Points Breakdown:</strong>
-        {points.byChain.map((chainPoints, index) => (
-          <div key={index}>
-            {chainPoints.chain}: {chainPoints.points} points
-          </div>
-        ))}
-      </div>
-    );
-  };
-
+  // Pagination calculations
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
         // Reset states
-        setLoadingPhase('initial');
+        // setLoadingPhase('initial');
         setLeaderboardData([]);
         setTopThreeUsers([]);
         setUserDetails(null);
@@ -93,29 +79,31 @@ const LeaderBoard: React.FC = () => {
 
         // User-specific data loading phase
         if (data.userDetails) {
-          setLoadingPhase('user_data');
+          // setLoadingPhase('user_data');
           setUserDetails(data.userDetails);
         }
 
         // Top three users loading phase
         if (data.topThreeUsers) {
-          setLoadingPhase('top_three');
+          // setLoadingPhase('top_three');
           setTopThreeUsers(data.topThreeUsers);
         }
 
         // All users loading phase
         if (data.allUsers) {
-          setLoadingPhase('all_users');
+          // setLoadingPhase('all_users');
           setLeaderboardData(data.allUsers);
         }
 
         // Mark loading as complete
-        setLoadingPhase('complete');
+        // setLoadingPhase('complete');
 
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load leaderboard data');
-        setLoadingPhase('initial');
+        // setLoadingPhase('initial');
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -164,6 +152,7 @@ const LeaderBoard: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = leaderboardData.slice(indexOfFirstItem, indexOfLastItem);
+  console.log("Hello current item", currentItems);
 
   // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
@@ -176,44 +165,44 @@ const LeaderBoard: React.FC = () => {
   };
 
   // Render loading state with progress indicators
-  const renderLoadingState = () => {
-    const loadingStages = [
-      { phase: 'initial', message: 'Preparing leaderboard...' },
-      { phase: 'user_data', message: 'Fetching your details...' },
-      { phase: 'top_three', message: 'Loading top performers...' },
-      { phase: 'all_users', message: 'Retrieving all users...' },
-      { phase: 'complete', message: 'Leaderboard ready!' }
-    ];
+  // const renderLoadingState = () => {
+  //   const loadingStages = [
+  //     { phase: 'initial', message: 'Preparing leaderboard...' },
+  //     { phase: 'user_data', message: 'Fetching your details...' },
+  //     { phase: 'top_three', message: 'Loading top performers...' },
+  //     { phase: 'all_users', message: 'Retrieving all users...' },
+  //     { phase: 'complete', message: 'Leaderboard ready!' }
+  //   ];
 
-    const currentStageIndex = loadingStages.findIndex(stage => stage.phase === loadingPhase);
+  //   const currentStageIndex = loadingStages.findIndex(stage => stage.phase === loadingPhase);
 
-    return (
-      <div className="flex flex-col items-center justify-center h-[70vh]">
-        <Image src={loader} alt="Loading" width={100} height={100} />
-        <div className="mt-4 text-white">
-          {loadingStages[currentStageIndex].message}
-        </div>
-        <div className="flex mt-4">
-          {loadingStages.map((stage, index) => (
-            <div
-              key={stage.phase}
-              className={`h-2 w-10 mx-1 rounded-full ${index <= currentStageIndex ? 'bg-[#FFE500]' : 'bg-gray-500'
-                }`}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex flex-col items-center justify-center h-[70vh]">
+  //       <Image src={loader} alt="Loading" width={100} height={100} />
+  //       <div className="mt-4 text-white">
+  //         {loadingStages[currentStageIndex].message}
+  //       </div>
+  //       <div className="flex mt-4">
+  //         {loadingStages.map((stage, index) => (
+  //           <div
+  //             key={stage.phase}
+  //             className={`h-2 w-10 mx-1 rounded-full ${index <= currentStageIndex ? 'bg-[#FFE500]' : 'bg-gray-500'
+  //               }`}
+  //           />
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="main">
       <Navbar />
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
-        {loadingPhase !== 'complete' ? (
+        {/* {loadingPhase !== 'complete' ? (
           renderLoadingState()
-        ) : (
+        ) : ( */}
           <div
             className={`h-[100vh] ${theme === "dark" ? " py-[30px] " : " py-[30px]  "
               }`}
@@ -518,6 +507,8 @@ const LeaderBoard: React.FC = () => {
                               </div>
                               
                               {/* Points */}
+                              <div className="text-center text-white">78</div>
+                              
                               <div className="text-center text-white">
                                 {entry.points?.total || 0}
                               </div>
@@ -562,7 +553,7 @@ const LeaderBoard: React.FC = () => {
               </div>
             </div>
           </div>
-        )};
+        {/* )}; */}
       </div>
       <Footer />
     </div>
