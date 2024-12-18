@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-// import dbConnect from '../../lib/dbConnect';
-// import TransactionModel from '../../models/TransactionSchema'; // Adjust path as needed
 import { getTransactionCollection } from '../../lib/getCollections';
 import chainConfig from '../../config/chains';
 import { handleError } from '../../utils/api-error-handler';
