@@ -8,12 +8,8 @@ export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: Lea
   // Normalize wallet address
   const normalizedWallet = leaderboardPointsData.gifterWallet.toLowerCase();
 
-  // Ensure points have both chain and chainId
-  const processedPoints: PointEntry[] = leaderboardPointsData.points.map((point) => ({
-    chain: point.chain || point.chainId || '',
-    chainId: point.chain || point.chainId || '',
-    points: point.points
-  }));
+  // Ensure points have chainId
+  const processedPoints: PointEntry[] = leaderboardPointsData.points;
 
   try {
     // Find existing entry for the wallet
@@ -22,24 +18,24 @@ export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: Lea
     });
 
     if (existingEntry) {
-      // Create a map of existing points by chain for easier lookup
+      // Create a map of existing points by chainId for easier lookup
       const existingPointsMap = new Map<string, number>(
-        existingEntry.points.map((p:any) => [p.chain, p.points])
+        existingEntry.points.map((p:any) => [p.chainId, p.points])
       );
 
       // Process new points
       processedPoints.forEach((newPointEntry) => {
-        const existingPoints = existingPointsMap.get(newPointEntry.chain) || 0;
+        const existingPoints = existingPointsMap.get(newPointEntry.chainId) || 0;
         
         // Accumulate points instead of just taking the max
         const updatedPoints = existingPoints + newPointEntry.points;
         
-        existingPointsMap.set(newPointEntry.chain, updatedPoints);
+        existingPointsMap.set(newPointEntry.chainId, updatedPoints);
       });
 
       // Convert map back to array
-      existingEntry.points = Array.from(existingPointsMap).map(([chain, points]) => ({
-        chain,
+      existingEntry.points = Array.from(existingPointsMap).map(([chainId, points]) => ({
+        chainId,
         points
       }));
 
@@ -56,7 +52,7 @@ export const createOrUpdateLeaderboardPoints = async (leaderboardPointsData: Lea
       return savedEntry;
     }
   } catch (error) {
-    console.error('Error in createOrUpdateLeaderboardPoints:', error);
+    console.error('Error in create or update leaderboard points:', error);
     throw error;
   }
 };

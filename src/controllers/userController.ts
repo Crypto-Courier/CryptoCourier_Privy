@@ -216,7 +216,7 @@ export const authenticateUserByTransactionHash = async (
   const calculateLeaderboardPoints = async () => {
     const leaderboardPointsToSave: { 
       gifterWallet: string, 
-      points: { chain: string, chainId: string, points: number }[] 
+      points: { chainId: string, points: number }[] 
     }[] = [];
   
     for (const [address, depth] of Object.entries(chainSpecificAuthData.localDepth)) {
@@ -233,7 +233,6 @@ export const authenticateUserByTransactionHash = async (
       leaderboardPointsToSave.push({
         gifterWallet: address,
         points: [{
-          chain: normalizedChainId,
           chainId: normalizedChainId,
           points: points
         }]

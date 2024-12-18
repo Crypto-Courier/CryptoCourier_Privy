@@ -1,6 +1,5 @@
 export interface PointEntry {
-    chain: string;
-    chainId?: string;
+    chainId: string;
     points: number;
 }
 
