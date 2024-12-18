@@ -1,46 +1,38 @@
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Image from "next/image";
+import notfound from "../assets/notfound.svg";
+import Footer from "@/components/Footer";
 import { useTheme } from "next-themes";
 
-export default function NotFound() {
-  const { theme } = useTheme();
+const NotFound: React.FC = () => {
+  // const { theme } = useTheme();
+
   return (
     <div className="main">
       <Navbar />
       <div className="txbg">
-        <div className="max-w-6xl w-[90%] mx-auto my-[3rem] ">
-          <div
-            className={`flex justify-end sm:justify-end md:justify-between  lg:justify-between border-black border-b-0 px-[30px] py-[20px]  
-              
-          rounded-tl-[40px] rounded-tr-[40px] items-center }`}
-          >
-            <AlertCircle
-              className="mx-auto mb-6 text-red-500"
-              size={80}
-              strokeWidth={1.5}
-            />
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
-              Page Not Found
+        <div className="flex flex-col items-center justify-center h-[90vh]  px-4 py-8">
+          <div className="max-w-md w-full   rounded-xl p-8 text-center">
+            <Image src={notfound} alt="" className="pulse" />
+            <h1 className="text-gray-200 mb-6">
+              Oops! The page you are looking for doesn't exist.
             </h1>
-            <p className="text-gray-600 mb-6">
-              Oops! The page you are looking for doesn't exist or has been
-              moved.
-            </p>
             <div className="flex justify-center space-x-4">
-              <Link href="/" className="bg-blue-500   ease-in-out">
-                Go to Home
-              </Link>
               <Link
-                href="/contact"
-                className="bg-gray-200  text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                href="/"
+                className="bg-[#FFE500] text-[#363535] hover:scale-110 duration-500 transition 0.3 font-semibold py-2 px-4 rounded-lg ease-in-out"
               >
-                Contact Support
+                Opps ! Please take me back
               </Link>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
-}
+};
+
+export default NotFound;

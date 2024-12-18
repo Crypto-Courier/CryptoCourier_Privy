@@ -28,7 +28,7 @@ const LeaderBoard: React.FC = () => {
   const { walletData } = useWallet();
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     []
-  );
+  )
   const [topThreeUsers, setTopThreeUsers] = useState<LeaderboardEntry[]>([]);
   const [userDetails, setUserDetails] = useState<{
     rank?: number;
@@ -415,6 +415,10 @@ const LeaderBoard: React.FC = () => {
                             </div>
 
                             {/* Claims */}
+                            <div className="text-center text-white">
+                              {entry.claims}
+                            </div>
+                            {/* Points */}
                             <div className="text-center text-white">
                               {entry.claims}
                             </div>
