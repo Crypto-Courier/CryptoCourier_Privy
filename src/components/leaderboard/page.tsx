@@ -8,7 +8,6 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import trophy from "../../assets/trophy.png";
 import rankImage from "../../assets/rank.png";
-// import { LeaderboardEntry } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import QuizGamePopup from "../Game";
 import mask from "../../assets/Mask.png";
@@ -21,18 +20,12 @@ import path3 from "../../assets/path3.png";
 import loader from "../../assets/processing.gif";
 import SwitchHistory from "../SwitchHistory";
 import FilterChainData from "../FilterChainData";
-// import { LeaderboardEntry, LeaderboardResponse } from '../../types/leaderboard-types'
 import { LeaderboardEntry, LeaderboardResponse, PointsEntry } from '@/types/leaderboard-types';
 
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const { walletData } = useWallet();
-
-  // // Expanded state to track different loading phases
-  // const [loadingPhase, setLoadingPhase] = useState<
-  //   'initial' | 'user_data' | 'top_three' | 'all_users' | 'complete'
-  // >('initial');
 
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [topThreeUsers, setTopThreeUsers] = useState<LeaderboardEntry[]>([]);
@@ -48,12 +41,10 @@ const LeaderBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Pagination calculations
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
         // Reset states
-        // setLoadingPhase('initial');
         setLeaderboardData([]);
         setTopThreeUsers([]);
         setUserDetails(null);
@@ -79,25 +70,18 @@ const LeaderBoard: React.FC = () => {
 
         // User-specific data loading phase
         if (data.userDetails) {
-          // setLoadingPhase('user_data');
           setUserDetails(data.userDetails);
         }
 
         // Top three users loading phase
         if (data.topThreeUsers) {
-          // setLoadingPhase('top_three');
           setTopThreeUsers(data.topThreeUsers);
         }
 
         // All users loading phase
         if (data.allUsers) {
-          // setLoadingPhase('all_users');
           setLeaderboardData(data.allUsers);
         }
-
-        // Mark loading as complete
-        // setLoadingPhase('complete');
-
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load leaderboard data');
         // setLoadingPhase('initial');
@@ -109,45 +93,6 @@ const LeaderBoard: React.FC = () => {
 
     fetchLeaderboardData();
   }, [activeAddress]);
-
-  // useEffect(() => {
-  //   const fetchLeaderboardData = async () => {
-  //     try {
-  //       const queryParams = activeAddress
-  //         ? `?activeAddress=${activeAddress}`
-  //         : "";
-
-  //       const response = await fetch(`/api/leaderboard${queryParams}`);
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch leaderboard data");
-  //       }
-
-  //       const data = await response.json();
-
-  //       // Update state with all users data
-  //       setLeaderboardData(data.allUsers);
-
-  //       setTopThreeUsers(data.topThreeUsers || []);
-  //       // If user-specific data is available, you can use it
-  //       if (data.userDetails) {
-  //         setUserDetails({
-  //           rank: data.userRank,
-  //           invites: data.userDetails.invites,
-  //           claims: data.userDetails.claims,
-  //           address: data.userDetails.address,
-  //         });
-  //       }
-  //     } catch (err) {
-  //       setError("Failed to load leaderboard data");
-  //       console.error(err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchLeaderboardData();
-  // }, [activeAddress]); // Add activeAddress as a dependency
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -164,45 +109,11 @@ const LeaderBoard: React.FC = () => {
     router.push("/send-token");
   };
 
-  // Render loading state with progress indicators
-  // const renderLoadingState = () => {
-  //   const loadingStages = [
-  //     { phase: 'initial', message: 'Preparing leaderboard...' },
-  //     { phase: 'user_data', message: 'Fetching your details...' },
-  //     { phase: 'top_three', message: 'Loading top performers...' },
-  //     { phase: 'all_users', message: 'Retrieving all users...' },
-  //     { phase: 'complete', message: 'Leaderboard ready!' }
-  //   ];
-
-  //   const currentStageIndex = loadingStages.findIndex(stage => stage.phase === loadingPhase);
-
-  //   return (
-  //     <div className="flex flex-col items-center justify-center h-[70vh]">
-  //       <Image src={loader} alt="Loading" width={100} height={100} />
-  //       <div className="mt-4 text-white">
-  //         {loadingStages[currentStageIndex].message}
-  //       </div>
-  //       <div className="flex mt-4">
-  //         {loadingStages.map((stage, index) => (
-  //           <div
-  //             key={stage.phase}
-  //             className={`h-2 w-10 mx-1 rounded-full ${index <= currentStageIndex ? 'bg-[#FFE500]' : 'bg-gray-500'
-  //               }`}
-  //           />
-  //         ))}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
   return (
     <div className="main">
       <Navbar />
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
-        {/* {loadingPhase !== 'complete' ? (
-          renderLoadingState()
-        ) : ( */}
           <div
             className={`h-[100vh] ${theme === "dark" ? " py-[30px] " : " py-[30px]  "
               }`}
@@ -465,7 +376,7 @@ const LeaderBoard: React.FC = () => {
                           {currentItems.map((entry, index) => (
                             <div
                               key={entry.address}
-                              className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${theme === "dark"
+                              className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${theme === "dark"
                                 ? "bg-[#000000]/40 border border-[#ddcb2cb2]"
                                 : "bg-[#FF3333]/40 border border-[#FFFFFF]"
                                 }`}
@@ -506,9 +417,7 @@ const LeaderBoard: React.FC = () => {
                                 {entry.claims}
                               </div>
                               
-                              {/* Points */}
-                              <div className="text-center text-white">78</div>
-                              
+                              {/* Points */}                              
                               <div className="text-center text-white">
                                 {entry.points?.total || 0}
                               </div>
@@ -553,7 +462,6 @@ const LeaderBoard: React.FC = () => {
               </div>
             </div>
           </div>
-        {/* )}; */}
       </div>
       <Footer />
     </div>
