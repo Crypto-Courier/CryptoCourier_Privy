@@ -22,11 +22,17 @@ import SwitchHistory from "../SwitchHistory";
 import FilterChainData from "../FilterChainData";
 import { LeaderboardEntry, LeaderboardResponse, PointsEntry } from '@/types/leaderboard-types';
 
+// Define the list of supported chains
+const SUPPORTED_CHAINS = [
+  8453, 919, 34443, 11155111, 291, 7560, 7777777, 1135, 255, 10, 252, 480,
+  288, 185, 690, 360, 254, 8866, 1750, 5112, 2192, 888888888
+];
+
 const LeaderBoard: React.FC = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const { walletData } = useWallet();
-
+  const [selectedChains, setSelectedChains] = useState<number[]>(SUPPORTED_CHAINS);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [topThreeUsers, setTopThreeUsers] = useState<LeaderboardEntry[]>([]);
   const [userDetails, setUserDetails] = useState<LeaderboardEntry | null>(null);
@@ -40,6 +46,50 @@ const LeaderBoard: React.FC = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  // Modify the filtering logic
+  const filterLeaderboardData = (data: LeaderboardEntry[]): LeaderboardEntry[] => {
+    return data.map(user => {
+      // If chains are selected, filter points and transactions
+      if (selectedChains.length < SUPPORTED_CHAINS.length) {
+        // Filter points by selected chains
+        const filteredPoints = (user.points?.byChain || []).filter(chainPoint => 
+          selectedChains.includes(Number(chainPoint.chain))
+        );
+
+        // Calculate total points for selected chains
+        const filteredTotalPoints = filteredPoints?.reduce((sum, chainPoint) => 
+          sum + chainPoint.points, 0);
+
+        // Filter transactions by selected chains
+        const filteredTransactions = (user.transactions || []).filter(transaction => 
+          selectedChains.includes(Number(transaction.chainId))
+        );
+
+        // Calculate filtered invites and claims
+        const filteredInvites = filteredTransactions.length;
+        
+        return {
+          ...user,
+          points: {
+            total: filteredTotalPoints,
+            byChain: filteredPoints
+          },
+          invites: filteredInvites,
+          claims: filteredInvites, // Assuming claims match the number of transactions
+          transactions: filteredTransactions
+        } as LeaderboardEntry;
+      }
+      
+      // If all chains are selected, return the original user data
+      return user;
+    });
+  };
+
+  const handleChainSelect = (chains: number[]) => {
+    setSelectedChains(chains);
+  };
+
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -80,7 +130,9 @@ const LeaderBoard: React.FC = () => {
 
         // All users loading phase
         if (data.allUsers) {
-          setLeaderboardData(data.allUsers);
+          // Apply chain filtering to the leaderboard data
+          const filteredData = filterLeaderboardData(data.allUsers);
+          setLeaderboardData(filteredData);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load leaderboard data');
@@ -92,7 +144,7 @@ const LeaderBoard: React.FC = () => {
     };
 
     fetchLeaderboardData();
-  }, [activeAddress]);
+  }, [activeAddress, selectedChains]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -342,9 +394,7 @@ const LeaderBoard: React.FC = () => {
                   ) : (
                     <div className="w-full  rounded-3xl">
                       <FilterChainData
-                        onChainSelect={function (selectedChains: number[]): void {
-                          throw new Error("Function not implemented.");
-                        }}
+                        onChainSelect={handleChainSelect}
                       />
 
                       <div className="overflow-hidden rounded-md ">
