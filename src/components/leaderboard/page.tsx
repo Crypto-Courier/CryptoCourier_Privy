@@ -9,7 +9,6 @@ import Image from "next/image";
 import trophy from "../../assets/trophy.png";
 import rankImage from "../../assets/rank.png";
 import { useWallet } from "../../context/WalletContext";
-import QuizGamePopup from "../Game";
 import mask from "../../assets/Mask.png";
 import r1 from "../../assets/R1.png";
 import r2 from "../../assets/R2.png";

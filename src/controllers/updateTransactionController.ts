@@ -1,15 +1,16 @@
-import { getTransactionCollection } from '../lib/getCollections';
-
-interface TransactionUpdateOptions {
-  authenticate?: boolean;
-  claim?: boolean;
+import { getTransactionCollection, getUserCollection } from '../lib/getCollections';
+interface AuthData {
+  [chainId: string]: {
+    authStatus: boolean;
+    gifterAddress?: string;
+    universalDepth?: Record<string, number>;
+    localDepth?: Record<string, number>;
+  }
 }
 
 export const updateTransactionStatus = async (
-  transactionHash: string, 
-  options: TransactionUpdateOptions = {}
+  transactionHash: string
 ) => {
-  const { authenticate = false, claim = false } = options;
 
   // Validate input
   if (!transactionHash || !/^0x.+$/.test(transactionHash)) {
@@ -18,6 +19,7 @@ export const updateTransactionStatus = async (
 
   // Get the transaction model
   const TransactionModel = await getTransactionCollection();
+  const UserModel = await getUserCollection();
 
   // Find the existing transaction
   const existingTransaction = await TransactionModel.findOne({ transactionHash });
@@ -29,18 +31,32 @@ export const updateTransactionStatus = async (
   // Prepare update object
   const updateData: any = {};
 
-  // Authentication logic
-  if (authenticate && !existingTransaction.authenticated) {
+  // Determine claimer address and chain ID from existing transaction
+  const claimerAddress = existingTransaction.claimerWallet.toLowerCase();
+  const chainId = existingTransaction.chainId;
+
+  // Find user by claimer wallet
+  const user = await UserModel.findOne({
+    claimerWallet: claimerAddress
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Check authentication status for this chain
+  const authData = user.authData as AuthData;
+  const chainAuthData = authData[chainId];
+
+  // Only update authentication if not already authenticated for this chain
+  if (!chainAuthData?.authStatus) {
     updateData.authenticated = true;
     updateData.authenticatedAt = new Date();
   }
 
   // Claiming logic
-  if (claim && !existingTransaction.claimed) {
-    // Additional checks can be added here if needed
-    updateData.claimed = true;
-    updateData.claimedAt = new Date();
-  }
+  updateData.claimed = true;
+  updateData.claimedAt = new Date();
 
   // Prevent unnecessary updates
   if (Object.keys(updateData).length === 0) {
@@ -51,36 +67,11 @@ export const updateTransactionStatus = async (
   const updatedTransaction = await TransactionModel.findOneAndUpdate(
     { transactionHash },
     updateData,
-    { 
-      new: true,  // Return the updated document
-      runValidators: true  // Run model validations
+    {
+      new: true,
+      runValidators: true
     }
   );
 
   return updatedTransaction;
-};
-
-// Example usage
-export const handleTransactionAuthentication = async (transactionHash: string) => {
-  try {
-    const updatedTransaction = await updateTransactionStatus(transactionHash, { 
-      authenticate: true 
-    });
-    return updatedTransaction;
-  } catch (error) {
-    console.error('Authentication failed:', error);
-    throw error;
-  }
-};
-
-export const handleTransactionClaim = async (transactionHash: string) => {
-  try {
-    const updatedTransaction = await updateTransactionStatus(transactionHash, { 
-      claim: true 
-    });
-    return updatedTransaction;
-  } catch (error) {
-    console.error('Claiming failed:', error);
-    throw error;
-  }
 };
