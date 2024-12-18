@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { getUserCollection, getTransactionCollection } from '../lib/getCollections';
-import { createOrUpdateLeaderboardPoints, getLeaderboardPointsByWallet } from '../controllers/leaderboardPointsController';
+import { createOrUpdateLeaderboardPoints } from '../controllers/leaderboardPointsController';
 
 interface DepthEntry {
   [address: string]: number;

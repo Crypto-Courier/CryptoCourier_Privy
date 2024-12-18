@@ -3,6 +3,7 @@ import { getTransactionCollection } from '../lib/getCollections';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Validate the transaction field before adding it into collection
 export const validateTransactionInput = (data: any) => {
   const {
     claimerWallet,
@@ -45,11 +46,13 @@ export const validateTransactionInput = (data: any) => {
   return errors;
 };
 
+// Add or Create new txn in transaction collection
 export const createTransaction = async (transactionData: any) => {
   const TransactionModel = await getTransactionCollection();
 
   // Check if transaction hash already exists
   const existingTransaction = await TransactionModel.findOne({ transactionHash: transactionData.transactionHash });
+
   if (existingTransaction) {
     throw new Error('Transaction with this hash already exists');
   }
