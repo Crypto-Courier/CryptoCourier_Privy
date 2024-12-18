@@ -17,6 +17,9 @@ const LeaderboardPointsSchema = new mongoose.Schema({
       type: Number,
       default: 0
     }
+  }, {
+    _id: true,
+    timestamps: false
   }]
 }, {
   timestamps: false
