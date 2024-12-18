@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { AddToken, AddTokenFormProps } from "../../types/add-token-form-types";
+import { AddToken, AddTokenFormProps } from "../../types/add-token-types";
 import { useChainId } from "wagmi";
 
 const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {

@@ -1,5 +1,4 @@
 import { getTransactionCollection } from '../lib/getCollections';
-import { validateTransactionInput } from './transactionController';
 
 interface TransactionUpdateOptions {
   authenticate?: boolean;

@@ -1,14 +1,6 @@
 import { ethers } from 'ethers';
 import { getTokenCollection } from '../lib/getCollections';
-
-// Interface for token input
-export interface AddToken {
-    chainId: number;
-    contractAddress: string;
-    name: string;
-    symbol: string;
-    decimals: number;
-}
+import { AddToken } from '../types/add-token-types';
 
 // Validation function
 export const validateTokenData = (token: AddToken): string[] => {
@@ -50,9 +42,11 @@ export const validateTokenData = (token: AddToken): string[] => {
     return errors;
 };
 
-// Create a new token
+// Create or Add a new token
 export const createToken = async (tokenData: AddToken) => {
+
     const TokenModel = await getTokenCollection();
+
     // Validate input
     const validationErrors = validateTokenData(tokenData);
     if (validationErrors.length > 0) {
@@ -81,29 +75,10 @@ export const createToken = async (tokenData: AddToken) => {
             existingToken.contractAddress === formattedToken.contractAddress
                 ? 'Contract address already exists'
                 : 'Token symbol already exists for this chain';
-
         throw new Error(conflictDetails);
     }
 
     // Create and save the token
     const token = new TokenModel(formattedToken);
     return token.save();
-};
-
-// Optional: Get token by contract address
-export const getTokenByAddress = async (contractAddress: string, chainId?: number) => {
-    const TokenModel = await getTokenCollection();
-    const normalizedAddress = ethers.getAddress(contractAddress);
-
-    const query = chainId
-        ? { contractAddress: normalizedAddress, chainId }
-        : { contractAddress: normalizedAddress };
-
-    return TokenModel.findOne(query);
-};
-
-// Optional: List tokens by chain
-export const getTokensByChain = async (chainId: number) => {
-    const TokenModel = await getTokenCollection();
-    return TokenModel.find({ chainId });
 };

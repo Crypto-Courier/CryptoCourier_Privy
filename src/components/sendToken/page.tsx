@@ -17,7 +17,7 @@ import { sendEmail } from "../Email/Emailer";
 import Email from "../Email/Email";
 import TransferDetails from "../TransferDetails";
 import AddTokenForm from "./AddTokenForm";
-import { AddToken } from "../../types/add-token-form-types";
+import { AddToken } from "../../types/add-token-types";
 import { TokenWithBalance } from "../../types/types";
 import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
