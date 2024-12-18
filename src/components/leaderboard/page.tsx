@@ -225,6 +225,16 @@ const LeaderBoard: React.FC = () => {
                         </div>
                       )}
                     </div>
+                    <div className="flex flex-col items-center">
+                      <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
+                        <span className="text-yellow-300 text-lg sm:text-2xl font-bold">
+                          68
+                        </span>
+                      </div>
+                      <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
+                        User Point
+                      </div>
+                    </div>
                   </div>
                 </div>
                 {/* ....... */}
@@ -306,6 +316,14 @@ const LeaderBoard: React.FC = () => {
                           Claimed User
                         </div>
                       </div>
+                      <div className="flex flex-col items-center">
+                        <div className="text-[#FFE500] font-bold text-lg">
+                          68
+                        </div>
+                        <div className="text-white lg:text-lg text-[12px] sm:text-[12px] md:text-lg mt-1">
+                          User Point
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -330,26 +348,30 @@ const LeaderBoard: React.FC = () => {
 
                     <div className="overflow-hidden rounded-md ">
                       <div
-                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-4 gap-2 p-3 rounded-md  ${
+                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${
                           theme === "dark"
                             ? " bg-black border border-[#FE660A]"
                             : " bg-white border border-[#FFFFFF]"
                         }`}
                       >
-                        {["Rank", "Inviter", "Claimer", "Claim Rate"].map(
-                          (header, index) => (
-                            <div
-                              key={index}
-                              className={`text-center font-semibold mb-0 bg-black ${
-                                theme === "dark"
-                                  ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                                  : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
-                              }`}
-                            >
-                              {header}
-                            </div>
-                          )
-                        )}
+                        {[
+                          "Rank",
+                          "Inviter",
+                          "Claimer",
+                          "Claim Rate",
+                          "Points",
+                        ].map((header, index) => (
+                          <div
+                            key={index}
+                            className={`text-center font-semibold mb-0 bg-black ${
+                              theme === "dark"
+                                ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
+                                : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md mb-2 text-transparent bg-clip-text"
+                            }`}
+                          >
+                            {header}
+                          </div>
+                        ))}
                       </div>{" "}
                       <div className="mt-2 ">
                         {currentItems.map((entry, index) => (
