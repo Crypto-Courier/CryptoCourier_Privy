@@ -29,7 +29,7 @@ import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
 import { isValidEmail } from "../../utils/parameter-validation";
-import useOutsideClick from "../../lib/useOutsideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";

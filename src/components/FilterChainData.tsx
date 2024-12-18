@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import useOutsideClick from "../lib/useOutsideClick";
+import useOutsideClick from "../hooks/useOutsideClick";
 import { Tooltip } from "antd";
 import { chains } from "../utils/chainIdToLogo";
 import sepolia from "../assets/sepolia.webp";
