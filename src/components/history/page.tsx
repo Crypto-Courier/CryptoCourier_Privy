@@ -14,7 +14,7 @@ import { useTheme } from "next-themes";
 import { useWallet } from "../../context/WalletContext";
 import TransactionTable from "../TransactionTable";
 import toast, { Toaster } from "react-hot-toast";
-import { ChevronDown, LogOut, ExternalLink } from "lucide-react";
+import { Check, LogOut, ExternalLink, Copy } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
@@ -22,6 +22,7 @@ import SwitchHistory from "../SwitchHistory";
 
 const History: React.FC = () => {
   const router = useRouter();
+  const [isCopied, setIsCopied] = useState(false); // Track copy state
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
   const { walletData } = useWallet();
   const { theme } = useTheme();
@@ -45,6 +46,19 @@ const History: React.FC = () => {
       toast.success("Logged out successfully");
     },
   });
+
+  const handleCopyWithFeedback = (address: string) => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+      setIsCopied(true); // Show check icon
+      toast.success("Address copied to clipboard!");
+    } else {
+      toast.error("No address available to copy.");
+    }
+
+    // Reset back to copy icon after 2 seconds
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -155,35 +169,22 @@ const History: React.FC = () => {
       return (
         <div
           className="relative w-full lg:w-[30%] md:w-[30%]"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           ref={dropdownRef}
         >
           <div
-            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0  ${
+            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
               theme === "dark"
-                ? "bg-[#1C1C1C] border border-[#A2A2A2]"
-                : "bg-[#F4F3F3] border border-[#C6C6C6]"
+                ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+                : "bg-[#F4F3F3] border border-[#000000]"
             }`}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown on click
           >
-            {/* <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                theme === "dark"
-                  ? "border-white bg-transparent"
-                  : "border-gray-500 bg-transparent"
-              }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#E265FF] text-white"
-                }`}
-              ></div>
-            </div> */}
             <div
-              className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px] cursor-pointer"
-              onClick={() => handleCopy(dashboardAddress || "")}
+              className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent dropdown toggle when copying
+                // handleCopy(dashboardAddress || "");
+              }}
             >
               {dashboardAddress
                 ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
@@ -191,19 +192,39 @@ const History: React.FC = () => {
                   )}`
                 : "Connect Wallet"}
             </div>
-            <ChevronDown size={20} />
+            {/* Copy or Check Icon */}
+            {isCopied ? (
+              <Check
+                size={20}
+                className={`cursor-pointer ${
+                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                }`}
+              />
+            ) : (
+              <Copy
+                size={20}
+                className={`cursor-pointer ${
+                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyWithFeedback(dashboardAddress || "");
+                }}
+              />
+            )}
           </div>
 
+          {/* Dropdown content */}
           {isDropdownOpen && (
             <div className="absolute top-full left-0 w-full rounded-md shadow-lg z-10">
               <div
                 className={`mt-1 rounded-md ${
                   theme === "dark"
                     ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
-                    : "bg-white text-black border border-[#C6C6C6]"
+                    : "bg-white text-black border border-[#1C1C1C]"
                 }`}
               >
-                <div className="p-2 ">
+                <div className="p-2">
                   <button
                     onClick={handleExportWallet}
                     className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
@@ -232,6 +253,7 @@ const History: React.FC = () => {
       );
     }
 
+    // Default View
     return (
       <div
         className={`hidden lg:flex md:flex sm:hidden items-center space-x-3 p-2 rounded-[10px] ${
@@ -240,23 +262,8 @@ const History: React.FC = () => {
             : "bg-[#F4F3F3] border border-[#C6C6C6]"
         }`}
       >
-        <div
-          className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-            theme === "dark"
-              ? "border-white bg-transparent"
-              : "border-gray-500 bg-transparent"
-          }`}
-        >
-          <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              theme === "dark"
-                ? "bg-[#FFE500] text-[#363535]"
-                : "bg-[#E265FF] text-white"
-            }`}
-          ></div>
-        </div>
         <span
-          onClick={() => handleCopy(activeAddress || "")}
+          // onClick={() => handleCopy(activeAddress || "")}
           className="cursor-pointer hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]"
         >
           {activeAddress
@@ -266,14 +273,14 @@ const History: React.FC = () => {
       </div>
     );
   };
-  const handleCopy = (address: string) => {
-    if (address) {
-      navigator.clipboard.writeText(address);
-      toast.success("Address copied to clipboard!");
-    } else {
-      toast.error("No address available to copy.");
-    }
-  };
+  // const handleCopy = (address: string) => {
+  //   if (address) {
+  //     navigator.clipboard.writeText(address);
+  //     toast.success("Address copied to clipboard!");
+  //   } else {
+  //     toast.error("No address available to copy.");
+  //   }
+  // };
 
   return (
     <div className="main">
@@ -285,7 +292,7 @@ const History: React.FC = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
-            <Tooltip title="Copy on click">{renderWalletAddress()}</Tooltip>
+            {renderWalletAddress()}
             <div className="text-right flex justify-end w-full p-[30px] sm:p-[30px] lg:p-0 md:p-0 ">
               <div className="gap-4 flex">
                 <Tooltip title="Leaderboard">
