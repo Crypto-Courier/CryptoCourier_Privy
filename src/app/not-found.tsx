@@ -13,9 +13,9 @@ const NotFound: React.FC = () => {
     <div className="main">
       <Navbar />
       <div className="txbg">
-        <div className="flex flex-col items-center justify-center h-[90vh]  px-4 py-8">
+        <div className="flex flex-col items-center justify-center   px-4 py-8">
           <div className="max-w-md w-full   rounded-xl p-8 text-center">
-            <Image src={notfound} alt="" className="pulse" />
+            <Image src={notfound} alt="" className="animate" />
             <h1 className="text-gray-200 mb-6">
               The page you are looking for doesn't exist.
             </h1>

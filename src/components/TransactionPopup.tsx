@@ -52,7 +52,7 @@ const TransactionPopup: React.FC<Transaction> = ({
           className={`relative w-full max-w-md mx-auto rounded-3xl shadow-2xl overflow-hidden transform transition-all ${getStatusBackground()}`}
         >
           {/* Status Indicator Header */}
-          <div className="absolute top-0 left-0 right-0 h-2 animate-pulse"></div>
+          <div className="absolute top-0 left-0 right-0 h-2 "></div>
 
           {/* Content Container */}
           <div className="relative bg-white rounded-3xl m-2 overflow-hidden">

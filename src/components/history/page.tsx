@@ -183,7 +183,7 @@ const History: React.FC = () => {
               className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
               onClick={(e) => {
                 e.stopPropagation(); // Prevent dropdown toggle when copying
-                // handleCopy(dashboardAddress || "");
+                handleCopy(dashboardAddress || "");
               }}
             >
               {dashboardAddress
@@ -258,8 +258,8 @@ const History: React.FC = () => {
       <div
         className={`hidden lg:flex md:flex sm:hidden items-center space-x-3 p-2 rounded-[10px] ${
           theme === "dark"
-            ? "bg-[#1C1C1C] border border-[#A2A2A2]"
-            : "bg-[#F4F3F3] border border-[#C6C6C6]"
+            ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+            : "bg-[#F4F3F3] border border-[#000000]"
         }`}
       >
         <span
@@ -273,14 +273,14 @@ const History: React.FC = () => {
       </div>
     );
   };
-  // const handleCopy = (address: string) => {
-  //   if (address) {
-  //     navigator.clipboard.writeText(address);
-  //     toast.success("Address copied to clipboard!");
-  //   } else {
-  //     toast.error("No address available to copy.");
-  //   }
-  // };
+  const handleCopy = (address: string) => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+      toast.success("Address copied to clipboard!");
+    } else {
+      toast.error("No address available to copy.");
+    }
+  };
 
   return (
     <div className="main">
@@ -293,7 +293,7 @@ const History: React.FC = () => {
             } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
             {renderWalletAddress()}
-            <div className="text-right flex justify-end w-full p-[30px] sm:p-[30px] lg:p-0 md:p-0 ">
+            <div className="text-right flex justify-end  p-[30px] sm:p-[30px] lg:p-0 md:p-0 ">
               <div className="gap-4 flex">
                 <Tooltip title="Leaderboard">
                   <button

@@ -6,7 +6,8 @@ import Image from "next/image";
 import trx from "../assets/trx.png";
 import { sendEmail } from "./Email/Emailer";
 import { renderEmailToString } from "./Email/renderEmailToString";
-// import { Transaction } from "../types/types";
+import trxdark from "../assets/trxdark.gif";
+import trxlight from "../assets/trxlight.gif";
 import { EnrichedTransaction } from "@/pages/api/transaction-history-table";
 import toast from "react-hot-toast";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
@@ -347,12 +348,37 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             isLoading ? (
               <SkeletonLoader />
             ) : error ? (
-              <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] font-semibold">
-                No transactions found for your wallet address.
+              // <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] font-semibold">
+              //   No transactions found for your wallet address.
+              // </div>
+              <div className="h-[30vh] flex justify-center items-center flex-col">
+                <Image
+                  src={theme === "light" ? trxlight : trxdark}
+                  alt=""
+                  width={200}
+                />
+                <div
+                  className={`${
+                    theme === "light" ? "text-black" : "text-white"
+                  } items-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px]`}
+                >
+                  No transactions found for your wallet address.
+                </div>
               </div>
             ) : transactions.length === 0 ? (
-              <div className="text-red-700 h-[40vh] flex justify-center items-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px] font-semibold">
-                No transactions found for your wallet address.
+              <div className="h-[30vh] flex justify-center items-center flex-col">
+                <Image
+                  src={theme === "light" ? trxlight : trxdark}
+                  alt=""
+                  width={200}
+                />
+                <div
+                  className={`${
+                    theme === "light" ? "text-black" : "text-white"
+                  } items-center text-[15px] lg:text-[20px] md:text-[20px] sm:text-[20px]`}
+                >
+                  No transactions found for your wallet address.
+                </div>
               </div>
             ) : (
               transactions.map((tx, index) => (
@@ -571,12 +597,19 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               ))
             )
           ) : (
-            <div
-              className={`text-center lg:text-[20px] md:text-[20px] sm:text-[20px] h-[40vh] flex justify-center items-center text-[20px] ${
-                theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
-              }`}
-            >
-              Connect your wallet to view your transactions.
+            <div className="h-[30vh] flex justify-center items-center flex-col">
+              <Image
+                src={theme === "light" ? trxlight : trxdark}
+                alt=""
+                width={200}
+              />
+              <div
+                className={`text-center lg:text-[20px] md:text-[20px] sm:text-[20px]   text-[20px] ${
+                  theme === "dark" ? "text-[#DEDEDE]" : "text-[#696969]"
+                }`}
+              >
+                Connect your wallet to view your transactions.
+              </div>
             </div>
           )}
         </div>

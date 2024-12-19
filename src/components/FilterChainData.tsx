@@ -61,10 +61,10 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
 
   return (
     <div
-      className={` items-center rounded-md backdrop-blur-[20px] mb-2 py-1 ${
+      className={`items-center rounded-md backdrop-blur-[20px] mb-2 py-1 ${
         theme === "dark"
-          ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
-          : "bg-[#FF3333]/40 border border-[#FFFFFF]"
+          ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2] sm:border-none md:border-none"
+          : "bg-[#000000]/40 border border-[#FFFFFF] sm:border-none md:border-none"
       }`}
     >
       {/* Desktop view */}
@@ -90,19 +90,18 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
               </div>
             </Tooltip>
           ))}
+          {userHasSelected && (
+            <div className=" justify-end items-center hidden sm:hidden lg:flex md:flex ">
+              {/* Show Clear All button only when user has made selections */}
 
-          <div className=" justify-end items-center hidden sm:hidden lg:flex md:flex ">
-            {/* Show Clear All button only when user has made selections */}
-
-            <div
-              ref={dropdownRef}
-              onClick={handleClearAll}
-              className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
-                theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
-              }`}
-            >
-              Clear All
-              {userHasSelected && (
+              <div
+                ref={dropdownRef}
+                onClick={handleClearAll}
+                className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
+                  theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
+                }`}
+              >
+                Clear All
                 <span
                   className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs ${
                     theme === "dark"
@@ -112,9 +111,9 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
                 >
                   {selectedChains.length}
                 </span>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="md:hidden" ref={dropdownRef}>
@@ -145,7 +144,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
             {userHasSelected && (
               <div
                 onClick={handleClearAll}
-                className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-full text-sm flex items-center gap-2 cursor-pointer font-bold ${
                   theme === "dark" ? "text-[#FFE500] " : "text-[#E265FF] "
                 }`}
               >
