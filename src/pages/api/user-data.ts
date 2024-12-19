@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { authenticateUserByTransactionHash } from '../../controllers/userController';
+import { userDataByTransactionHash } from '../../controllers/userController';
 import mongoose from 'mongoose';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Authenticate user based on transaction
-      const user = await authenticateUserByTransactionHash(transactionHash);
+      const user = await userDataByTransactionHash(transactionHash);
 
       // Return the authenticated user
       return res.status(200).json({

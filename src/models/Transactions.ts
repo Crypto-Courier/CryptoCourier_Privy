@@ -17,10 +17,11 @@ const TransactionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  transactedAt: Date,
   authenticatedAt: Date,
   claimedAt: Date,
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 TransactionSchema.index({ transactionHash: 1 }, { unique: true });

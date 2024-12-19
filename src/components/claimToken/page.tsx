@@ -41,7 +41,7 @@ function ClaimToken() {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         try {
-          const response = await fetch("/api/user-data", {
+          const userDataResponse = await fetch("/api/user-data", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -52,9 +52,26 @@ function ClaimToken() {
           });
 
           // Check if the response is successful
-          if (!response.ok) {
-            const errorData = await response.json();
+          if (!userDataResponse .ok) {
+            const errorData = await userDataResponse.json();
             throw new Error(errorData.error || 'Authentication failed');
+          }
+
+           // Then, update transaction status
+           const transactionUpdateResponse = await fetch("/api/update-transaction", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              transactionHash: transactionHash,
+            }),
+          });
+
+          // Check if the transaction update response is successful
+          if (!transactionUpdateResponse.ok) {
+            const errorData = await transactionUpdateResponse.json();
+            throw new Error(errorData.message || 'Transaction update failed');
           }
 
         } catch (error) {
@@ -66,7 +83,7 @@ function ClaimToken() {
       }
     };
     handleAuthenticationAndRedirect();
-  }, [ready, authenticated, user, router, isRedirecting]);
+  }, [ready, authenticated, user, router, isRedirecting, transactionHash]);
 
   const handleClaim = async () => {
     if (!authenticated) {

@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: function(v) {
-        return ethers.isAddress(v); // Ensure it's a valid Ethereum address
+        return ethers.isAddress(v);
       },
       message: props => `${props.value} is not a valid Ethereum address!`
     }
@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
     default: {}
   }
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 // Ensure unique index on claimerAddress

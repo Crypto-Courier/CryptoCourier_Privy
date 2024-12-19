@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import useOutsideClick from "../lib/useOutsideClick";
+import useOutsideClick from "../hooks/useOutsideClick";
 import { useWallet } from "../context/WalletContext";
 import { useTheme } from "next-themes";
 import Image from "next/image";

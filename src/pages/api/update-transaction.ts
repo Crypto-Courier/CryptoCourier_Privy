@@ -9,27 +9,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { 
-      transactionHash, 
-      authenticate = false, 
-      claim = false 
-    } = req.body;
+    const { transactionHash } = req.body;
 
     // Validate required fields
     if (!transactionHash) {
       return handleError(res, 400, 'Transaction hash is required');
     }
 
-    // Validate at least one action is requested
-    if (!authenticate && !claim) {
-      return handleError(res, 400, 'At least one action (authenticate or claim) must be specified');
-    }
-
     // Perform transaction update
-    const updatedTransaction = await updateTransactionStatus(transactionHash, {
-      authenticate,
-      claim
-    });
+    const updatedTransaction = await updateTransactionStatus(transactionHash);
 
     // Respond with updated transaction details
     res.status(200).json({
@@ -53,11 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'Invalid transaction hash':
         return handleError(res, 400, 'Invalid transaction hash');
       
-      case 'Transaction already authenticated':
-        return handleError(res, 409, 'Transaction already authenticated');
-      
-      case 'Transaction already claimed':
-        return handleError(res, 409, 'Transaction already claimed');
+      case 'User not found':
+        return handleError(res, 404, 'User associated with transaction not found');
       
       default:
         handleError(res, 500, 'Failed to update transaction');

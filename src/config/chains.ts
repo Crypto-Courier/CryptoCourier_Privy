@@ -1,15 +1,4 @@
-interface ChainConfig {
-  [chainId: number]: {
-    name: string;
-    rpcUrl: string;
-    nativeCurrency: {
-      name: string;
-      symbol: string;
-      decimals: number;
-    };
-    blockexplorer: string;
-  };
-}
+import { ChainConfig } from "../types/chain-config-types";
 
 const alchemyKey = process.env.ALCHEMY_API_KEY;
 
@@ -22,7 +11,7 @@ const chainConfig: ChainConfig = {
       symbol: "ETH",
       decimals: 18,
     },
-    blockexplorer:'https://sepolia.etherscan.io/tx',
+    blockexplorer: 'https://sepolia.etherscan.io/tx',
   },
   252: {
     name: "Fraxtal",
@@ -53,7 +42,7 @@ const chainConfig: ChainConfig = {
       decimals: 18,
     },
     blockexplorer: 'https://basescan.org/tx',
-  },  
+  },
   42220: {
     name: "Celo",
     rpcUrl: `https://forno.celo.org`,
@@ -93,7 +82,7 @@ const chainConfig: ChainConfig = {
       decimals: 18,
     },
     blockexplorer: 'https://blockscout.lisk.com/tx',
-  },    
+  },
   291: {
     name: "Orderly",
     rpcUrl: `https://rpc.orderly.network`,
@@ -123,7 +112,7 @@ const chainConfig: ChainConfig = {
       decimals: 18,
     },
     blockexplorer: 'https://blockscout.kroma.network/tx',
-  },  
+  },
   480: {
     name: "WorldChain",
     rpcUrl: `https://worldchain-mainnet.g.alchemy.com/v2/${alchemyKey}`,

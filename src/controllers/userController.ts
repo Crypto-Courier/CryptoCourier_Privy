@@ -1,113 +1,7 @@
-import { ethers } from 'ethers';
 import { getUserCollection, getTransactionCollection } from '../lib/getCollections';
-import { createOrUpdateLeaderboardPoints, getLeaderboardPointsByWallet } from '../controllers/leaderboardPointsController';
+import { createOrUpdateLeaderboardPoints } from '../controllers/leaderboardPointsController';
 
-interface DepthEntry {
-  [address: string]: number;
-}
-
-// Define types for the User schema
-interface AuthDataValue {
-  authStatus: boolean;
-  gifterAddress?: string;
-  universalDepth?: Record<string, number>;
-  localDepth?: Record<string, number>;
-}
-
-interface UserInput {
-  claimerWallet: string;
-  claimerEmail: string;
-  authData?: Record<string, AuthDataValue>;
-}
-
-export const validateUserInput = (data: UserInput) => {
-  const {
-    claimerWallet,
-    claimerEmail,
-    authData
-  } = data;
-
-  const errors: string[] = [];
-
-  // Validate claimer address
-  if (!claimerWallet) {
-    errors.push('Claimer address is required');
-  } else if (!ethers.isAddress(claimerWallet)) {
-    errors.push('Invalid Ethereum address format');
-  }
-
-  // Validate claimer email
-  if (!claimerEmail) {
-    errors.push('Claimer email is required');
-  }
-
-  // Optional: Validate authData structure if provided
-  if (authData) {
-    Object.entries(authData).forEach(([key, value]) => {
-      // Validate gifter address if present
-      if (value.gifterAddress && !ethers.isAddress(value.gifterAddress.toLowerCase())) {
-        errors.push(`Invalid gifter address for key: ${key}`);
-      }
-
-      // Validate authStatus is a boolean
-      if (typeof value.authStatus !== 'boolean') {
-        errors.push(`Invalid authStatus for key: ${key}`);
-      }
-
-      // Validate universal and local depth maps
-      if (value.universalDepth && typeof value.universalDepth !== 'object') {
-        errors.push(`Invalid universalDepth for key: ${key}`);
-      }
-
-      if (value.localDepth && typeof value.localDepth !== 'object') {
-        errors.push(`Invalid localDepth for key: ${key}`);
-      }
-    });
-  }
-
-  return errors;
-};
-
-export const createUser = async (userData: UserInput) => {
-  const UserModel = await getUserCollection();
-
-  // Validate input
-  const validationErrors = validateUserInput(userData);
-  if (validationErrors.length > 0) {
-    throw new Error(validationErrors.join('; '));
-  }
-
-  // Ensure walletAddress is not null
-  if (!userData.claimerWallet) {
-    throw new Error('Wallet address cannot be null');
-  }
-
-  // Check if user with same address or email already exists
-  const existingUser = await UserModel.findOne({
-    $or: [
-      { claimerWallet: userData.claimerWallet.toLowerCase() },
-      { claimerEmail: userData.claimerEmail.toLowerCase() }
-    ]
-  });
-
-  if (existingUser) {
-    // throw new Error('User with this address or email already exists');
-    return existingUser;
-  }
-
-  // Create and save the user
-  const userDataToSave = {
-    ...userData,
-    claimerWallet: userData.claimerWallet.toLowerCase(),
-    claimerEmail: userData.claimerEmail.toLowerCase()
-  };
-
-  // Create and save the user
-  const user = new UserModel(userDataToSave);
-  return user.save();
-};
-
-export const authenticateUserByTransactionHash = async (
+export const userDataByTransactionHash = async (
   transactionHash: string,
 ) => {
   // Get transaction and user collections
@@ -154,7 +48,7 @@ export const authenticateUserByTransactionHash = async (
     const universalDepth: { [key: string]: number } = {};
     const localDepth: { [key: string]: number } = {};
 
-    // Check if gifter user exists and has auth data for this chain
+    // Check if gifter user exists and has user data for this chain
     if (existingGifterUser && existingGifterUser.authData) {
       const existingChainAuthData = existingGifterUser.authData.get(normalizedChainId);
 
@@ -214,32 +108,31 @@ export const authenticateUserByTransactionHash = async (
 
   // Leaderboard Points Calculation
   const calculateLeaderboardPoints = async () => {
-    const leaderboardPointsToSave: { 
-      gifterWallet: string, 
-      points: { chain: string, chainId: string, points: number }[] 
+    const leaderboardPointsToSave: {
+      gifterWallet: string,
+      points: { chainId: string, points: number }[]
     }[] = [];
-  
+
     for (const [address, depth] of Object.entries(chainSpecificAuthData.localDepth)) {
       let points = 1; // Base points
-      if( depth > 0 && depth < 11 ) {
+      if (depth > 0 && depth < 11) {
         points = Math.pow(2, 11 - depth);
-      } else if( depth >= 11) {
+      } else if (depth >= 11) {
         points = 1;
-      } else if ( depth <= 0) {
+      } else if (depth <= 0) {
         points = 0;
       }
-  
+
       // Always add the point entry for the specific chain
       leaderboardPointsToSave.push({
         gifterWallet: address,
         points: [{
-          chain: normalizedChainId,
           chainId: normalizedChainId,
           points: points
         }]
       });
     }
-  
+
     return leaderboardPointsToSave;
   };
 
@@ -279,15 +172,6 @@ export const authenticateUserByTransactionHash = async (
       new: true,
       upsert: true,
       runValidators: true
-    }
-  );
-
-  // Mark transaction as authenticated
-  await TransactionModel.findOneAndUpdate(
-    { transactionHash },
-    {
-      authenticated: true,
-      authenticatedAt: new Date()
     }
   );
 

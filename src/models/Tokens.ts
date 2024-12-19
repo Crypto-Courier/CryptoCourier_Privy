@@ -1,12 +1,5 @@
 import mongoose from 'mongoose';
-
-interface TokenDocument extends mongoose.Document {
-  chainId: number;
-  contractAddress: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-}
+import { TokenDocument } from '../types/token-schema-types';
 
 const TokenSchema = new mongoose.Schema<TokenDocument>({
   chainId: {
@@ -44,7 +37,7 @@ const TokenSchema = new mongoose.Schema<TokenDocument>({
     max: [18, 'Decimals cannot exceed 18']
   }
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 // Compound unique index to allow same symbol on different chains
