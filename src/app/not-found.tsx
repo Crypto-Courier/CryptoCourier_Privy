@@ -17,7 +17,7 @@ const NotFound: React.FC = () => {
           <div className="max-w-md w-full   rounded-xl p-8 text-center">
             <Image src={notfound} alt="" className="pulse" />
             <h1 className="text-gray-200 mb-6">
-              Oops! The page you are looking for doesn't exist.
+              The page you are looking for doesn't exist.
             </h1>
             <div className="flex justify-center space-x-4">
               <Link
