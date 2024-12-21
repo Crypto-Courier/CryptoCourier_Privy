@@ -60,7 +60,8 @@ const SendToken = () => {
   const [transactionHash, setTransactionHash] = useState<string>("");
   const [transactionStauts, setTransactionStatus] = useState(false);
   const [isContractCall, setIsContractCall] = useState(false);
-  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);``
+  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
+  ``;
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
   const [senderWallet, setsenderWallet] = useState("");

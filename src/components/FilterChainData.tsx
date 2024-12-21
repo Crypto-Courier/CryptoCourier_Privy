@@ -61,10 +61,10 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
 
   return (
     <div
-      className={`items-center rounded-md backdrop-blur-[20px] mb-2 py-1 ${
+      className={`items-center rounded-md backdrop-blur-[20px] mb-2 py-1 relative z-[100] ${
         theme === "dark"
-          ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2] sm:border-none md:border-none"
-          : "bg-[#000000]/40 border border-[#FFFFFF] sm:border-none md:border-none"
+          ? "lg:bg-[#000000]/70 lg:border lg:border-[#ddcb2cb2] sm:border-none md:border-none"
+          : "lg:bg-[#000000]/70 lg:border border-[#FFFFFF] sm:border-none md:border-none"
       }`}
     >
       {/* Desktop view */}
@@ -116,7 +116,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
           )}
         </div>
       </div>
-      <div className="md:hidden" ref={dropdownRef}>
+      <div className="md:hidden z-50 " ref={dropdownRef}>
         <div className="flex justify-between items-center">
           <div
             className={`w-[100%]  backdrop-blur-[10px]  bg-opacity-50 rounded-xl p-3 mb-1 cursor-pointer flex justify-between items-center outline-none ${
@@ -166,7 +166,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
         {/* Dropdown options */}
         {dropdownOpen && (
           <div
-            className={`absolute z-10 w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[60vh] scroll ${
+            className={`absolute  w-[70%] rounded-xl overflow-scroll mt-1 backdrop-blur-[10px] h-[42vh] scroll ${
               theme === "dark"
                 ? "bg-[#000000]/70 border border-white text-white"
                 : "bg-[#FFFCFC] border border-gray-700 text-black"

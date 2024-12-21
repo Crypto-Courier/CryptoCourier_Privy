@@ -6,6 +6,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import invited from "../../assets/invite.svg";
 import global from "../../assets/g-dark.png";
 import monthly from "../../assets/m-dark.png";
 import global2 from "../../assets/g-dark2.png";
@@ -20,6 +21,7 @@ import path1 from "../../assets/path1.png";
 import path2 from "../../assets/path2.png";
 import path3 from "../../assets/path3.png";
 import loader from "../../assets/processing.gif";
+import loading from "../../assets/loader.gif";
 import SwitchHistory from "../SwitchHistory";
 import FilterChainData from "../FilterChainData";
 import {
@@ -27,6 +29,7 @@ import {
   LeaderboardResponse,
   PointsEntry,
 } from "@/types/leaderboard-types";
+import { Tooltip } from "antd";
 
 // Define the list of supported chains
 const SUPPORTED_CHAINS = [
@@ -185,8 +188,8 @@ const LeaderBoard: React.FC = () => {
             theme === "dark" ? " py-[30px] " : " py-[30px]  "
           }`}
         >
-          <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh]">
-            <div className="w-[60%]  mr-0 ml-auto flex justify-end mb-4">
+          <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh] ">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100%  mr-0 ml-auto flex justify-end mb-4 gap-5">
               <div>
                 <button
                   onClick={() => setActiveButton("Global")}
@@ -229,6 +232,18 @@ const LeaderBoard: React.FC = () => {
               >
                 Invite Your Friends
               </button> */}
+              <Tooltip title="Invite Your Friends">
+                <button
+                  onClick={invite}
+                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                    theme === "dark"
+                      ? " text-[#363535] border bg-[#FFE500] "
+                      : "bg-[#E265FF] text-white"
+                  }`}
+                >
+                  <Image src={invited} width={20} alt="" />
+                </button>
+              </Tooltip>
             </div>
             <div className="flex flex-col lg:flex-row md:flex-col  justify-between gap-8 items-start">
               <div className="md:w-[100%] lg:w-[40%] sm:w-full w-full flex gap-5 flex-col items-center  lg:flex md:flex  ">
@@ -253,12 +268,12 @@ const LeaderBoard: React.FC = () => {
                     <div className="flex flex-col items-center justify-center">
                       {userDetails ? (
                         <>
-                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
-                            <span className="text-yellow-300  font-bold">
+                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full">
+                            <span className="text-yellow-300 text-lg sm:text-2xl">
                               {userDetails.invites}
                             </span>
                           </div>
-                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
+                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold lg:mt-[20px] md:mt-[20px] mt-[15px] sm:mt-[15px]">
                             Invited
                           </div>
                         </>
@@ -277,12 +292,12 @@ const LeaderBoard: React.FC = () => {
                     <div className="flex flex-col items-center justify-center">
                       {userDetails ? (
                         <>
-                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
-                            <span className="text-yellow-300 text-lg sm:text-2xl font-bold">
+                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full">
+                            <span className="text-yellow-300 text-lg sm:text-2xl ">
                               {userDetails.claims}
                             </span>
                           </div>
-                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
+                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold lg:mt-[20px] md:mt-[20px] mt-[15px] sm:mt-[15px]">
                             Claimed
                           </div>
                         </>
@@ -298,14 +313,27 @@ const LeaderBoard: React.FC = () => {
                       )}
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                      <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] border-[3px] border-yellow-400 rounded-full">
-                        <span className="text-yellow-300 text-lg sm:text-2xl font-bold">
-                          {userDetails?.points?.total || 0}
-                        </span>
-                      </div>
-                      <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold mt-2">
-                        Points
-                      </div>
+                      {userDetails ? (
+                        <>
+                          <div className="flex items-center justify-center w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]  rounded-full">
+                            <span className="text-yellow-300 text-lg sm:text-2xl ">
+                              {userDetails?.points?.total || 0}
+                            </span>
+                          </div>
+                          <div className="text-white text-[12px] sm:text-[12px] lg:text-lg md:text-lg font-semibold lg:mt-[20px] md:mt-[20px] mt-[15px] sm:mt-[15px] ">
+                            Points
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <Image
+                            src={loader}
+                            alt="Loading"
+                            width={40}
+                            height={40}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -331,8 +359,7 @@ const LeaderBoard: React.FC = () => {
                         <Image
                           src={path1} // Replace with your image path
                           alt="First Rank Badge"
-                          width={50}
-                          className="absolute top-6 left-0 transform -translate-x-1/2 "
+                          className="absolute lg:top-6 md:top-6 sm:top-7 top-7 left-0 transform -translate-x-1/2 lg:w-[50px] md:w-[50px] sm:w-[30px] w-[30px] "
                         />
                       )}
                       {index === 1 && (
@@ -403,15 +430,20 @@ const LeaderBoard: React.FC = () => {
 
               <div className="md:w-[100%] lg:w-[60%] w-full sm:w-full">
                 {isLoading ? (
-                  <div className="h-40 md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
-                    Loading...
+                  <div className=" md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                    <Image
+                      src={loading} // Replace with your image path
+                      alt="loading"
+                      width={50}
+                      // className="absolute top-6 left-0 transform -translate-x-1/2 "
+                    />
                   </div>
                 ) : error ? (
-                  <div className="text-red-700 h-40 md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                  <div className="text-red-700  md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
                     {error}
                   </div>
                 ) : (
-                  <div className="w-full  rounded-3xl">
+                  <div className="w-full  rounded-3xl relative ">
                     <FilterChainData onChainSelect={handleChainSelect} />
 
                     <div className="overflow-hidden rounded-md ">
@@ -441,7 +473,7 @@ const LeaderBoard: React.FC = () => {
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${
+                            className={`relative z-20 grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${
                               theme === "dark"
                                 ? "bg-[#000000]/50 border border-[#ddcb2cb2]"
                                 : "bg-[#000000]/50 border border-[#E265FF]"
