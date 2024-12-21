@@ -28,9 +28,6 @@ export const updateTransactionStatus = async (
     throw new Error('Transaction not found');
   }
 
-  // Prepare update object
-  const updateData: any = {};
-
   // Determine claimer address and chain ID from existing transaction
   const claimerAddress = existingTransaction.claimerWallet.toLowerCase();
   const chainId = existingTransaction.chainId;
@@ -44,23 +41,23 @@ export const updateTransactionStatus = async (
     throw new Error('User not found');
   }
 
+  // Prepare update object
+  const updateData: any = {
+    claimed: true,
+    claimedAt: new Date()
+  };
+
   // Check authentication status for this chain
-  const authData = user.authData as AuthData;
-  const chainAuthData = authData[chainId];
+  const authData = user.authData as Map<string, any>;
+  console.log("What is auth data in the update controller", authData);
+  const chainAuthData = authData.get(chainId);
+  console.log("What is the chainAuth data for paricular chain in the update controller", chainAuthData);
 
   // Only update authentication if not already authenticated for this chain
-  if (!chainAuthData?.authStatus) {
+  if (!chainAuthData || !chainAuthData?.authStatus) {
+    console.log("What is the authStatus here", chainAuthData?.authStatus);
     updateData.authenticated = true;
     updateData.authenticatedAt = new Date();
-  }
-
-  // Claiming logic
-  updateData.claimed = true;
-  updateData.claimedAt = new Date();
-
-  // Prevent unnecessary updates
-  if (Object.keys(updateData).length === 0) {
-    return existingTransaction;
   }
 
   // Update the transaction
