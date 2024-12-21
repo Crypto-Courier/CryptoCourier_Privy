@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       chainId,
       transactionHash,
       authenticated: false,
-      claimed: false
+      claimed: false,
+      transactedAt: Date()
     });
 
     res.status(201).json({
