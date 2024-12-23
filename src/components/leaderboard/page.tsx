@@ -22,12 +22,10 @@ import path2 from "../../assets/path2.png";
 import path3 from "../../assets/path3.png";
 import loader from "../../assets/processing.gif";
 import loading from "../../assets/loader.gif";
-import SwitchHistory from "../SwitchHistory";
 import FilterChainData from "../FilterChainData";
 import {
   LeaderboardEntry,
   LeaderboardResponse,
-  PointsEntry,
 } from "@/types/leaderboard-types";
 import { Tooltip } from "antd";
 
@@ -59,48 +57,21 @@ const LeaderBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Modify the filtering logic
-  const filterLeaderboardData = (
-    data: LeaderboardEntry[]
-  ): LeaderboardEntry[] => {
-    return data.map((user) => {
-      // If chains are selected, filter points and transactions
-      if (selectedChains.length < SUPPORTED_CHAINS.length) {
-        // Filter points by selected chains
-        const filteredPoints = (user.points?.byChain || []).filter(
-          (chainPoint) => selectedChains.includes(Number(chainPoint.chain))
-        );
-
-        // Calculate total points for selected chains
-        const filteredTotalPoints = filteredPoints?.reduce(
-          (sum, chainPoint) => sum + chainPoint.points,
-          0
-        );
-
-        // Filter transactions by selected chains
-        const filteredTransactions = (user.transactions || []).filter(
-          (transaction) => selectedChains.includes(Number(transaction.chainId))
-        );
-
-        // Calculate filtered invites and claims
-        const filteredInvites = filteredTransactions.length;
-
-        return {
-          ...user,
-          points: {
-            total: filteredTotalPoints,
-            byChain: filteredPoints,
-          },
-          invites: filteredInvites,
-          claims: filteredInvites, // Assuming claims match the number of transactions
-          transactions: filteredTransactions,
-        } as LeaderboardEntry;
-      }
-
-      // If all chains are selected, return the original user data
-      return user;
-    });
-  };
+  const getEmptyLeaderboardEntry = (address: string): LeaderboardEntry => ({
+    address,
+    invites: 0,
+    claims: 0,
+    transactions: [],
+    points: {
+      total: 0,
+      byChain: selectedChains.map(chain => ({
+        chain: chain.toString(),
+        points: 0
+      }))
+    },
+    rank: 0
+  });
+  
 
   const handleChainSelect = (chains: number[]) => {
     setSelectedChains(chains);
@@ -109,60 +80,77 @@ const LeaderBoard: React.FC = () => {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        // Reset states
+        setIsLoading(true);
         setLeaderboardData([]);
         setTopThreeUsers([]);
         setUserDetails(null);
         setError(null);
-
-        const queryParams = activeAddress
-          ? `?activeAddress=${activeAddress}`
-          : "";
-
-        // Fetch leaderboard data
-        const response = await fetch(`/api/leaderboard-data${queryParams}`);
-
+  
+        // Build query parameters
+        const params = new URLSearchParams();
+        if (activeAddress) {
+          params.append('activeAddress', activeAddress);
+        }
+        if (selectedChains.length === 1) {
+          params.append('chainId', selectedChains[0].toString());
+        }
+  
+        const response = await fetch(`/api/leaderboard-data?${params.toString()}`);
+  
         if (!response.ok) {
           throw new Error("Failed to fetch leaderboard data");
         }
-
+  
         const data: LeaderboardResponse = await response.json();
-
-        // Handle different loading phases
+  
         if (data.status === "error") {
           throw new Error(data.error || "Unknown error");
         }
-
-        // User-specific data loading phase
-        if (data.userDetails) {
-          setUserDetails(data.userDetails);
-        }
-
-        // Top three users loading phase
-        if (data.topThreeUsers) {
-          setTopThreeUsers(data.topThreeUsers);
-        }
-
-        // All users loading phase
-        if (data.allUsers) {
-          // Apply chain filtering to the leaderboard data
-          const filteredData = filterLeaderboardData(data.allUsers);
-          setLeaderboardData(filteredData);
+  
+        // Handle empty data case with proper type checking
+        if (!data.allUsers || data.allUsers.length === 0) {
+          if (activeAddress) {
+            const emptyEntry = getEmptyLeaderboardEntry(activeAddress);
+            setLeaderboardData([emptyEntry]);
+            setTopThreeUsers([emptyEntry]);
+            setUserDetails(emptyEntry);
+          } else {
+            setLeaderboardData([]);
+            setTopThreeUsers([]);
+            setUserDetails(null);
+          }
+        } else {
+          setLeaderboardData(data.allUsers);
+          setTopThreeUsers(data.topThreeUsers || []);
+          if (data.userDetails) {
+            setUserDetails(data.userDetails);
+          } else if (activeAddress) {
+            setUserDetails(getEmptyLeaderboardEntry(activeAddress));
+          }
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load leaderboard data"
-        );
-        // setLoadingPhase('initial');
+        setError(err instanceof Error ? err.message : "Failed to load leaderboard data");
         console.error(err);
+        
+        // Set empty state on error
+        if (activeAddress) {
+          const emptyEntry = getEmptyLeaderboardEntry(activeAddress);
+          setLeaderboardData([emptyEntry]);
+          setTopThreeUsers([emptyEntry]);
+          setUserDetails(emptyEntry);
+        } else {
+          setLeaderboardData([]);
+          setTopThreeUsers([]);
+          setUserDetails(null);
+        }
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     fetchLeaderboardData();
   }, [activeAddress, selectedChains]);
-
+  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = leaderboardData.slice(indexOfFirstItem, indexOfLastItem);
@@ -184,39 +172,36 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`h-[100vh] ${
-            theme === "dark" ? " py-[30px] " : " py-[30px]  "
-          }`}
+          className={`h-[100vh] ${theme === "dark" ? " py-[30px] " : " py-[30px]  "
+            }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh] ">
             <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100%  mr-0 ml-auto flex justify-end mb-4 gap-5">
               <div>
                 <button
                   onClick={() => setActiveButton("Global")}
-                  className={`invite px-[30px] py-[10px] rounded-tl-lg rounded-tr-none rounded-bl-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
-                    activeButton === "Global"
-                      ? theme === "dark"
-                        ? "bg-[#FFE500] text-[#1E1E1E]"
-                        : "bg-[#E265FF] text-white"
-                      : theme === "dark"
+                  className={`invite px-[30px] py-[10px] rounded-tl-lg rounded-tr-none rounded-bl-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${activeButton === "Global"
+                    ? theme === "dark"
+                      ? "bg-[#FFE500] text-[#1E1E1E]"
+                      : "bg-[#E265FF] text-white"
+                    : theme === "dark"
                       ? "bg-[#1E1E1E] text-[#FFE500]"
                       : "bg-white text-black"
-                  }`}
+                    }`}
                 >
                   Global
                 </button>
 
                 <button
                   onClick={() => setActiveButton("Monthly")}
-                  className={`invite px-[30px] py-[10px] rounded-tr-lg rounded-tl-none rounded-br-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
-                    activeButton === "Monthly"
-                      ? theme === "dark"
-                        ? "bg-[#FFE500] text-[#1E1E1E]"
-                        : "bg-[#E265FF] text-white"
-                      : theme === "dark"
+                  className={`invite px-[30px] py-[10px] rounded-tr-lg rounded-tl-none rounded-br-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${activeButton === "Monthly"
+                    ? theme === "dark"
+                      ? "bg-[#FFE500] text-[#1E1E1E]"
+                      : "bg-[#E265FF] text-white"
+                    : theme === "dark"
                       ? "bg-[#1E1E1E] text-[#FFE500]"
                       : "bg-white text-black"
-                  }`}
+                    }`}
                 >
                   Monthly
                 </button>
@@ -235,11 +220,10 @@ const LeaderBoard: React.FC = () => {
               <Tooltip title="Invite Your Friends">
                 <button
                   onClick={invite}
-                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
-                    theme === "dark"
-                      ? " text-[#363535] border bg-[#FFE500] "
-                      : "bg-[#E265FF] text-white"
-                  }`}
+                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${theme === "dark"
+                    ? " text-[#363535] border bg-[#FFE500] "
+                    : "bg-[#E265FF] text-white"
+                    }`}
                 >
                   <Image src={invited} width={20} alt="" />
                 </button>
@@ -347,13 +331,12 @@ const LeaderBoard: React.FC = () => {
                   {topThreeUsers.map((user, index) => (
                     <div
                       key={index}
-                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${
-                        index === 0
-                          ? "border-[#FF3333]"
-                          : index === 1
+                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${index === 0
+                        ? "border-[#FF3333]"
+                        : index === 1
                           ? "border-[#FF3333]"
                           : "border-[#FF3333]"
-                      }`}
+                        }`}
                     >
                       {index === 0 && (
                         <Image
@@ -435,7 +418,7 @@ const LeaderBoard: React.FC = () => {
                       src={loading} // Replace with your image path
                       alt="loading"
                       width={50}
-                      // className="absolute top-6 left-0 transform -translate-x-1/2 "
+                    // className="absolute top-6 left-0 transform -translate-x-1/2 "
                     />
                   </div>
                 ) : error ? (
@@ -448,21 +431,19 @@ const LeaderBoard: React.FC = () => {
 
                     <div className="overflow-hidden rounded-md ">
                       <div
-                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${
-                          theme === "dark"
-                            ? " bg-black border border-[#FE660A]"
-                            : " bg-white border border-[#FFFFFF]"
-                        }`}
+                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${theme === "dark"
+                          ? " bg-black border border-[#FE660A]"
+                          : " bg-white border border-[#FFFFFF]"
+                          }`}
                       >
                         {["Rank", "Inviter", "Claimer", "Rate", "Points"].map(
                           (header, index) => (
                             <div
                               key={index}
-                              className={`text-center font-semibold mb-0 bg-black ${
-                                theme === "dark"
-                                  ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
-                                  : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
-                              }`}
+                              className={`text-center font-semibold mb-0 bg-black ${theme === "dark"
+                                ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
+                                : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
+                                }`}
                             >
                               {header}
                             </div>
@@ -473,19 +454,17 @@ const LeaderBoard: React.FC = () => {
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`relative z-20 grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${
-                              theme === "dark"
-                                ? "bg-[#000000]/50 border border-[#ddcb2cb2]"
-                                : "bg-[#000000]/50 border border-[#E265FF]"
-                            }`}
+                            className={`relative z-20 grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${theme === "dark"
+                              ? "bg-[#000000]/50 border border-[#ddcb2cb2]"
+                              : "bg-[#000000]/50 border border-[#E265FF]"
+                              }`}
                           >
                             {/* Yellow Line */}
                             <div
-                              className={`h-[70%]  w-[2px]  ${
-                                theme === "dark"
-                                  ? "bg-[#FFE500]"
-                                  : "bg-[#E265FF]"
-                              }`}
+                              className={`h-[70%]  w-[2px]  ${theme === "dark"
+                                ? "bg-[#FFE500]"
+                                : "bg-[#E265FF]"
+                                }`}
                             ></div>
 
                             {/* Rank Section */}
@@ -536,11 +515,10 @@ const LeaderBoard: React.FC = () => {
                         <button
                           onClick={() => paginate(currentPage - 1)}
                           disabled={currentPage === 1}
-                          className={`px-4 py-2 rounded ${
-                            currentPage === 1
-                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                              : "bg-[#FFE500] text-[#363535]"
-                          }`}
+                          className={`px-4 py-2 rounded ${currentPage === 1
+                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                            : "bg-[#FFE500] text-[#363535]"
+                            }`}
                         >
                           Previous
                         </button>
@@ -552,11 +530,10 @@ const LeaderBoard: React.FC = () => {
                         <button
                           onClick={() => paginate(currentPage + 1)}
                           disabled={currentPage === totalPages}
-                          className={`px-4 py-2 rounded ${
-                            currentPage === totalPages
-                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                              : "bg-[#FFE500] text-[#363535]"
-                          }`}
+                          className={`px-4 py-2 rounded ${currentPage === totalPages
+                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                            : "bg-[#FFE500] text-[#363535]"
+                            }`}
                         >
                           Next
                         </button>

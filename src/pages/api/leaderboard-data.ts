@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   getLeaderboardPointsCollection,
@@ -19,61 +18,72 @@ export default async function handler(
   }
 
   try {
-    // Extract query parameters
-    const { activeAddress } = req.query;
+    const { activeAddress, chainId } = req.query;
 
-    // Get collections
     const transactionsCollection = await getTransactionCollection();
     const leaderboardPointsCollection = await getLeaderboardPointsCollection();
 
-    // Fetch all transactions
-    const transactions = await transactionsCollection.find({});
+    // Build query for transactions based on chainId
+    const transactionQuery = chainId ? { chainId: chainId.toString() } : {};
 
-    // Fetch leaderboard points
+    // Fetch filtered transactions
+    const transactions = await transactionsCollection.find(transactionQuery);
+
+    // Fetch all leaderboard points
     const leaderboardPoints = await leaderboardPointsCollection.find({});
+
+    // Get all unique addresses from both transactions and points
+    const uniqueAddresses = new Set<string>();
+    transactions.forEach((tx: any) => uniqueAddresses.add(tx.gifterWallet));
+    leaderboardPoints.forEach((point: any) => uniqueAddresses.add(point.gifterWallet));
 
     // Process the data
     const senderData = new Map<string, LeaderboardEntry>();
 
-    transactions.forEach((transaction: any) => {
-      const { gifterWallet, claimerWallet, claimerEmail, authenticated } = transaction;
+    // Initialize entries for all unique addresses
+    uniqueAddresses.forEach(address => {
+      senderData.set(address, {
+        address,
+        invites: 0,
+        claims: 0,
+        transactions: [],
+        points: { total: 0, byChain: [] },
+        rank: 0
+      });
+    });
 
-      // Ensure gifter wallet exists in the map
-      if (!senderData.has(gifterWallet)) {
-        senderData.set(gifterWallet, {
-          address: gifterWallet,
-          invites: 0,
-          claims: 0,
-          transactions: [],
-          points: { total: 0, byChain: [] }
-        });
-      }
+    // Process transactions with chain filtering
+    transactions.forEach((transaction: any) => {
+      const {
+        gifterWallet,
+        claimerWallet,
+        claimerEmail,
+        authenticated,
+        chainId: txChainId
+      } = transaction;
 
       const senderInfo = senderData.get(gifterWallet)!;
 
-      // Track invites
-      if (claimerWallet && !senderInfo.transactions.some(t => t.claimerWallet === claimerWallet)) {
-        senderInfo.invites++;
-      }
+      // Track invites and claims only if chain matches or no chain filter
+      if ((!chainId || txChainId === chainId)) {
+        if (claimerWallet &&
+          !senderInfo.transactions.some(t => t.claimerWallet === claimerWallet)) {
+          senderInfo.invites++;
+        }
 
-      // Track claims (only unique, authenticated emails)
-      if (
-        claimerEmail &&
-        authenticated &&
-        !senderInfo.transactions.some(t => t.claimerEmail === claimerEmail)
-      ) {
-        senderInfo.claims++;
-      }
+        if (claimerEmail &&
+          authenticated &&
+          !senderInfo.transactions.some(t => t.claimerEmail === claimerEmail)) {
+          senderInfo.claims++;
+        }
 
-      senderInfo.transactions.push(transaction);
+        senderInfo.transactions.push(transaction);
+      }
     });
 
-    // Add points from LeaderboardPoints collection
+    // Process points with chain filtering
     leaderboardPoints.forEach((pointEntry: any) => {
-      // Normalize wallet address to lowercase for consistent matching
       const wallet = pointEntry.gifterWallet.toLowerCase();
-
-      // Find the matching wallet in senderData using case-insensitive comparison
       const matchingWallet = Array.from(senderData.keys()).find(
         key => key.toLowerCase() === wallet
       );
@@ -81,13 +91,22 @@ export default async function handler(
       if (matchingWallet) {
         const senderInfo = senderData.get(matchingWallet)!;
 
-        // Calculate total points and prepare points by chain
-        const pointsByChain: PointsEntry[] = pointEntry.points.map((point: any) => ({
-          chain: point.chain,
-          points: point.points instanceof mongoose?.Types.Decimal128
-            ? point.points.toNumber()
-            : point.points
-        }));
+        // Filter points based on chainId
+        const pointsByChain: PointsEntry[] = pointEntry.points
+          .filter((point: any) => !chainId || point.chainId === chainId)
+          .map((point: any) => ({
+            chain: point.chainId,
+            points: typeof point.points === 'number' ? point.points : 0
+          }));
+
+        // If chain is selected but user has no points for that chain,
+        // add an entry with 0 points
+        if (chainId && !pointsByChain.some(p => p.chain === chainId)) {
+          pointsByChain.push({
+            chain: chainId.toString(),
+            points: 0
+          });
+        }
 
         const totalPoints = pointsByChain.reduce((sum, point) => sum + point.points, 0);
 
@@ -97,10 +116,10 @@ export default async function handler(
         };
       }
     });
-    // Convert to array and sort (prioritize points, then claims)
+
+    // Convert to array and sort
     const leaderboardData = Array.from(senderData.values())
       .sort((a, b) => {
-        // Sort by total points, then by claims
         const pointsDiff = (b.points?.total || 0) - (a.points?.total || 0);
         return pointsDiff !== 0 ? pointsDiff : b.claims - a.claims;
       })
@@ -109,7 +128,6 @@ export default async function handler(
         rank: index + 1
       }));
 
-    // Prepare response
     const response: LeaderboardResponse = {
       status: 'success',
       message: 'Leaderboard data retrieved successfully',
@@ -118,7 +136,7 @@ export default async function handler(
       topThreeUsers: leaderboardData.slice(0, 3)
     };
 
-    // If active address is provided, get specific data
+    // Add user-specific data if requested
     if (activeAddress) {
       const userSpecificData = leaderboardData.find(
         user => user.address.toLowerCase() === (activeAddress as string).toLowerCase()
@@ -127,6 +145,17 @@ export default async function handler(
       if (userSpecificData) {
         response.userDetails = userSpecificData;
         response.userRank = userSpecificData.rank;
+      } else {
+        // Add default user data if address exists but has no activity
+        response.userDetails = {
+          address: activeAddress as string,
+          invites: 0,
+          claims: 0,
+          transactions: [],
+          points: { total: 0, byChain: chainId ? [{ chain: chainId.toString(), points: 0 }] : [] },
+          rank: leaderboardData.length + 1
+        };
+        response.userRank = leaderboardData.length + 1;
       }
     }
 
