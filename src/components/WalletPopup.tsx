@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
+import Exwallet from "../assets/Exwallet.png";
+import install from "../assets/install.png";
+import { useTheme } from "next-themes";
 
 type Step = {
   title: string;
@@ -16,6 +19,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [flowType, setFlowType] = useState<"copy" | "phrase" | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,11 +43,43 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   const initialSteps: Step[] = [
     {
       title: "Slide 1",
-      render: () => <div>Content for Slide 1</div>,
+      render: () => (
+        <>
+          <div
+            className={` text-lg ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            1. Click on{" "}
+            <span className={`font-bold text-[#FE660A]`}>Copy Phrase</span> or
+            <span className={`font-bold text-[#FE660A]`}> Copy Key</span> from
+            export wallet.
+          </div>
+          <div className="flex justify-center mt-3">
+            <Image src={Exwallet} alt="" />
+          </div>
+        </>
+      ),
     },
     {
       title: "Slide 2",
-      render: () => <div>Content for Slide 2</div>,
+      render: () => (
+        <>
+          <div
+            className={` text-lg ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            1. Visit the Official Website:
+            <span className={`font-bold text-[#FE660A]`}>Copy Phrase</span> or
+            <span className={`font-bold text-[#FE660A]`}> Copy Key</span> from
+            export wallet.
+          </div>
+          <div className="flex justify-center mt-3">
+            <Image src={install} alt="" width={300} />
+          </div>
+        </>
+      ),
     },
     {
       title: "Slide 3",
@@ -127,10 +163,10 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
 
   return (
     <div>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] ">
         <div
           ref={popupRef}
-          className="bg-white rounded-lg w-[680px] h-[680px] relative"
+          className="bg-white rounded-lg w-[60%]  relative mx-w-3xl m-auto"
         >
           {/* Close button at the top right */}
           <div className="absolute top-0 right-0 z-10">
@@ -167,7 +203,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
             </div>
           )}
 
-          <div className="p-6 pt-3 flex flex-col justify-between h-[680px]">
+          <div
+            className={`p-6 pt-3 flex flex-col justify-between h-[680px] rounded-md ${
+              theme === "dark"
+                ? "bg-[#000000] border border-[#FFE500]"
+                : "bg-[#F4F3F3] border border-[#E265FF]"
+            }`}
+          >
             <div className="mb-8">
               <div className="flex justify-start mb-1">
                 {/* <h2 className="text-xl font-semibold">
@@ -178,9 +220,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </span>
               </div>
 
-              <div className="h-2 bg-gray-200 rounded-full">
+              <div className="h-1 bg-gray-200 rounded-full">
                 <div
-                  className="h-full bg-blue-600 rounded-full transition-all duration-300"
+                  className={`h-full  rounded-full transition-all duration-300 ${
+                    theme === "dark" ? "bg-[#FFE500]" : "bg-[#E265FF]"
+                  }`}
                   style={{
                     width: `${
                       ((currentStep + 1) / getCurrentSteps().length) * 100
@@ -209,7 +253,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
 
               <button
                 onClick={handleNext}
-                className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
+                className={`px-4 py-2 bg-[#FF336A] text-white rounded-lg  ${
                   currentStep === getCurrentSteps().length - 1 && !flowType
                     ? "invisible"
                     : ""
