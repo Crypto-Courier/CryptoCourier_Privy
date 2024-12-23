@@ -30,6 +30,8 @@ import {
   PointsEntry,
 } from "@/types/leaderboard-types";
 import { Tooltip } from "antd";
+import WalletPopup from "../WalletPopup";
+import MonthYearPicker from "../MonthYearPicker";
 
 // Define the list of supported chains
 const SUPPORTED_CHAINS = [
@@ -189,7 +191,7 @@ const LeaderBoard: React.FC = () => {
           }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh] ">
-            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100%  mr-0 ml-auto flex justify-end mb-4 gap-5">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100% mr-0 ml-auto flex justify-end mb-4 gap-5">
               <div>
                 <button
                   onClick={() => setActiveButton("Global")}
@@ -232,6 +234,7 @@ const LeaderBoard: React.FC = () => {
               >
                 Invite Your Friends
               </button> */}
+
               <Tooltip title="Invite Your Friends">
                 <button
                   onClick={invite}
@@ -444,6 +447,9 @@ const LeaderBoard: React.FC = () => {
                   </div>
                 ) : (
                   <div className="w-full  rounded-3xl relative ">
+                    <div className="flex justify-end mb-2">
+                      {activeButton === "Monthly" && <MonthYearPicker />}
+                    </div>
                     <FilterChainData onChainSelect={handleChainSelect} />
 
                     <div className="overflow-hidden rounded-md ">

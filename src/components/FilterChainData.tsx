@@ -61,7 +61,7 @@ function FilterChainData({ onChainSelect }: SwitchHistoryProps) {
 
   return (
     <div
-      className={`items-center rounded-md backdrop-blur-[20px] mb-2 py-1 relative z-[100] ${
+      className={`items-center rounded-md backdrop-blur-[20px] mb-2 py-1 relative sm:z-[100] lg:z-0 md:z-0 z-[100] ${
         theme === "dark"
           ? "lg:bg-[#000000]/70 lg:border lg:border-[#ddcb2cb2] sm:border-none md:border-none"
           : "lg:bg-[#000000]/70 lg:border border-[#FFFFFF] sm:border-none md:border-none"

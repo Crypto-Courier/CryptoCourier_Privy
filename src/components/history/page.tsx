@@ -14,14 +14,17 @@ import { useTheme } from "next-themes";
 import { useWallet } from "../../context/WalletContext";
 import TransactionTable from "../TransactionTable";
 import toast, { Toaster } from "react-hot-toast";
-import { Check, LogOut, ExternalLink, Copy } from "lucide-react";
+import { Check, LogOut, ExternalLink, Copy, HelpCircle } from "lucide-react";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import Image from "next/image";
 import board from "../../assets/leaderboard.png";
 import SwitchHistory from "../SwitchHistory";
+import WalletPopup from "../WalletPopup";
 
 const History: React.FC = () => {
   const router = useRouter();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const [isCopied, setIsCopied] = useState(false); // Track copy state
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
   const { walletData } = useWallet();
@@ -233,8 +236,21 @@ const History: React.FC = () => {
                         : "opacity-50 cursor-not-allowed"
                     }`}
                   >
-                    <ExternalLink size={16} className="mr-2" />
+                    <ExternalLink
+                      size={16}
+                      className="mr-2"
+                      onClick={() => setIsPopupOpen(true)}
+                    />
                     Export Wallet
+                    <span
+                      className="ml-2 cursor-pointer text-gray-500 hover:text-gray-700"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the export action
+                        setIsPopupOpen(true); // Toggle the popup state
+                      }}
+                    >
+                      <HelpCircle size={16} />
+                    </span>
                   </button>
                   <div className="logout">
                     <button
@@ -356,6 +372,12 @@ const History: React.FC = () => {
             </div>
           </div>
         </div>
+        {isPopupOpen && (
+          <WalletPopup
+            isOpen={isPopupOpen}
+            onClose={() => setIsPopupOpen(false)}
+          />
+        )}
       </div>
       <Footer />
       <Toaster

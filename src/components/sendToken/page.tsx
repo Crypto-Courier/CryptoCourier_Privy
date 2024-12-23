@@ -34,6 +34,7 @@ import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
+import WalletPopup from "../WalletPopup";
 
 const SendToken = () => {
   const { walletData } = useWallet();
