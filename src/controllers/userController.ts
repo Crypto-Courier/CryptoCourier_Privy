@@ -19,7 +19,8 @@ export const userDataByTransactionHash = async (
     claimerWallet,
     gifterWallet,
     chainId,
-    claimerEmail
+    claimerEmail,
+    authenticatedAt
   } = transaction;
 
   // Validate essential fields
@@ -37,6 +38,11 @@ export const userDataByTransactionHash = async (
   const normalizedGifterWallet = gifterWallet.toLowerCase();
   const normalizedChainId = chainId;
 
+   // Get month/year string from authenticatedAt
+   const monthYear = authenticatedAt ? 
+   `${(authenticatedAt.getMonth() + 1).toString().padStart(2, '0')}/${authenticatedAt.getFullYear()}` : 
+   `${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`;
+
   // Find existing user for the gifter
   const existingGifterUser = await UserModel.findOne({
     claimerWallet: normalizedGifterWallet
@@ -49,7 +55,7 @@ export const userDataByTransactionHash = async (
     const localDepth: { [key: string]: number } = {};
 
     // Check if gifter user exists and has user data for this chain
-    if (existingGifterUser && existingGifterUser.authData) {
+    if (existingGifterUser?.authData) {
       const existingChainAuthData = existingGifterUser.authData.get(normalizedChainId);
 
       // Copy and increment Universal Depth
@@ -109,8 +115,12 @@ export const userDataByTransactionHash = async (
   // Leaderboard Points Calculation
   const calculateLeaderboardPoints = async () => {
     const leaderboardPointsToSave: {
-      gifterWallet: string,
-      points: { chainId: string, points: number }[]
+      gifterWallet: string;
+      points: { chainId: string; points: number }[];
+      monthlyPoints: {
+        month: string;
+        points: { chainId: string; points: number }[];
+      }[];
     }[] = [];
 
     for (const [address, depth] of Object.entries(chainSpecificAuthData.localDepth)) {
@@ -124,11 +134,18 @@ export const userDataByTransactionHash = async (
       }
 
       // Always add the point entry for the specific chain
-      leaderboardPointsToSave.push({
+       leaderboardPointsToSave.push({
         gifterWallet: address,
         points: [{
           chainId: normalizedChainId,
           points: points
+        }],
+        monthlyPoints: [{
+          month: monthYear,
+          points: [{
+            chainId: normalizedChainId,
+            points: points
+          }]
         }]
       });
     }
