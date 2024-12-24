@@ -3,7 +3,7 @@ import {
   getLeaderboardPointsCollection,
   getTransactionCollection
 } from '../../lib/getCollections';
-import { LeaderboardEntry, LeaderboardResponse, PointsEntry } from '@/types/leaderboard-types';
+import { LeaderboardEntry, LeaderboardResponse, PointsEntry } from '../../types/leaderboard-types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,17 +18,23 @@ export default async function handler(
   }
 
   try {
-    const { activeAddress, chainId } = req.query;
+    const { activeAddress, chainId, month } = req.query;
 
-    // Get current month/year in MM/YYYY format
-    const currentDate = new Date();
-    const currentMonthYear = `${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
-    console.log("Month m/y", currentMonthYear);
-  
-    // Calculate start and end dates for the current month
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
-    
+    // Parse selected month or use current month
+    let targetDate: Date;
+    if (month) {
+      const [monthStr, yearStr] = (month as string).split('/');
+      targetDate = new Date(parseInt(yearStr), parseInt(monthStr) - 1);
+    } else {
+      targetDate = new Date();
+    }
+
+    const targetMonthYear = `${(targetDate.getMonth() + 1).toString().padStart(2, '0')}/${targetDate.getFullYear()}`;
+    const startOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+    const endOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    console.log("For which month data is fetching for monthly leaderboard", targetMonthYear, startOfMonth, endOfMonth);
+
     const transactionsCollection = await getTransactionCollection();
     const leaderboardPointsCollection = await getLeaderboardPointsCollection();
 
@@ -60,7 +66,7 @@ export default async function handler(
 
     // Fetch all leaderboard points with monthly data
     const leaderboardPoints = await leaderboardPointsCollection.find({
-      'monthlyPoints.month': currentMonthYear
+      'monthlyPoints.month': targetMonthYear
     });
 
     // Get all unique addresses from both transactions and points
@@ -102,7 +108,7 @@ export default async function handler(
         // Check if transaction is relevant for this month based on transactedAt or authenticatedAt
         const txDate = new Date(transactedAt);
         const authDate = authenticated ? new Date(authenticatedAt) : null;
-        
+
         const isTransactionInMonth = txDate >= startOfMonth && txDate <= endOfMonth;
         const isAuthenticationInMonth = authDate && authDate >= startOfMonth && authDate <= endOfMonth;
 
@@ -133,7 +139,7 @@ export default async function handler(
       if (matchingWallet) {
         const senderInfo = senderData.get(matchingWallet)!;
         const monthlyData = pointEntry.monthlyPoints.find(
-          (mp: any) => mp.month === currentMonthYear
+          (mp: any) => mp.month === targetMonthYear
         );
 
         if (monthlyData) {
@@ -177,11 +183,11 @@ export default async function handler(
 
     const response: LeaderboardResponse = {
       status: 'success',
-      message: `Monthly leaderboard data for ${currentMonthYear} retrieved successfully`,
+      message: `Monthly leaderboard data for ${targetMonthYear} retrieved successfully`,
       allUsers: leaderboardData,
       totalUsers: leaderboardData.length,
       topThreeUsers: leaderboardData.slice(0, 3),
-      month: currentMonthYear
+      month: targetMonthYear
     };
 
     // Add user-specific data if requested

@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-interface MonthYearPickerProps {
-  onMonthSelect: (date: string) => void;
-  selectedMonth: string;
-}
+import { MonthYearPickerProps } from "../types/month-year-picker-types";
 
 const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ onMonthSelect, selectedMonth }) => {
-  // const [startDate, setStartDate] = useState<Date>(new Date());
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
@@ -17,15 +12,9 @@ const MonthYearPicker: React.FC<MonthYearPickerProps> = ({ onMonthSelect, select
     }
   };
 
-  const selectedDate = selectedMonth 
+  const selectedDate = selectedMonth
     ? new Date(parseInt(selectedMonth.split('/')[1]), parseInt(selectedMonth.split('/')[0]) - 1)
     : new Date();
-  
-  // const handleDateChange = (date: Date | null) => {
-  //   if (date) {
-  //     setStartDate(date);
-  //   }
-  // };
 
   return (
     <div>
