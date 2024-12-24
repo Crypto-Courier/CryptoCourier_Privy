@@ -4,6 +4,14 @@ import Image from "next/image";
 import Exwallet from "../assets/Exwallet.png";
 import install from "../assets/install.png";
 import { useTheme } from "next-themes";
+import started from "../assets/started.png";
+import seed from "../assets/seed.png";
+import pass from "../assets/password.png";
+import account from "../assets/addAccount.png";
+import imp from "../assets/import.png";
+import key from "../assets/pKey.png";
+import imp2 from "../assets/Imported.png";
+import { URL } from "node:url";
 
 type Step = {
   title: string;
@@ -72,19 +80,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           >
             Download & Install the Extension or App{" "}
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3">
+          <div className="flex gap-5 items-start justify-center ">
+            <div className="flex justify-center mt-3 w-[50%]">
               <Image src={install} alt="" width={250} />
             </div>
             <div className="w-[60%] mt-3">
-              <div
-                className={` text-lg  ${
+              <ul
+                className={` text-lg mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 1. Visit the Official Website :
-              </div>
-              <div>
+              </ul>
+              <li>
                 Go to the official website:{" "}
                 <a
                   className="text-blue-600"
@@ -94,33 +102,31 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   https://metamask.io/
                 </a>
                 .
-              </div>
+              </li>
 
-              <div
-                className={` text-lg mt-5 ${
+              <ul
+                className={` text-lg mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 2. For desktop :
-              </div>
-              <div>
-                - Click "Download" and choose the browser extension for Chrome,
+              </ul>
+              <li>
+                Click "Download" and choose the browser extension for Chrome,
                 Firefox, Brave, or Edge.
-              </div>
-              <div>
-                - Install the extension from the browser's official store.
-              </div>
-              <div
-                className={` text-lg mt-5  ${
+              </li>
+              <li>Install the extension from the browser's official store.</li>
+              <ul
+                className={` text-lg mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 3. For Mobile :
-              </div>
-              <div>
-                - Download the MetaMask app from the App Store (iOS) or Google
+              </ul>
+              <li>
+                Download the MetaMask app from the App Store (iOS) or Google
                 Play Store (Android).
-              </div>
+              </li>
             </div>
           </div>
         </>
@@ -139,7 +145,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5  ${
+              className={` text-lg mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
@@ -159,7 +165,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5  ${
+              className={` text-lg mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
@@ -225,16 +231,299 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
     },
   ];
   // Define Steps for Copy Flow (10 slides)
-  const copySteps: Step[] = Array.from({ length: 10 }, (_, i) => ({
-    title: `Copy Step ${i + 1}`,
-    render: () => <div>Content for Copy Step {i + 1}</div>,
-  }));
+  const copySteps: Step[] = [
+    {
+      title: "Slide 1",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Add account in your wallet using
+            <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={account} alt="" width={200} />
+            </div>
+            <div className="w-[70%] mt-3">
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. For Chrome Extension:
+              </ul>
+              <li>Click the account selector at the top of your wallet.</li>
+              <li>
+                Select 'Add account or hardware wallet' at the bottom of the
+                list.
+              </li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 2",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Add account in your wallet using
+            <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={imp} alt="" width={200} />
+            </div>
+            <div className="w-[70%] mt-3">
+              <li
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                On the next menu, select{" "}
+                <span className={`font-bold text-[#FFE500]`}>
+                  'Import account'
+                </span>
+              </li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 3",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Add account in your wallet using
+            <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={key} alt="" width={200} />
+            </div>
+            <div className="w-[70%] mt-3">
+              <li
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                You will be directed to the Import page. Paste your private key
+                and click 'Import'.
+                <span className={`font-bold text-[#FFE500]`}>'Import'</span>
+              </li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 4",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Add account in your wallet using
+            <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={imp2} alt="" width={200} />
+            </div>
+            <div className="w-[70%] mt-3">
+              <li
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                You should be able to see the newly imported account in the
+                account selector dropdown with an{" "}
+                <span className={`font-bold text-[#FFE500]`}>'Imported'</span>{" "}
+                tag next to it.
+              </li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+  ];
 
   // Define Steps for Phrase Flow (10 slides)
-  const phraseSteps: Step[] = Array.from({ length: 10 }, (_, i) => ({
-    title: `Phrase Step ${i + 1}`,
-    render: () => <div>Content for Phrase Step {i + 1}</div>,
-  }));
+  const phraseSteps: Step[] = [
+    {
+      title: "Slide 1",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Importing a Wallet to
+            <span className={`font-bold text-[#FFE500]`}> MetaMask</span> Using
+            <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={started} alt="" width={280} />
+            </div>
+            <div className="w-[50%] mt-3">
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. Open MetaMask :
+              </ul>
+              <li>Click on the MetaMask extension or open the app.</li>
+
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. Select Import Wallet :
+              </ul>
+              <li>Click "Import Wallet" on the startup screen.</li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 2",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Importing a Wallet to MetaMask Using
+            <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={seed} alt="" width={200} />
+            </div>
+            <div className="w-[60%] mt-3">
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. Enter Seed Phrase :
+              </ul>
+              <li>Input the 12-word seed phrase of your existing wallet.</li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 3",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Importing a Wallet to MetaMask Using
+            <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={seed} alt="" width={200} />
+            </div>
+            <div className="w-[60%] mt-3">
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. Enter Seed Phrase :
+              </ul>
+              <li>Input the 12-word seed phrase of your existing wallet.</li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 4",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Importing a Wallet to MetaMask Using
+            <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={pass} alt="" width={200} />
+            </div>
+            <div className="w-[60%] mt-3">
+              <ul
+                className={` text-lg mt-5 mb-3 ${
+                  theme === "dark" ? "text-[#FFE500]" : "text-black"
+                }`}
+              >
+                1. Set a Password :
+              </ul>
+              <li>Create a new password for this MetaMask account.</li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Slide 4",
+      render: () => (
+        <>
+          <div
+            className={` text-lg text-center mb-3 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Add account in your wallet using
+            <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+          </div>
+          <div className="flex gap-5 items-start">
+            <div className="flex justify-center mt-3 w-[50%]">
+              <Image src={imp2} alt="" width={200} />
+            </div>
+            <div className="w-[70%] mt-3">
+              <li>
+                You should be able to see the newly imported account in the
+                account selector dropdown with an{" "}
+                <span className={`font-bold text-[#FFE500]`}>'Imported'</span>{" "}
+                tag next to it.
+              </li>
+            </div>
+          </div>
+        </>
+      ),
+    },
+  ];
 
   const getCurrentSteps = () => {
     if (flowType === "copy") return copySteps;
