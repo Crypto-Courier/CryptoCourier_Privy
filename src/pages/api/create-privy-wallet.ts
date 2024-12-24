@@ -1,11 +1,12 @@
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { email } = req.body;
         
         const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
-        const privyAppSecret = process.env.NEXT_PUBLIC_PRIVY_APP_SECRET;
+        const privyAppSecret = process.env.PRIVY_APP_SECRET;
 
         if (!privyAppId || !privyAppSecret) {
             console.error('Privy app ID or secret is missing');
@@ -37,3 +38,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+
+export default privyAuthMiddleware(handler);

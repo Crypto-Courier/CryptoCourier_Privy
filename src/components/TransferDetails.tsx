@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import trx2 from "../assets/trx2.png";
 import { TransferDetailsProps } from "../types/transfer-detail-types";
 import axios from "axios";
+import { usePrivy } from "@privy-io/react-auth";
 
 const TransferDetails: React.FC<TransferDetailsProps> = ({
   isOpen,
@@ -23,6 +24,10 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
+  const { getAccessToken } = usePrivy();
+
+  const SITE_URL = process.env.NEXT_PUBLIC_PRODUCTION_URL?.split(',');
+  const DEVELOPMENT_URL =  process.env.NEXT_PUBLIC_LOCAL_URL?.split(',');
 
   // Check email embedded wallet from privy
   useEffect(() => {
@@ -33,7 +38,20 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
       setChecking(true);
 
       try {
-        const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail });
+        const token = await getAccessToken();
+
+        // Set the domain dynamically based on the environment
+        const domain = process.env.NODE_ENV === 'development'
+          ? `http://${DEVELOPMENT_URL}`  // Development domain
+          : `https://${SITE_URL}`; // Production domain
+
+        const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Origin': domain,
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
         if (response.data) {
           setWalletAddress(response.data);
@@ -291,7 +309,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   </p>
                   {isContractCall && (
                     // <div className="flex gap-4 mb-4 flex-col w-[100%] lg:w-[80%] md:w-[80%] sm:w-[80%] m-auto">
-                      <>
+                    <>
                       <div className="item-start font-semibold">Transaction Flow</div>
                       <div
                         className={` text-sm lg:text-md  md:text-md sm:text-md  rounded-[12px] text-md py-2 px-4 font-bold ${theme === "dark"
@@ -316,7 +334,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                           </li>
                         </ol>
                       </div>
-                      </>
+                    </>
                     // {/* </div> */}
                   )}
 
