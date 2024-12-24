@@ -41,24 +41,7 @@ function ClaimToken() {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         try {
-          const userDataResponse = await fetch("/api/user-data", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              transactionHash: transactionHash,
-            }),
-          });
-
-          // Check if the response is successful
-          if (!userDataResponse .ok) {
-            const errorData = await userDataResponse.json();
-            throw new Error(errorData.error || 'Authentication failed');
-          }
-
-           // Then, update transaction status
-           const transactionUpdateResponse = await fetch("/api/update-transaction", {
+          const transactionUpdateResponse = await fetch("/api/update-transaction", {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -74,6 +57,21 @@ function ClaimToken() {
             throw new Error(errorData.message || 'Transaction update failed');
           }
 
+          const userDataResponse = await fetch("/api/user-data", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              transactionHash: transactionHash,
+            }),
+          });
+
+          // Check if the response is successful
+          if (!userDataResponse.ok) {
+            const errorData = await userDataResponse.json();
+            throw new Error(errorData.error || 'Authentication failed');
+          }
         } catch (error) {
           setIsRedirecting(false);
           console.error("Error updating/storing authentication data:", error);
@@ -111,14 +109,14 @@ function ClaimToken() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
             className={`rounded-[10px] max-w-[40rem] w-full mx-3 relative ${theme === "dark"
-                ? "bg-[#000000] border-red-500 border backdrop-blur-[10px]"
-                : "bg-[#FFFCFC] border border-[#FE005B]/60"
+              ? "bg-[#000000] border-red-500 border backdrop-blur-[10px]"
+              : "bg-[#FFFCFC] border border-[#FE005B]/60"
               }`}
           >
             <div
               className={`flex justify-center items-center p-6 rounded-tr-[10px] rounded-tl-[10px] ${theme === "dark"
-                  ? "bg-[#171717] border-b-2 border-red-500"
-                  : "bg-white border-b-2 border-[#FE005B]"
+                ? "bg-[#171717] border-b-2 border-red-500"
+                : "bg-white border-b-2 border-[#FE005B]"
                 }`}
             >
               <div className="flex items-center flex-col">

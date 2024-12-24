@@ -51,7 +51,8 @@ const LeaderBoard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [activeButton, setActiveButton] = useState("Global"); // Default active button
+  const [selectedMonth, setSelectedMonth] = useState<string>(''); // Format: "MM/YYYY"
+  const [activeButton, setActiveButton] = useState("Global");
 
   const activeAddress = walletData?.address;
 
@@ -73,7 +74,7 @@ const LeaderBoard: React.FC = () => {
     },
     rank: 0
   });
-  
+
 
   const handleChainSelect = (chains: number[]) => {
     setSelectedChains(chains);
@@ -87,7 +88,7 @@ const LeaderBoard: React.FC = () => {
         setTopThreeUsers([]);
         setUserDetails(null);
         setError(null);
-  
+
         // Build query parameters
         const params = new URLSearchParams();
         if (activeAddress) {
@@ -96,21 +97,29 @@ const LeaderBoard: React.FC = () => {
         if (selectedChains.length === 1) {
           params.append('chainId', selectedChains[0].toString());
         }
-  
-        const response = await fetch(`/api/leaderboard-data?${params.toString()}`);
-  
+        if (activeButton === "Monthly" && selectedMonth) {
+          params.append('month', selectedMonth);
+        }
+
+         // Choose API endpoint based on active button
+         const endpoint = activeButton === "Global" 
+         ? '/api/global-leaderboard-data' 
+         : '/api/monthly-leaderboard-data';
+
+        const response = await fetch(`${endpoint}?${params.toString()}`);
+
         if (!response.ok) {
           throw new Error("Failed to fetch leaderboard data");
         }
-  
+
         const data: LeaderboardResponse = await response.json();
-  
+
         if (data.status === "error") {
           throw new Error(data.error || "Unknown error");
         }
-  
-        // Handle empty data case with proper type checking
-        if (!data.allUsers || data.allUsers.length === 0) {
+
+         // Handle empty data case with proper type checking
+         if (!data.allUsers || data.allUsers.length === 0) {
           if (activeAddress) {
             const emptyEntry = getEmptyLeaderboardEntry(activeAddress);
             setLeaderboardData([emptyEntry]);
@@ -149,10 +158,10 @@ const LeaderBoard: React.FC = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchLeaderboardData();
-  }, [activeAddress, selectedChains]);
-  
+  }, [activeAddress, selectedChains, activeButton, selectedMonth]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = leaderboardData.slice(indexOfFirstItem, indexOfLastItem);
@@ -166,6 +175,10 @@ const LeaderBoard: React.FC = () => {
 
   const invite = async () => {
     router.push("/send-token");
+  };
+
+  const handleMonthSelect = (month: string) => {
+    setSelectedMonth(month);
   };
 
   return (
@@ -431,7 +444,7 @@ const LeaderBoard: React.FC = () => {
                 ) : (
                   <div className="w-full  rounded-3xl relative ">
                     <div className="flex justify-end mb-2">
-                      {activeButton === "Monthly" && <MonthYearPicker />}
+                      {activeButton === "Monthly" && <MonthYearPicker onMonthSelect={handleMonthSelect} selectedMonth={selectedMonth} />}
                     </div>
                     <FilterChainData onChainSelect={handleChainSelect} />
 
