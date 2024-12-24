@@ -1,35 +1,54 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { PrivyClient } from '@privy-io/server-auth';
 
-export async function privyAuthMiddleware(req: NextApiRequest, res: NextApiResponse, next: Function) {
-    const token = req.headers.authorization?.split(' ')[1];
+type NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void;
 
-    if (!token) {
-        console.error('No token provided');
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
+const protectedPaths = [
+    '/api/check-privy-wallet',
+    '/api/create-privy-wallet',
+    '/api/settings/*'
+    // Add more protected paths here
+];
 
-    console.log("Token received:", token);
+const isProtectedPath = (path: string): boolean => {
+    return protectedPaths.some(pattern => {
+        const regexPattern = pattern
+            .replace(/\*/g, '.*')
+            .replace(/\//g, '\\/');
+        return new RegExp(`^${regexPattern}$`).test(path);
+    });
+};
 
-    try {
-        const privyClient = new PrivyClient(
-            process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-            process.env.PRIVY_APP_SECRET!
-        );
+export const privyAuthMiddleware = (handler: NextApiHandler): NextApiHandler => {
+    return async (req: NextApiRequest, res: NextApiResponse) => {
+        const path = req.url?.split('?')[0] ?? '';
 
-        // Verify the token
-        const isValid = await privyClient.verifyAuthToken(token);
-
-        console.log("Validation status:", isValid);
-
-        if (!isValid) {
-            console.error('Invalid token');
-            return res.status(401).json({ message: 'Invalid token' });
+        if (!isProtectedPath(path)) {
+            return handler(req, res);
         }
 
-        next();
-    } catch (error) {
-        console.error('Error verifying Privy token:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: No token provided' });
+        }
+
+        try {
+            const privyClient = new PrivyClient(
+                process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                process.env.PRIVY_APP_SECRET!
+            );
+
+            const isValid = await privyClient.verifyAuthToken(token);
+
+            if (!isValid) {
+                return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+            }
+
+            return handler(req, res);
+        } catch (error) {
+            console.error('Privy authentication error:', error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    };
+};

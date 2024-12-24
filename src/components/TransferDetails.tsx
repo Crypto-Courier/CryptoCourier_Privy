@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import trx2 from "../assets/trx2.png";
 import { TransferDetailsProps } from "../types/transfer-detail-types";
 import axios from "axios";
+import { usePrivy } from "@privy-io/react-auth";
 
 const TransferDetails: React.FC<TransferDetailsProps> = ({
   isOpen,
@@ -23,6 +24,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
+  const { getAccessToken } = usePrivy();
 
   // Check email embedded wallet from privy
   useEffect(() => {
@@ -33,7 +35,12 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
       setChecking(true);
 
       try {
-        const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail });
+        const token = await getAccessToken(); 
+        const response = await axios.post('/api/check-privy-wallet', { email: recipientEmail }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
         if (response.data) {
           setWalletAddress(response.data);
