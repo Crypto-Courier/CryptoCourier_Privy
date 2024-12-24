@@ -17,7 +17,7 @@ type WalletPopupProps = {
 
 const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [flowType, setFlowType] = useState<"copy" | "phrase" | null>(null);
+  const [flowType, setFlowType] = useState<"copy" | "phrase" | null>("phrase");
   const popupRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
 
@@ -223,14 +223,6 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
         </>
       ),
     },
-    {
-      title: "Slide 5",
-      render: () => (
-        <div>
-          <p>Content for Slide 4</p>
-        </div>
-      ),
-    },
   ];
   // Define Steps for Copy Flow (10 slides)
   const copySteps: Step[] = Array.from({ length: 10 }, (_, i) => ({
@@ -253,30 +245,32 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   const handleNext = () => {
     const steps = getCurrentSteps();
 
-    // If we are on the last step of the main flow (Step 4), go to Copy/Phrase buttons selection
-    if (currentStep === 4 && !flowType) {
-      setFlowType(null); // Reset the flow to null to show method selection (Copy/Phrase)
-      setCurrentStep(5); // Move to the step that shows Copy/Phrase buttons
-      return; // Exit the function early to avoid further changes
+    if (currentStep === 3 && !flowType) {
+      // Automatically activate "phrase" on Step 4
+      setFlowType("phrase");
+      setCurrentStep(0); // Move to the first step of the "phrase" flow
+      return; // Exit early to prevent advancing further
     }
 
-    // Normal flow: Proceed to next step
+    // Proceed to the next step normally
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
   const handleBack = () => {
-    if (flowType) {
-      // If we are in "copy" or "phrase" flow, return to Step 3 (main flow)
-      setFlowType(null); // Reset the flow
-      setCurrentStep(4); // Go to Step 3 in the main flow
-    } else {
-      // Normal navigation
-      if (currentStep > 0) {
-        setCurrentStep(currentStep - 1);
-      }
+    if (flowType && currentStep === 0) {
+      // If on Step 1 of a flow, go back to Step 4 of the main slider
+      setFlowType(null); // Reset flow type
+      setCurrentStep(3); // Go back to Step 4 in the main slider
+    } else if (flowType && currentStep > 0) {
+      // If in a method flow (copy or phrase), go back to the previous step
+      setCurrentStep(currentStep - 1);
+    } else if (!flowType && currentStep > 0) {
+      // If in the main slider, go back to the previous step
+      setCurrentStep(currentStep - 1);
     }
   };
+
   const handleMethodSelect = (method: "copy" | "phrase") => {
     setFlowType(method);
     setCurrentStep(0); // Reset to first step of the selected flow
@@ -329,7 +323,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </span>
               </div>
 
-              <div className="h-2 bg-gray-200 rounded-full">
+              <div className="h-2 bg-transaparent rounded-full border border-[#ffe600ac]">
                 <div
                   className={`h-full  rounded-full transition-all duration-300 ${
                     theme === "dark" ? "bg-[#FFE500]" : "bg-[#E265FF]"
@@ -343,26 +337,26 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
             {(currentStep === 4 || flowType) && (
-              <div className="flex border-b border-gray-200">
+              <div className="flex border-b border-[#FFE500]">
                 <button
                   onClick={() => handleMethodSelect("copy")}
-                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 ${
+                  className={`flex-1 px-4 py-3 text-lg font-bold border-b-2 ${
                     flowType === "copy"
-                      ? "border-blue-600 text-blue-600 bg-blue-100" // Active state
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      ? "border-[#FFE500] text-black bg-[#FFE500]"
+                      : "border-transparent text-[#FFE500]"
                   }`}
                 >
-                  Copy
+                  Copy key
                 </button>
                 <button
                   onClick={() => handleMethodSelect("phrase")}
-                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 ${
+                  className={`flex-1 px-4 py-3 text-lg border-b-2 font-bold ${
                     flowType === "phrase"
-                      ? "border-blue-600 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      ? "border-[#FFE500] text-black bg-[#FFE500]"
+                      : "border-transparent text-[#FFE500]"
                   }`}
                 >
-                  Phrase
+                  Copy phrase
                 </button>
               </div>
             )}
@@ -378,25 +372,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <button
                 onClick={handleBack}
                 className={`px-6 py-2 rounded-full ${
-                  currentStep === 0
-                    ? "bg-transaparnt cursor-not-allowed border border-[#FFE500]"
-                    : "bg-transaparnt text-white  border border-[#FFE500]"
+                  currentStep === 0 && !flowType
+                    ? "bg-transparent cursor-not-allowed border border-[#FFE500]"
+                    : "bg-transparent text-white border border-[#FFE500]"
                 }`}
-                disabled={currentStep === 0}
+                disabled={currentStep === 0 && !flowType} // Disable only in the first step of the main flow
               >
                 Back
               </button>
 
-              <button
-                onClick={handleNext}
-                className={`px-6 py-2 bg-[#FFE500] text-black rounded-full  ${
-                  currentStep === getCurrentSteps().length - 1 && !flowType
-                    ? "invisible"
-                    : ""
-                }`}
-              >
-                Next
-              </button>
+              {currentStep < getCurrentSteps().length - 1 ||
+              (currentStep === 3 && !flowType) ? (
+                <button
+                  onClick={handleNext}
+                  className="px-6 py-2 bg-[#FFE500] text-black rounded-full"
+                >
+                  Next
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
