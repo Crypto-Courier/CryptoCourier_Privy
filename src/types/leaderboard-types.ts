@@ -24,4 +24,5 @@ export interface PointsEntry {
     totalUsers?: number;
     userRank?: number;
     error?: string;
+    month?:string;
   }
