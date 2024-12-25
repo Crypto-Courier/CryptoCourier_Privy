@@ -10,7 +10,7 @@ const protectedPaths = [
 ];
 
 const allowedDomains = {
-    development: process.env.NEXT_PUBLIC_LOCAL_URL?.split(','),
+    development: process.env.NEXT_PUBLIC_DEVELOPMENT_URL?.split(','),
     production: process.env.NEXT_PUBLIC_PRODUCTION_URL?.split(',')
 };
 
