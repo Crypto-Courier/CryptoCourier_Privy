@@ -1,10 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
 import "../../styles/History.css";
 import { Tooltip } from "antd";
 import Navbar from "../Navbar";
@@ -153,6 +149,7 @@ const History: React.FC = () => {
     }
   };
 
+  // Route to leaderboard page
   const leaderboard = () => {
     router.push("/leaderboard");
   };
@@ -168,47 +165,49 @@ const History: React.FC = () => {
   };
 
   const renderWalletAddress = () => {
-    if (viewMode === "dashboard") {
+    if (viewMode === "dashboard" || hasEmbeddedWallet) {
       return (
         <div
           className="relative w-full lg:w-[30%] md:w-[30%]"
           ref={dropdownRef}
         >
           <div
-            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
-              theme === "dark"
-                ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
-                : "bg-[#F4F3F3] border border-[#000000]"
-            }`}
+            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${theme === "dark"
+              ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+              : "bg-[#F4F3F3] border border-[#000000]"
+              }`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown on click
           >
             <div
               className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
               onClick={(e) => {
                 e.stopPropagation(); // Prevent dropdown toggle when copying
-                handleCopy(dashboardAddress || "");
+                handleCopy(dashboardAddress || activeAddress || "");
               }}
             >
-              {dashboardAddress
+              {/* (viewMode === "dashboard") ? {dashboardAddress
                 ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
                     -4
                   )}`
+                : "Connect Wallet"} :  */}
+              {activeAddress
+                ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(
+                  -4
+                )}`
                 : "Connect Wallet"}
             </div>
             {/* Copy or Check Icon */}
             {isCopied ? (
               <Check
                 size={20}
-                className={`cursor-pointer ${
-                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
-                }`}
+                className={`cursor-pointer ${theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                  }`}
               />
             ) : (
               <Copy
                 size={20}
-                className={`cursor-pointer ${
-                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
-                }`}
+                className={`cursor-pointer ${theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                  }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCopyWithFeedback(dashboardAddress || "");
@@ -221,20 +220,18 @@ const History: React.FC = () => {
           {isDropdownOpen && (
             <div className="absolute top-full left-0 w-full rounded-md shadow-lg z-10">
               <div
-                className={`mt-1 rounded-md ${
-                  theme === "dark"
-                    ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
-                    : "bg-white text-black border border-[#1C1C1C]"
-                }`}
+                className={`mt-1 rounded-md ${theme === "dark"
+                  ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
+                  : "bg-white text-black border border-[#1C1C1C]"
+                  }`}
               >
                 <div className="p-2">
                   <button
                     onClick={handleExportWallet}
-                    className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
-                      canExportWallet
-                        ? "hover:bg-gray-100 hover:text-gray-900"
-                        : "opacity-50 cursor-not-allowed"
-                    }`}
+                    className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${canExportWallet
+                      ? "hover:bg-gray-100 hover:text-gray-900"
+                      : "opacity-50 cursor-not-allowed"
+                      }`}
                   >
                     <ExternalLink
                       size={16}
@@ -272,23 +269,51 @@ const History: React.FC = () => {
     // Default View
     return (
       <div
-        className={`hidden lg:flex md:flex sm:hidden items-center space-x-3 p-2 rounded-[10px] ${
-          theme === "dark"
-            ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
-            : "bg-[#F4F3F3] border border-[#000000]"
-        }`}
+        className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${theme === "dark"
+          ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+          : "bg-[#F4F3F3] border border-[#000000]"
+          }`}
       >
-        <span
-          // onClick={() => handleCopy(activeAddress || "")}
-          className="cursor-pointer hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]"
+        <div
+          className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent dropdown toggle when copying
+            handleCopy(dashboardAddress || activeAddress || "");
+          }}
         >
+          {/* (viewMode === "dashboard") ? {dashboardAddress
+                ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
+                    -4
+                  )}`
+                : "Connect Wallet"} :  */}
           {activeAddress
-            ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`
-            : "Connect or Login"}
-        </span>
+            ? `${activeAddress.slice(0, 6)}...${activeAddress.slice(
+              -4
+            )}`
+            : "Connect Wallet"}
+        </div>
+        {/* Copy or Check Icon */}
+        {isCopied ? (
+          <Check
+            size={20}
+            className={`cursor-pointer ${theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+              }`}
+          />
+        ) : (
+          <Copy
+            size={20}
+            className={`cursor-pointer ${theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+              }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopyWithFeedback(dashboardAddress || "");
+            }}
+          />
+        )}
       </div>
     );
   };
+
   const handleCopy = (address: string) => {
     if (address) {
       navigator.clipboard.writeText(address);
@@ -304,32 +329,32 @@ const History: React.FC = () => {
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px]">
           <div
-            className={`p-0 flex flex-col-reverse sm:flex-col-reverse md:flex-row lg:flex-row justify-end sm:justify-between md:justify-between lg:justify-between border-black border-b-0 lg:p-[30px] shadow-lg md:p-[30px] sm:p-0 ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } rounded-tl-[40px] rounded-tr-[40px] items-center`}
+            className={`p-0 flex flex-col-reverse sm:flex-col-reverse md:flex-row lg:flex-row justify-end sm:justify-between md:justify-between lg:justify-between border-black border-b-0 lg:p-[30px] shadow-lg md:p-[30px] sm:p-0 ${theme === "dark" ? "bg-black" : "bg-white"
+              } rounded-tl-[40px] rounded-tr-[40px] items-center`}
           >
             {renderWalletAddress()}
             <div className="text-right flex justify-end  p-[30px] sm:p-[30px] lg:p-0 md:p-0 ">
               <div className="gap-4 flex">
+
+                {/* Icon of leaderboard */}
                 <Tooltip title="Leaderboard">
                   <button
                     onClick={leaderboard}
-                    className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
-                      theme === "dark"
-                        ? " text-[#363535] border border-[#FFE500] "
-                        : "bg-[#E265FF] text-white"
-                    }`}
+                    className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${theme === "dark"
+                      ? " text-[#363535] border border-[#FFE500] "
+                      : "bg-[#E265FF] text-white"
+                      }`}
                   >
                     <Image src={board} width={20} alt="" />
                   </button>
                 </Tooltip>
+
                 {viewMode === "default" && (
                   <button
-                    className={`px-[30px] py-[10px] rounded-full lg:mx-5 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                      theme === "dark"
-                        ? "bg-[#FFE500] text-[#363535]"
-                        : "bg-[#E265FF] text-white"
-                    }`}
+                    className={`px-[30px] py-[10px] rounded-full lg:mx-5 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#E265FF] text-white"
+                      }`}
                     onClick={SendToken}
                   >
                     Gift Token
@@ -337,11 +362,10 @@ const History: React.FC = () => {
                 )}
                 {viewMode === "dashboard" && (
                   <button
-                    className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                      theme === "dark"
-                        ? "bg-[#FFE500] text-[#363535]"
-                        : "bg-[#E265FF] text-white"
-                    }`}
+                    className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#E265FF] text-white"
+                      }`}
                     onClick={invite}
                   >
                     Invite Your Friends
@@ -352,11 +376,10 @@ const History: React.FC = () => {
           </div>
 
           <div
-            className={`${
-              theme === "dark"
-                ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
-                : "bg-white/80 backdrop-blur-[80px]"
-            } rounded-br-[40px] rounded-bl-[40px]`}
+            className={`${theme === "dark"
+              ? "bg-[#0A0A0A]/80 backdrop-blur-[80px]"
+              : "bg-white/80 backdrop-blur-[80px]"
+              } rounded-br-[40px] rounded-bl-[40px]`}
           >
             <div className="">
               <SwitchHistory onChainSelect={handleChainSelect} />
