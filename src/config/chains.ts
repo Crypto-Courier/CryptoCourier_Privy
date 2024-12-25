@@ -1,11 +1,10 @@
 import { ChainConfig } from "../types/chain-config-types";
-
-const alchemyKey = process.env.ALCHEMY_API_KEY;
+import { ALCHEMY_API_KEY } from '../config/constant';  
 
 const chainConfig: ChainConfig = {
   11155111: {
     name: "Ethereum Sepolia",
-    rpcUrl: `https://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`,
+    rpcUrl: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
@@ -25,7 +24,7 @@ const chainConfig: ChainConfig = {
   },
   10: {
     name: "Optimism",
-    rpcUrl: `https://opt-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+    rpcUrl: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
@@ -35,7 +34,7 @@ const chainConfig: ChainConfig = {
   },
   8453: {
     name: "Base",
-    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
@@ -65,7 +64,7 @@ const chainConfig: ChainConfig = {
   },
   7777777: {
     name: "Zora",
-    rpcUrl: `https://zora-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+    rpcUrl: `https://zora-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
@@ -115,7 +114,7 @@ const chainConfig: ChainConfig = {
   },
   480: {
     name: "WorldChain",
-    rpcUrl: `https://worldchain-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+    rpcUrl: `https://worldchain-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",

@@ -4,6 +4,7 @@ import { WalletAccount } from "../../types/check-privy-wallet-api-types"
 import { handleError } from "../../utils/api-error-handler"; 
 import { isValidEmail } from "../../utils/parameter-validation";
 import { privyAuthMiddleware } from "../../middleware/privyAuth";
+import { PRIVY_APP_ID, PRIVY_APP_SECRET } from '../../config/constant';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -17,8 +18,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const privyClient = new PrivyClient(
-      process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-      process.env.PRIVY_APP_SECRET!
+      PRIVY_APP_ID!,
+      PRIVY_APP_SECRET!
     );
 
     const users = await privyClient.getUserByEmail(email);

@@ -1,14 +1,12 @@
 import { privyAuthMiddleware } from '../../middleware/privyAuth';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { PRIVY_APP_ID, PRIVY_APP_SECRET } from '../../config/constant';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { email } = req.body;
         
-        const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
-        const privyAppSecret = process.env.PRIVY_APP_SECRET;
-
-        if (!privyAppId || !privyAppSecret) {
+        if (!PRIVY_APP_ID || !PRIVY_APP_SECRET) {
             console.error('Privy app ID or secret is missing');
             return res.status(500).json({ error: 'Server configuration error' });
         }
@@ -17,9 +15,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             const response = await fetch('https://auth.privy.io/api/v1/users', {
                 method: 'POST',
                 headers: {
-                    'privy-app-id': privyAppId,
+                    'privy-app-id': PRIVY_APP_ID,
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + Buffer.from(`${privyAppId}:${privyAppSecret}`).toString('base64'),
+                    'Authorization': 'Basic ' + Buffer.from(`${PRIVY_APP_ID}:${PRIVY_APP_SECRET}`).toString('base64'),
                 },
                 body: JSON.stringify({
                     create_ethereum_wallet: true,
