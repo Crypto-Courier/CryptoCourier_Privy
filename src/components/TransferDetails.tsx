@@ -39,19 +39,12 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
       try {
         const token = await getAccessToken();
 
-        // Set the domain dynamically based on the environment
-        const domain =
-          process.env.NODE_ENV === "development"
-            ? `http://${DEVELOPMENT_URL}` // Development domain
-            : `https://${SITE_URL}`; // Production domain
-
         const response = await axios.post(
           "/api/check-privy-wallet",
           { email: recipientEmail },
           {
             headers: {
               "Content-Type": "application/json",
-              Origin: domain,
               Authorization: `Bearer ${token}`,
             },
           }
@@ -99,17 +92,10 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
     try {
       const token = await getAccessToken();
 
-      // Set the domain dynamically based on the environment
-      const domain =
-        process.env.NODE_ENV === "development"
-          ? `http://${DEVELOPMENT_URL}` // Development domain
-          : `https://${SITE_URL}`; // Production domain
-
       const response = await fetch("/api/create-privy-wallet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: domain,
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ email: recipientEmail }),
