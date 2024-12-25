@@ -581,7 +581,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[100] ">
         <div
           ref={popupRef}
-          className="bg-white rounded-lg w-[45%]  relative  m-auto"
+          className="bg-white rounded-lg w-[80%]  relative  m-auto sm:w-[80%] lg:w-[45%] md:w-[50%]"
         >
           {/* Close button at the top right */}
           <div className="absolute top-0 right-0 z-10">
