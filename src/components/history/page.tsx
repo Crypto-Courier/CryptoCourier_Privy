@@ -210,7 +210,7 @@ const History: React.FC = () => {
                   }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleCopyWithFeedback(dashboardAddress || "");
+                  handleCopyWithFeedback(dashboardAddress || activeAddress || "");
                 }}
               />
             )}
@@ -306,7 +306,7 @@ const History: React.FC = () => {
               }`}
             onClick={(e) => {
               e.stopPropagation();
-              handleCopyWithFeedback(dashboardAddress || "");
+              handleCopyWithFeedback(dashboardAddress || activeAddress || "");
             }}
           />
         )}
