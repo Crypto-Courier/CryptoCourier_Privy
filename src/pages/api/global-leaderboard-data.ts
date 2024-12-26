@@ -34,8 +34,8 @@ export default async function handler(
 
     // Get all unique addresses from both transactions and points
     const uniqueAddresses = new Set<string>();
-    transactions.forEach((tx: any) => uniqueAddresses.add(tx.gifterWallet));
-    leaderboardPoints.forEach((point: any) => uniqueAddresses.add(point.gifterWallet));
+    transactions.forEach((tx: any) => uniqueAddresses.add(tx.gifterWallet.toLowerCase()));
+    leaderboardPoints.forEach((point: any) => uniqueAddresses.add(point.gifterWallet.toLowerCase()));
 
     // Process the data
     const senderData = new Map<string, LeaderboardEntry>();
@@ -62,12 +62,13 @@ export default async function handler(
         chainId: txChainId
       } = transaction;
 
-      const senderInfo = senderData.get(gifterWallet)!;
+      const normalizedGifterWallet = gifterWallet.toLowerCase();
+      const senderInfo = senderData.get(normalizedGifterWallet)!;
 
       // Track invites and claims only if chain matches or no chain filter
       if ((!chainId || txChainId === chainId)) {
         if (claimerWallet &&
-          !senderInfo.transactions.some(t => t.claimerWallet === claimerWallet)) {
+          !senderInfo.transactions.some(t => t.claimerWallet === claimerWallet.toLowerCase())) {
           senderInfo.invites++;
         }
 
@@ -77,7 +78,7 @@ export default async function handler(
           senderInfo.claims++;
         }
 
-        senderInfo.transactions.push(transaction);
+        senderInfo.transactions.push({...transaction, gifterWallet: normalizedGifterWallet});
       }
     });
 
@@ -138,8 +139,9 @@ export default async function handler(
 
     // Add user-specific data if requested
     if (activeAddress) {
+      const normalizedActiveAddress = (activeAddress as string).toLowerCase();
       const userSpecificData = leaderboardData.find(
-        user => user.address.toLowerCase() === (activeAddress as string).toLowerCase()
+        user => user.address.toLowerCase() === normalizedActiveAddress
       );
 
       if (userSpecificData) {
