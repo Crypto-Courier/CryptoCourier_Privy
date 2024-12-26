@@ -4,7 +4,6 @@ import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/naviga
 import "../../styles/History.css";
 import { Tooltip } from "antd";
 import Navbar from "../Navbar";
-import NewNavbar from "../newNavbar";
 import Footer from "../Footer";
 import { useTheme } from "next-themes";
 import { useWallet } from "../../context/WalletContext";
@@ -325,7 +324,7 @@ const History: React.FC = () => {
 
   return (
     <div className="main">
-      {viewMode === "dashboard" ? <NewNavbar /> : <Navbar />}
+      <Navbar />
       <div className="txbg">
         <div className="max-w-6xl w-[90%] mx-auto my-[60px]">
           <div
