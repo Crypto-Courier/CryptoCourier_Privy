@@ -285,9 +285,12 @@ const SendToken = () => {
 
   // Handling the transaction for embedded as well as external wallets
   const handleSend = async (walletAddress: string) => {
-    try {
+    if(!isEmailConnected){
       setTxStatus("pending");
       setShowTxPopup(true);
+    }
+
+    try {
       setIsTransactionLoading(true);
 
       // Find Token contract address from the token data to interact
@@ -888,7 +891,7 @@ const SendToken = () => {
             transferType={isValidEmail(claimerEmail) ? "email" : "eoa"}
             isContractCall={isContractCall}
           />
-          {/* <TransactionPopup
+          <TransactionPopup
             isOpen={showTxPopup}
             onClose={() => setShowTxPopup(false)}
             tokenAmount={tokenAmount}
@@ -899,8 +902,7 @@ const SendToken = () => {
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
-            senderEmail={""}
-          /> */}
+            senderEmail={""} chainId={walletData?.chainId}          />
         </div>
 
         {showAddTokenForm && (
