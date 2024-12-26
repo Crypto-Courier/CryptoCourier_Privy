@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ethers } from 'ethers';
 import chainConfig from '../../config/chains';
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 
 const abi = [
   { constant: true, inputs: [], name: "name", outputs: [{ name: "", type: "string" }], type: "function" },
@@ -41,7 +42,7 @@ function handleError(error: any): { message: string; details: any } {
   return { message: 'An unexpected error occurred', details: error };
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -114,3 +115,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message: `Error fetching token details: ${message}`, details });
   }
 }
+
+export default privyAuthMiddleware(handler);

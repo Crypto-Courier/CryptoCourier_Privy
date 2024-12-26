@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import sgMail from '@sendgrid/mail';
 import { SENDGRID_API_KEY, SENDGRID_VERIFIED_SENDER } from '../../config/constant'
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 
 // Initialize SendGrid with your API key
 sgMail.setApiKey(SENDGRID_API_KEY as string);
@@ -9,7 +10,7 @@ type Data = {
   message: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
@@ -40,3 +41,5 @@ export default async function handler(
     res.status(500).json({ message: 'Error sending email' });
   }
 }
+
+export default privyAuthMiddleware(handler);

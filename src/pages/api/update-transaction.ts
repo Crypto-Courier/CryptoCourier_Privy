@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { handleError } from '../../utils/api-error-handler';
 import { updateTransactionStatus } from '../../controllers/updateTransactionController';
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Only allow PATCH method
   if (req.method !== 'PATCH') {
     return handleError(res, 405, 'Method Not Allowed');
@@ -49,3 +50,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 }
+
+export default privyAuthMiddleware(handler);

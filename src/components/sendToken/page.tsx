@@ -67,7 +67,7 @@ const SendToken = () => {
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
   const [senderWallet, setsenderWallet] = useState("");
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
 
   const isConnected = walletData?.authenticated;
   const gifterAddress = walletData?.address;
@@ -246,10 +246,13 @@ const SendToken = () => {
     gifterEmail: string
   ) => {
     try {
+      const token = await getAccessToken();
+      
       const storeResponse = await fetch("/api/store-transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           claimerWallet: claimerWallet,
@@ -553,10 +556,13 @@ const SendToken = () => {
   const handleAddToken = async (newToken: AddToken) => {
     try {
       const chainId = walletData?.chainId.split(":")[1];
+      const token = await getAccessToken();
+      
       const response = await fetch("/api/add-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           ...newToken,

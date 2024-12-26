@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { handleError } from '../../utils/api-error-handler';
 import { validateTransactionInput, createTransaction } from '../../controllers/transactionController';
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return handleError(res, 405, 'Method Not Allowed');
   }
@@ -53,3 +54,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     handleError(res, 500, 'Failed to store transaction');
   }
 }
+
+export default privyAuthMiddleware(handler);
+

@@ -11,7 +11,7 @@ import { Wallet } from "ethers";
 
 function ClaimToken() {
   const { theme } = useTheme();
-  const { login, authenticated, ready, user } = usePrivy();
+  const { login, authenticated, ready, user, getAccessToken } = usePrivy();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
@@ -19,22 +19,24 @@ function ClaimToken() {
   const [showTooltip, setShowTooltip] = useState(false); // Tooltip visibility state
 
   const transactionHash = searchParams?.get("transactionHash");
-
+  
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto"; // Restore scroll when unmounted
     };
   }, []);
-
+  
   useEffect(() => {
     if (ready) {
       setIsAuthenticated(authenticated);
     }
   }, [ready, authenticated]);
-
+  
   useEffect(() => {
     const handleAuthenticationAndRedirect = async () => {
+      const token = await getAccessToken();
+
       if (ready && authenticated && user?.wallet?.address && !isRedirecting) {
         setIsRedirecting(true);
         // Add a small delay to ensure wallet state is properly initialized
@@ -45,6 +47,7 @@ function ClaimToken() {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               transactionHash: transactionHash,
@@ -61,6 +64,7 @@ function ClaimToken() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               transactionHash: transactionHash,

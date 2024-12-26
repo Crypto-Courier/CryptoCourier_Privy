@@ -7,7 +7,12 @@ type NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<voi
 const protectedPaths = [
     '/api/check-privy-wallet',
     '/api/create-privy-wallet',
-    '/api/settings/*'
+    '/api/add-token',
+    '/api/getTokenDetails',
+    '/api/send-email',
+    '/api/store-transaction',
+    '/api/update-transaction',
+    '/api/user-data'
 ];
 
 const allowedDomains = {
