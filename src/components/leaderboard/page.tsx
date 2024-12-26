@@ -51,7 +51,7 @@ const LeaderBoard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState<string>(''); // Format: "MM/YYYY"
+  const [selectedMonth, setSelectedMonth] = useState<string>(""); // Format: "MM/YYYY"
   const [activeButton, setActiveButton] = useState("Global");
 
   const activeAddress = walletData?.address;
@@ -67,14 +67,13 @@ const LeaderBoard: React.FC = () => {
     transactions: [],
     points: {
       total: 0,
-      byChain: selectedChains.map(chain => ({
+      byChain: selectedChains.map((chain) => ({
         chain: chain.toString(),
-        points: 0
-      }))
+        points: 0,
+      })),
     },
-    rank: 0
+    rank: 0,
   });
-
 
   const handleChainSelect = (chains: number[]) => {
     setSelectedChains(chains);
@@ -92,19 +91,20 @@ const LeaderBoard: React.FC = () => {
         // Build query parameters
         const params = new URLSearchParams();
         if (activeAddress) {
-          params.append('activeAddress', activeAddress);
+          params.append("activeAddress", activeAddress);
         }
         if (selectedChains.length === 1) {
-          params.append('chainId', selectedChains[0].toString());
+          params.append("chainId", selectedChains[0].toString());
         }
         if (activeButton === "Monthly" && selectedMonth) {
-          params.append('month', selectedMonth);
+          params.append("month", selectedMonth);
         }
 
-         // Choose API endpoint based on active button
-         const endpoint = activeButton === "Global" 
-         ? '/api/global-leaderboard-data' 
-         : '/api/monthly-leaderboard-data';
+        // Choose API endpoint based on active button
+        const endpoint =
+          activeButton === "Global"
+            ? "/api/global-leaderboard-data"
+            : "/api/monthly-leaderboard-data";
 
         const response = await fetch(`${endpoint}?${params.toString()}`);
 
@@ -118,8 +118,8 @@ const LeaderBoard: React.FC = () => {
           throw new Error(data.error || "Unknown error");
         }
 
-         // Handle empty data case with proper type checking
-         if (!data.allUsers || data.allUsers.length === 0) {
+        // Handle empty data case with proper type checking
+        if (!data.allUsers || data.allUsers.length === 0) {
           if (activeAddress) {
             const emptyEntry = getEmptyLeaderboardEntry(activeAddress);
             setLeaderboardData([emptyEntry]);
@@ -140,9 +140,11 @@ const LeaderBoard: React.FC = () => {
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load leaderboard data");
+        setError(
+          err instanceof Error ? err.message : "Failed to load leaderboard data"
+        );
         console.error(err);
-        
+
         // Set empty state on error
         if (activeAddress) {
           const emptyEntry = getEmptyLeaderboardEntry(activeAddress);
@@ -187,36 +189,39 @@ const LeaderBoard: React.FC = () => {
 
       <div className={`${theme === "dark" ? "txbgg1" : "txbgg2"}`}>
         <div
-          className={`h-[100vh] ${theme === "dark" ? " py-[30px] " : " py-[30px]  "
-            }`}
+          className={`h-[100vh] ${
+            theme === "dark" ? " py-[30px] " : " py-[30px]  "
+          }`}
         >
           <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh] ">
             <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100% mr-0 ml-auto flex justify-end mb-4 gap-5">
               <div>
                 <button
                   onClick={() => setActiveButton("Global")}
-                  className={`invite px-[30px] py-[10px] rounded-tl-lg rounded-tr-none rounded-bl-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${activeButton === "Global"
-                    ? theme === "dark"
-                      ? "bg-[#FFE500] text-[#1E1E1E]"
-                      : "bg-[#E265FF] text-white"
-                    : theme === "dark"
+                  className={`invite px-[30px] py-[10px] rounded-tl-lg rounded-tr-none rounded-bl-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
+                    activeButton === "Global"
+                      ? theme === "dark"
+                        ? "bg-[#FFE500] text-[#1E1E1E]"
+                        : "bg-[#E265FF] text-white"
+                      : theme === "dark"
                       ? "bg-[#1E1E1E] text-[#FFE500]"
                       : "bg-white text-black"
-                    }`}
+                  }`}
                 >
                   Global
                 </button>
 
                 <button
                   onClick={() => setActiveButton("Monthly")}
-                  className={`invite px-[30px] py-[10px] rounded-tr-lg rounded-tl-none rounded-br-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${activeButton === "Monthly"
-                    ? theme === "dark"
-                      ? "bg-[#FFE500] text-[#1E1E1E]"
-                      : "bg-[#E265FF] text-white"
-                    : theme === "dark"
+                  className={`invite px-[30px] py-[10px] rounded-tr-lg rounded-tl-none rounded-br-lg text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
+                    activeButton === "Monthly"
+                      ? theme === "dark"
+                        ? "bg-[#FFE500] text-[#1E1E1E]"
+                        : "bg-[#E265FF] text-white"
+                      : theme === "dark"
                       ? "bg-[#1E1E1E] text-[#FFE500]"
                       : "bg-white text-black"
-                    }`}
+                  }`}
                 >
                   Monthly
                 </button>
@@ -236,10 +241,11 @@ const LeaderBoard: React.FC = () => {
               <Tooltip title="Invite Your Friends">
                 <button
                   onClick={invite}
-                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${theme === "dark"
-                    ? " text-[#363535] border bg-[#FFE500] "
-                    : "bg-[#E265FF] text-white"
-                    }`}
+                  className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                    theme === "dark"
+                      ? " text-[#363535] border bg-[#FFE500] "
+                      : "bg-[#E265FF] text-white"
+                  }`}
                 >
                   <Image src={invited} width={20} alt="" />
                 </button>
@@ -347,12 +353,13 @@ const LeaderBoard: React.FC = () => {
                   {topThreeUsers.map((user, index) => (
                     <div
                       key={index}
-                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${index === 0
-                        ? "border-[#FF3333]"
-                        : index === 1
+                      className={`flex items-center justify-around gap-4 py-4 px-6 bg-gradient-to-r from-[#40004ea1] to-[#b3000097] rounded-xl border backdrop-blur-[20px] ${
+                        index === 0
+                          ? "border-[#FF3333]"
+                          : index === 1
                           ? "border-[#FF3333]"
                           : "border-[#FF3333]"
-                        }`}
+                      }`}
                     >
                       {index === 0 && (
                         <Image
@@ -428,62 +435,71 @@ const LeaderBoard: React.FC = () => {
               </div>
 
               <div className="md:w-[100%] lg:w-[60%] w-full sm:w-full">
-                {isLoading ? (
-                  <div className=" md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
-                    <Image
-                      src={loading} // Replace with your image path
-                      alt="loading"
-                      width={50}
-                    // className="absolute top-6 left-0 transform -translate-x-1/2 "
-                    />
+                <div className="w-full  rounded-3xl relative ">
+                  <div className="flex justify-end mb-2">
+                    {activeButton === "Monthly" && (
+                      <MonthYearPicker
+                        onMonthSelect={handleMonthSelect}
+                        selectedMonth={selectedMonth}
+                      />
+                    )}
                   </div>
-                ) : error ? (
-                  <div className="text-red-700  md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
-                    {error}
-                  </div>
-                ) : (
-                  <div className="w-full  rounded-3xl relative ">
-                    <div className="flex justify-end mb-2">
-                      {activeButton === "Monthly" && <MonthYearPicker onMonthSelect={handleMonthSelect} selectedMonth={selectedMonth} />}
-                    </div>
-                    <FilterChainData onChainSelect={handleChainSelect} />
+                  <FilterChainData onChainSelect={handleChainSelect} />
 
-                    <div className="overflow-hidden rounded-md ">
-                      <div
-                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${theme === "dark"
+                  <div className="overflow-hidden rounded-md ">
+                    <div
+                      className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${
+                        theme === "dark"
                           ? " bg-black border border-[#FE660A]"
                           : " bg-white border border-[#FFFFFF]"
-                          }`}
-                      >
-                        {["Rank", "Inviter", "Claimer", "Rate", "Points"].map(
-                          (header, index) => (
-                            <div
-                              key={index}
-                              className={`text-center font-semibold mb-0 bg-black ${theme === "dark"
+                      }`}
+                    >
+                      {["Rank", "Inviter", "Claimer", "Rate", "Points"].map(
+                        (header, index) => (
+                          <div
+                            key={index}
+                            className={`text-center font-semibold mb-0 bg-black ${
+                              theme === "dark"
                                 ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
                                 : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
-                                }`}
-                            >
-                              {header}
-                            </div>
-                          )
-                        )}
-                      </div>{" "}
+                            }`}
+                          >
+                            {header}
+                          </div>
+                        )
+                      )}
+                    </div>
+                    {isLoading ? (
+                      <div className=" md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                        <Image
+                          src={loading} // Replace with your image path
+                          alt="loading"
+                          width={50}
+                          // className="absolute top-6 left-0 transform -translate-x-1/2 "
+                        />
+                      </div>
+                    ) : error ? (
+                      <div className="text-red-700  md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                        {error}
+                      </div>
+                    ) : (
                       <div className="mt-2 ">
                         {currentItems.map((entry, index) => (
                           <div
                             key={entry.address}
-                            className={`relative z-20 grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${theme === "dark"
-                              ? "bg-[#000000]/50 border border-[#ddcb2cb2]"
-                              : "bg-[#000000]/50 border border-[#E265FF]"
-                              }`}
+                            className={`relative z-20 grid grid-cols-[5px_1fr_1fr_1fr_1fr_1fr] gap-2 h-[45px] mb-1 last:mb-0 items-center rounded-md backdrop-blur-[50px]  ${
+                              theme === "dark"
+                                ? "bg-[#000000]/50 border border-[#ddcb2cb2]"
+                                : "bg-[#000000]/50 border border-[#E265FF]"
+                            }`}
                           >
                             {/* Yellow Line */}
                             <div
-                              className={`h-[70%]  w-[2px]  ${theme === "dark"
-                                ? "bg-[#FFE500]"
-                                : "bg-[#E265FF]"
-                                }`}
+                              className={`h-[70%]  w-[2px]  ${
+                                theme === "dark"
+                                  ? "bg-[#FFE500]"
+                                  : "bg-[#E265FF]"
+                              }`}
                             ></div>
 
                             {/* Rank Section */}
@@ -526,40 +542,42 @@ const LeaderBoard: React.FC = () => {
                           </div>
                         ))}
                       </div>
-                    </div>
-                    {/* Conditional Pagination - Only show if more than 10 entries */}
-
-                    {leaderboardData.length > itemsPerPage && (
-                      <div className="flex justify-center items-center mt-4 space-x-2">
-                        <button
-                          onClick={() => paginate(currentPage - 1)}
-                          disabled={currentPage === 1}
-                          className={`px-4 py-2 rounded ${currentPage === 1
-                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                            : "bg-[#FFE500] text-[#363535]"
-                            }`}
-                        >
-                          Previous
-                        </button>
-
-                        <span className="text-white">
-                          {currentPage} of {totalPages}
-                        </span>
-
-                        <button
-                          onClick={() => paginate(currentPage + 1)}
-                          disabled={currentPage === totalPages}
-                          className={`px-4 py-2 rounded ${currentPage === totalPages
-                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                            : "bg-[#FFE500] text-[#363535]"
-                            }`}
-                        >
-                          Next
-                        </button>
-                      </div>
                     )}
                   </div>
-                )}
+                  {/* Conditional Pagination - Only show if more than 10 entries */}
+
+                  {leaderboardData.length > itemsPerPage && (
+                    <div className="flex justify-center items-center mt-4 space-x-2">
+                      <button
+                        onClick={() => paginate(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-4 py-2 rounded ${
+                          currentPage === 1
+                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                            : "bg-[#FFE500] text-[#363535]"
+                        }`}
+                      >
+                        Previous
+                      </button>
+
+                      <span className="text-white">
+                        {currentPage} of {totalPages}
+                      </span>
+
+                      <button
+                        onClick={() => paginate(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`px-4 py-2 rounded ${
+                          currentPage === totalPages
+                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                            : "bg-[#FFE500] text-[#363535]"
+                        }`}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

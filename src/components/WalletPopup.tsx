@@ -48,13 +48,21 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
+  // Reset states when popup opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentStep(0);
+      setFlowType(null);
+    }
+  }, [isOpen]);
+
   const initialSteps: Step[] = [
     {
       title: "Slide 1",
       render: () => (
         <>
           <div
-            className={` text-lg text-center  ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
@@ -64,7 +72,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
             export wallet.
           </div>
           <div className="flex justify-center mt-5">
-            <Image src={Exwallet} alt="" width={300} />
+            <Image
+              src={Exwallet}
+              alt=""
+              className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
+            />
           </div>
         </>
       ),
@@ -74,19 +86,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Download & Install the Extension or App{" "}
           </div>
-          <div className="flex gap-5 items-start justify-center ">
-            <div className="flex justify-center mt-3 w-[50%]">
+          <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
               <Image src={install} alt="" width={250} />
             </div>
-            <div className="w-[60%] mt-3">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mb-3 ${
+                className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -105,25 +117,39 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </li>
 
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 2. For desktop :
               </ul>
-              <li>
+              <li
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
                 Click "Download" and choose the browser extension for Chrome,
                 Firefox, Brave, or Edge.
               </li>
-              <li>Install the extension from the browser's official store.</li>
+              <li
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Install the extension from the browser's official store.
+              </li>
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 3. For Mobile :
               </ul>
-              <li>
+              <li
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
                 Download the MetaMask app from the App Store (iOS) or Google
                 Play Store (Android).
               </li>
@@ -137,7 +163,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
@@ -145,18 +171,32 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5 mb-3 ${
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
               1. Export wallet :
             </ul>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               Exporting your wallet means saving the private keys or recovery
               phrase associated with your wallet.
             </li>
-            <li>This allows you to access your wallet from any device. </li>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              This allows you to access your wallet from any device.{" "}
+            </li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               It's important to keep your private keys safe, as anyone with
               access to them can control your wallet and the assets within it.
               It’s like a password for a wallet but you can't change or forget
@@ -165,22 +205,34 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5 mb-3 ${
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
               1. Import Wallet :
             </ul>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               Importing your wallet means restoring access to your existing
               wallet on a new device by using your private key or recovery
               Phrase.
             </li>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               This process is essential when switching devices or recovering
               access to your wallet.
             </li>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               Importing a wallet ensures you can continue managing your tokens
               and assets securely.
             </li>
@@ -193,7 +245,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
@@ -201,13 +253,17 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5 mb-3 ${
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
               1. Copy Phrase :
             </ul>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               This method will export your entire wallet with an account. You
               will need to import the entire wallet in your preferred wallet
               provider.
@@ -215,13 +271,17 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <ul
-              className={` text-lg mt-5 mb-3 ${
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                 theme === "dark" ? "text-[#FFE500]" : "text-black"
               }`}
             >
               1. Copy Key :
             </ul>
-            <li>
+            <li
+              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               This method will export only one account which you can import in
               your existing wallet using a private key.
             </li>
@@ -237,27 +297,41 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Add account in your wallet using
             <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={account} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={account}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[70%] mt-3">
+            <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
                 1. For Chrome Extension:
               </ul>
-              <li>Click the account selector at the top of your wallet.</li>
-              <li>
+              <li
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Click the account selector at the top of your wallet.
+              </li>
+              <li
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
                 Select 'Add account or hardware wallet' at the bottom of the
                 list.
               </li>
@@ -271,20 +345,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Add account in your wallet using
             <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={imp} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={imp}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[70%] mt-3">
+            <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
               <li
-                className={` text-lg mt-5 mb-3 ${
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -303,25 +381,29 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Add account in your wallet using
             <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={key} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={key}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[70%] mt-3">
+            <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
               <li
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                You will be directed to the Import page. Paste your private key
-                and click 'Import'.
+                You will be redirected to the Import page. Paste your private
+                key and click 'Import'.
                 <span className={`font-bold text-[#FFE500]`}>'Import'</span>
               </li>
             </div>
@@ -334,20 +416,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Add account in your wallet using
             <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={imp2} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={imp2}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[70%] mt-3">
+            <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
               <li
-                className={` text-lg mt-5 mb-3 ${
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -370,7 +456,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
@@ -378,13 +464,17 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
             <span className={`font-bold text-[#FFE500]`}> MetaMask</span> Using
             <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={started} alt="" width={280} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
+              <Image
+                src={started}
+                alt=""
+                className="lg:w-[280px] md:w-[280px] sm:w-[200px] w-[200px] m-auto"
+              />
             </div>
-            <div className="w-[50%] mt-3">
+            <div className="lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -393,7 +483,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <li>Click on the MetaMask extension or open the app.</li>
 
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -410,20 +500,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Importing a Wallet to MetaMask Using
             <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={seed} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={seed}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[60%] mt-3">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -440,20 +534,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Importing a Wallet to MetaMask Using
             <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={seed} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={seed}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[60%] mt-3">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -470,20 +568,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Importing a Wallet to MetaMask Using
             <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={pass} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={pass}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[60%] mt-3">
+            <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
               <ul
-                className={` text-lg mt-5 mb-3 ${
+                className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
                   theme === "dark" ? "text-[#FFE500]" : "text-black"
                 }`}
               >
@@ -500,18 +602,22 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       render: () => (
         <>
           <div
-            className={` text-lg text-center mb-3 ${
+            className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
               theme === "dark" ? "text-white" : "text-black"
             }`}
           >
             Add account in your wallet using
             <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
           </div>
-          <div className="flex gap-5 items-start">
-            <div className="flex justify-center mt-3 w-[50%]">
-              <Image src={imp2} alt="" width={200} />
+          <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
+            <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+              <Image
+                src={imp2}
+                alt=""
+                className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+              />
             </div>
-            <div className="w-[70%] mt-3">
+            <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
               <li>
                 You should be able to see the newly imported account in the
                 account selector dropdown with an{" "}
@@ -548,14 +654,10 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   };
   const handleBack = () => {
     if (flowType && currentStep === 0) {
-      // If on Step 1 of a flow, go back to Step 4 of the main slider
-      setFlowType(null); // Reset flow type
-      setCurrentStep(3); // Go back to Step 4 in the main slider
-    } else if (flowType && currentStep > 0) {
-      // If in a method flow (copy or phrase), go back to the previous step
-      setCurrentStep(currentStep - 1);
-    } else if (!flowType && currentStep > 0) {
-      // If in the main slider, go back to the previous step
+      // When on first step of copy or phrase flow, go back to initial step 1
+      setFlowType(null);
+      setCurrentStep(0);
+    } else if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -629,7 +731,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex border-b border-[#FFE500]">
                 <button
                   onClick={() => handleMethodSelect("copy")}
-                  className={`flex-1 px-4 py-3 text-lg font-bold border-b-2 ${
+                  className={`flex-1 px-4 py-3  lg:text-lg md:text-l sm:text-sm text-sm font-bold border-b-2 ${
                     flowType === "copy"
                       ? "border-[#FFE500] text-black bg-[#FFE500]"
                       : "border-transparent text-[#FFE500]"
@@ -639,7 +741,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </button>
                 <button
                   onClick={() => handleMethodSelect("phrase")}
-                  className={`flex-1 px-4 py-3 text-lg border-b-2 font-bold ${
+                  className={`flex-1 px-4 py-3  lg:text-lg md:text-l sm:text-sm text-sm border-b-2 font-bold ${
                     flowType === "phrase"
                       ? "border-[#FFE500] text-black bg-[#FFE500]"
                       : "border-transparent text-[#FFE500]"
