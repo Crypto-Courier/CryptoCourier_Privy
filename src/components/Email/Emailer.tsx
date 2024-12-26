@@ -1,7 +1,6 @@
 import axios from "axios";
 import { renderEmailToString } from "./renderEmailToString";
 import { SendEmailParams } from "../../types/types";
-import { usePrivy } from "@privy-io/react-auth";
 
 export const sendEmail = async ({
   claimerEmail,
@@ -10,8 +9,8 @@ export const sendEmail = async ({
   tokenSymbol,
   gifterEmail,
   transactionHash,
+  getAccessToken
 }: SendEmailParams): Promise<void> => {
-  const { getAccessToken } = usePrivy();
   const token = await getAccessToken(); 
   
   try {

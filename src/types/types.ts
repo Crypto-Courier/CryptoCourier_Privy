@@ -51,6 +51,7 @@ export interface SendEmailParams {
   tokenSymbol: string;
   gifterEmail: string;
   transactionHash: string;
+  getAccessToken: any;
 }
 
 export interface TokenDetails {

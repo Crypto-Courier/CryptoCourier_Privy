@@ -18,6 +18,7 @@ import { ChevronDown, ChevronUp } from "lucide-react"; // Assuming you're using 
 import { Tooltip } from "antd";
 import { chainLogos } from "../utils/chainIdToLogo";
 import resend from "../assets/resend.png";
+import { usePrivy } from "@privy-io/react-auth";
 
 interface TransactionTableProps {
   viewMode: string;
@@ -43,7 +44,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-
+  const { getAccessToken }  = usePrivy();
+  
   // Toggle expand/collapse for a specific transaction
   const toggleTransactionExpand = (index: any) => {
     setExpandedTxIndex(expandedTxIndex === index ? null : index);
@@ -253,6 +255,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenSymbol: tx.tokenSymbol,
         gifterEmail: tx.gifterEmail,
         transactionHash: tx.transactionHash,
+        getAccessToken
       });
       toast.success("Email resent successfully!");
     } catch (error) {

@@ -158,6 +158,7 @@ const SendToken = () => {
             tokenSymbol: selectedTokenData.symbol,
             gifterEmail,
             transactionHash: transactionHash,
+            getAccessToken
           });
         }
         StoreTransactionData(
