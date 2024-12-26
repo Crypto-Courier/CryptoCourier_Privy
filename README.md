@@ -63,7 +63,7 @@ To set up and run the CryptoCourier project locally, follow these steps:
     ```
 4. **Add Environment Variable in .env.local:**
     ```bash
-    NEXT_PUBLIC_PRIVY_APP_ID
+    PRIVY_APP_ID
     PRIVY_APP_SECRET
     BTTC_API_KEY
     MONGODB_URI

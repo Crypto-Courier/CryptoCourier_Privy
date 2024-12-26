@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { AddToken, AddTokenFormProps } from "../../types/add-token-types";
 import { useChainId } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 
 const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
   const chainId = useChainId();
@@ -16,9 +17,11 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
   const [error, setError] = useState<string | null>(null);
   const [tokenFetched, setTokenFetched] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const { getAccessToken } = usePrivy();
 
   useEffect(() => {
     const fetchTokenDetails = async () => {
+      const token = await getAccessToken();
       if (newToken.contractAddress && newToken.contractAddress.length === 42) {
         setError(null);
         setIsFetching(true);
@@ -28,6 +31,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               tokenAddress: newToken.contractAddress,
@@ -82,7 +86,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
       onClose();
     }
   };
-  
+
   useEffect(() => {
     // Function to detect clicks outside the modal
     const handleClickOutside = (event: MouseEvent) => {

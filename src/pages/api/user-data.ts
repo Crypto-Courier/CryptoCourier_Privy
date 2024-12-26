@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { userDataByTransactionHash } from '../../controllers/userController';
 import mongoose from 'mongoose';
+import { privyAuthMiddleware } from '../../middleware/privyAuth';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) : Promise<void>  {
   if (req.method === 'POST') {
     try {
       const {
@@ -35,15 +36,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('An unexpected error occurred:', error.message);
       }
 
-      return res.status(500).json({
+      res.status(500).json({
         error: error instanceof Error ? error.message : 'An unexpected error occurred',
         // Optionally include more error details for debugging
         ...(error instanceof Error ? { details: error.toString() } : {})
       });
+
+      return;
     }
   } else {
     // Handle unsupported HTTP methods
     res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return;
   }
 }
+
+export default privyAuthMiddleware(handler);

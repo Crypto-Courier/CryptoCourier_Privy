@@ -43,6 +43,7 @@ const LeaderBoard: React.FC = () => {
   const { walletData } = useWallet();
   const [selectedChains, setSelectedChains] =
     useState<number[]>(SUPPORTED_CHAINS);
+  const [userHasSelected, setUserHasSelected] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     []
   );
@@ -162,7 +163,13 @@ const LeaderBoard: React.FC = () => {
     };
 
     fetchLeaderboardData();
-  }, [activeAddress, selectedChains, activeButton, selectedMonth]);
+  }, [
+    activeAddress,
+    selectedChains,
+    activeButton,
+    selectedMonth,
+    userHasSelected,
+  ]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -435,54 +442,59 @@ const LeaderBoard: React.FC = () => {
               </div>
 
               <div className="md:w-[100%] lg:w-[60%] w-full sm:w-full">
-                <div className="w-full  rounded-3xl relative ">
-                  <div className="flex justify-end mb-2">
-                    {activeButton === "Monthly" && (
-                      <MonthYearPicker
-                        onMonthSelect={handleMonthSelect}
-                        selectedMonth={selectedMonth}
-                      />
-                    )}
+                {isLoading ? (
+                  <div className=" md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                    <Image
+                      src={loading} // Replace with your image path
+                      alt="loading"
+                      width={50}
+                      // className="absolute top-6 left-0 transform -translate-x-1/2 "
+                    />
                   </div>
-                  <FilterChainData onChainSelect={handleChainSelect} />
-
-                  <div className="overflow-hidden rounded-md ">
-                    <div
-                      className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${
-                        theme === "dark"
-                          ? " bg-black border border-[#FE660A]"
-                          : " bg-white border border-[#FFFFFF]"
-                      }`}
-                    >
-                      {["Rank", "Inviter", "Claimer", "Rate", "Points"].map(
-                        (header, index) => (
-                          <div
-                            key={index}
-                            className={`text-center font-semibold mb-0 bg-black ${
-                              theme === "dark"
-                                ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
-                                : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
-                            }`}
-                          >
-                            {header}
-                          </div>
-                        )
+                ) : error ? (
+                  <div className="text-red-700  md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
+                    {error}
+                  </div>
+                ) : (
+                  <div className="w-full  rounded-3xl relative ">
+                    <div className="flex justify-end mb-2">
+                      {activeButton === "Monthly" && (
+                        <MonthYearPicker
+                          onMonthSelect={handleMonthSelect}
+                          selectedMonth={selectedMonth}
+                        />
                       )}
                     </div>
-                    {isLoading ? (
-                      <div className=" md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
-                        <Image
-                          src={loading} // Replace with your image path
-                          alt="loading"
-                          width={50}
-                          // className="absolute top-6 left-0 transform -translate-x-1/2 "
-                        />
-                      </div>
-                    ) : error ? (
-                      <div className="text-red-700  md:h-60 lg:h-80 flex justify-center items-center text-lg md:text-xl">
-                        {error}
-                      </div>
-                    ) : (
+                    <FilterChainData
+                      onChainSelect={handleChainSelect}
+                      selectedChains={selectedChains}
+                      userHasSelected={userHasSelected}
+                      onUserSelectChange={setUserHasSelected}
+                    />
+
+                    <div className="overflow-hidden rounded-md ">
+                      <div
+                        className={`lg:text-lg text-[12px] sm:text-[12px] md:text-lg grid grid-cols-5 gap-2 p-3 rounded-md  ${
+                          theme === "dark"
+                            ? " bg-black border border-[#FE660A]"
+                            : " bg-white border border-[#FFFFFF]"
+                        }`}
+                      >
+                        {["Rank", "Inviter", "Claimer", "Rate", "Points"].map(
+                          (header, index) => (
+                            <div
+                              key={index}
+                              className={`text-center font-semibold mb-0 bg-black ${
+                                theme === "dark"
+                                  ? "bg-gradient-to-r from-[#FFE500] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
+                                  : "bg-gradient-to-r from-[#FF336A] to-[#FF3333] rounded-md  text-transparent bg-clip-text"
+                              }`}
+                            >
+                              {header}
+                            </div>
+                          )
+                        )}
+                      </div>{" "}
                       <div className="mt-2 ">
                         {currentItems.map((entry, index) => (
                           <div
@@ -542,42 +554,42 @@ const LeaderBoard: React.FC = () => {
                           </div>
                         ))}
                       </div>
+                    </div>
+                    {/* Conditional Pagination - Only show if more than 10 entries */}
+
+                    {leaderboardData.length > itemsPerPage && (
+                      <div className="flex justify-center items-center mt-4 space-x-2">
+                        <button
+                          onClick={() => paginate(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className={`px-4 py-2 rounded ${
+                            currentPage === 1
+                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                              : "bg-[#FFE500] text-[#363535]"
+                          }`}
+                        >
+                          Previous
+                        </button>
+
+                        <span className="text-white">
+                          {currentPage} of {totalPages}
+                        </span>
+
+                        <button
+                          onClick={() => paginate(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className={`px-4 py-2 rounded ${
+                            currentPage === totalPages
+                              ? "bg-black cursor-not-allowed border border-[#FE660A]"
+                              : "bg-[#FFE500] text-[#363535]"
+                          }`}
+                        >
+                          Next
+                        </button>
+                      </div>
                     )}
                   </div>
-                  {/* Conditional Pagination - Only show if more than 10 entries */}
-
-                  {leaderboardData.length > itemsPerPage && (
-                    <div className="flex justify-center items-center mt-4 space-x-2">
-                      <button
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className={`px-4 py-2 rounded ${
-                          currentPage === 1
-                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                            : "bg-[#FFE500] text-[#363535]"
-                        }`}
-                      >
-                        Previous
-                      </button>
-
-                      <span className="text-white">
-                        {currentPage} of {totalPages}
-                      </span>
-
-                      <button
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className={`px-4 py-2 rounded ${
-                          currentPage === totalPages
-                            ? "bg-black cursor-not-allowed border border-[#FE660A]"
-                            : "bg-[#FFE500] text-[#363535]"
-                        }`}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           </div>

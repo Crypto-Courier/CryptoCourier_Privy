@@ -1,16 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { PrivyClient } from '@privy-io/server-auth';
+import { PRIVY_APP_ID, PRIVY_APP_SECRET } from '../config/constant';
 
 type NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void;
 
 const protectedPaths = [
     '/api/check-privy-wallet',
     '/api/create-privy-wallet',
-    '/api/settings/*'
+    '/api/add-token',
+    '/api/getTokenDetails',
+    '/api/send-email',
+    '/api/store-transaction',
+    '/api/update-transaction',
+    '/api/user-data'
 ];
 
 const allowedDomains = {
-    development: process.env.NEXT_PUBLIC_LOCAL_URL?.split(','),
+    development: process.env.NEXT_PUBLIC_DEVELOPMENT_URL?.split(','),
     production: process.env.NEXT_PUBLIC_PRODUCTION_URL?.split(',')
 };
 
@@ -62,8 +68,8 @@ export const privyAuthMiddleware = (handler: NextApiHandler): NextApiHandler => 
 
         try {
             const privyClient = new PrivyClient(
-                process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                process.env.PRIVY_APP_SECRET!
+                PRIVY_APP_ID!,
+                PRIVY_APP_SECRET!
             );
 
             const isValid = await privyClient.verifyAuthToken(token);

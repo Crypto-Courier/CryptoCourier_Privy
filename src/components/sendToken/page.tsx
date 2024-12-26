@@ -30,6 +30,7 @@ import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
 import { isValidEmail } from "../../utils/parameter-validation";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { CONTRACT_ADDRESS } from "../../config/constant"
 import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
@@ -66,7 +67,7 @@ const SendToken = () => {
   const [txStatus, setTxStatus] = useState("pending");
   const [showTxPopup, setShowTxPopup] = useState(false);
   const [senderWallet, setsenderWallet] = useState("");
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
 
   const isConnected = walletData?.authenticated;
   const gifterAddress = walletData?.address;
@@ -76,10 +77,7 @@ const SendToken = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
-  const TRANSACTIONS_CONTRACT_ADDRESS =
-    process.env.NEXT_PUBLIC_TRANSACTIONS_CONTRACT_ADDRESS;
-
-  if (!TRANSACTIONS_CONTRACT_ADDRESS) {
+  if (!CONTRACT_ADDRESS) {
     throw new Error("Contract address is not defined");
   }
 
@@ -248,10 +246,13 @@ const SendToken = () => {
     gifterEmail: string
   ) => {
     try {
+      const token = await getAccessToken();
+      
       const storeResponse = await fetch("/api/store-transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           claimerWallet: claimerWallet,
@@ -378,7 +379,7 @@ const SendToken = () => {
 
         // Initialize a contract instance for interacting with Transaction contract.
         const transactionsContract = new Contract(
-          TRANSACTIONS_CONTRACT_ADDRESS,
+          CONTRACT_ADDRESS!,
           TRANSACTIONS_CONTRACT_ABI,
           walletData?.provider
         );
@@ -400,7 +401,7 @@ const SendToken = () => {
             const approveTx = await privySendTransaction({
               to: selectedTokenData.contractAddress,
               data: tokenContract.interface.encodeFunctionData("approve", [
-                TRANSACTIONS_CONTRACT_ADDRESS,
+                CONTRACT_ADDRESS,
                 tokenAmountInWei,
               ]),
             });
@@ -408,7 +409,7 @@ const SendToken = () => {
             if (approveTx.status === 1) {
               // Sends a transaction to the Transactions contract to transfer both ETH and non-native token to the recipient.
               const tx = await privySendTransaction({
-                to: TRANSACTIONS_CONTRACT_ADDRESS,
+                to: CONTRACT_ADDRESS,
                 value: additionalEthInWei,
                 data: transactionsContract.interface.encodeFunctionData(
                   "transferWithEth",
@@ -456,7 +457,7 @@ const SendToken = () => {
                 address: selectedTokenData.contractAddress as `0x${string}`,
                 abi: ERC20_ABI,
                 functionName: "approve",
-                args: [TRANSACTIONS_CONTRACT_ADDRESS, tokenAmountInWei],
+                args: [CONTRACT_ADDRESS, tokenAmountInWei],
               });
 
               // Wait for the approval transaction
@@ -469,7 +470,7 @@ const SendToken = () => {
               if (approveReceipt?.status === "success") {
                 // Call the transferWithEth function on the Transactions contract to send ETH and tokens
                 const transferTxHash = await approveAsync({
-                  address: TRANSACTIONS_CONTRACT_ADDRESS as `0x${string}`,
+                  address: CONTRACT_ADDRESS as `0x${string}`,
                   abi: TRANSACTIONS_CONTRACT_ABI,
                   functionName: "transferWithEth",
                   args: [
@@ -555,10 +556,13 @@ const SendToken = () => {
   const handleAddToken = async (newToken: AddToken) => {
     try {
       const chainId = walletData?.chainId.split(":")[1];
+      const token = await getAccessToken();
+      
       const response = await fetch("/api/add-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           ...newToken,

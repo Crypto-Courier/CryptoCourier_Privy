@@ -33,6 +33,22 @@ export const userDataByTransactionHash = async (
   const normalizedGifterWallet = gifterWallet.toLowerCase();
   const normalizedChainId = chainId;
 
+   // Check if user exists with this wallet and chainId
+   const existingUser = await UserModel.findOne({
+    $or: [
+      { claimerWallet: normalizedClaimerWallet },
+      { claimerEmail: normalizedClaimerEmail }
+    ]
+  });
+
+  const authDataForChain = existingUser?.authData?.get(normalizedChainId);
+
+  // If user exists and has auth data for this chainId, skip processing
+  if (authDataForChain) {
+    console.log("Hello existing user with chainID, can i know which chainID is there for user? ", authDataForChain)
+    return existingUser;
+  }
+  
   // Ensure authenticatedAt is a proper Date object
   const authDate = authenticatedAt ? new Date(authenticatedAt) : new Date();
   const monthYear = `${(authDate.getMonth() + 1).toString().padStart(2, '0')}/${authDate.getFullYear()}`;
@@ -139,9 +155,9 @@ export const userDataByTransactionHash = async (
     await createOrUpdateLeaderboardPoints(pointData);
   }
 
-  const existingClaimerUser = await UserModel.findOne({
-    claimerWallet: normalizedClaimerWallet
-  });
+  // const existingClaimerUser = await UserModel.findOne({
+  //   claimerWallet: normalizedClaimerWallet
+  // });
 
   const updateOperation: any = {
     $set: {
@@ -150,7 +166,7 @@ export const userDataByTransactionHash = async (
     }
   };
 
-  if (!existingClaimerUser) {
+  if (!existingUser) {
     updateOperation.$set.claimerWallet = normalizedClaimerWallet;
   }
 

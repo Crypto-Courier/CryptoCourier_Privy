@@ -1,10 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import { MONGODB_URI } from "../config/constant";
 
-if (!process.env.MONGODB_URI) {
+if (!MONGODB_URI) {
   throw new Error("Please add your Mongo URI to .env.local");
 }
-
-const MONGODB_URI = process.env.MONGODB_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -31,7 +30,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached!.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached!.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
       return mongoose;
     });
   }
@@ -45,4 +44,4 @@ async function dbConnect() {
   return cached!.conn;
 }
 
-export default dbConnect; 
+export default dbConnect;

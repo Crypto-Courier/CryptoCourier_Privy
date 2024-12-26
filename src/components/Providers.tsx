@@ -37,6 +37,7 @@ import {
 } from "viem/chains";
 import { WalletProvider } from "../context/WalletContext";
 import { Tooltip } from "antd";
+import { PRIVY_APP_ID } from "../config/constant";
 
 export const wagmiConfig = createConfig({
   chains: [
@@ -112,7 +113,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      appId={PRIVY_APP_ID!}
       config={{
         loginMethods: ["email", "wallet"],
         appearance: {
