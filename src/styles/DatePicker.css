@@ -29,8 +29,8 @@
   cursor: pointer;
 }
 
-.react-datepicker__month:hover {
-  background-color: #404040;
+.react-datepicker__month-text:hover {
+  color: black !important;
 }
 
 .react-datepicker__month-text--selected {
@@ -91,7 +91,4 @@
 .react-datepicker__month-text--in-range {
   background-color: #1a1a1a;
   color: white;
-}
-.react-datepicker__month:hover {
-  background-color: black !important;
 }
