@@ -5,6 +5,7 @@ import SwitchNetwork from "@/components/SwitchNetwork";
 import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
 import Navbar from "../Navbar";
+import board from "../../assets/leaderboard.png";
 import Footer from "../Footer";
 import { useWriteContract, useWalletClient, usePublicClient } from "wagmi";
 import { sendTransaction, waitForTransactionReceipt } from "@wagmi/core";
@@ -30,12 +31,13 @@ import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
 import { wagmiConfig } from "../Providers";
 import { isValidEmail } from "../../utils/parameter-validation";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { CONTRACT_ADDRESS } from "../../config/constant"
+import { CONTRACT_ADDRESS } from "../../config/constant";
 import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
 import MenuDivider from "antd/es/menu/MenuDivider";
 import WalletPopup from "../WalletPopup";
+import { Tooltip } from "antd";
 
 const SendToken = () => {
   const { walletData } = useWallet();
@@ -99,7 +101,10 @@ const SendToken = () => {
     }
     setIsPopupOpen(true);
   };
-
+  // Route to leaderboard page
+  const leaderboard = () => {
+    router.push("/leaderboard");
+  };
   useEffect(() => {
     const selectedTokenData = tokens.find(
       (t) => t.contractAddress === selectedToken
@@ -247,7 +252,7 @@ const SendToken = () => {
   ) => {
     try {
       const token = await getAccessToken();
-      
+
       const storeResponse = await fetch("/api/store-transaction", {
         method: "POST",
         headers: {
@@ -285,7 +290,7 @@ const SendToken = () => {
 
   // Handling the transaction for embedded as well as external wallets
   const handleSend = async (walletAddress: string) => {
-    if(!isEmailConnected){
+    if (!isEmailConnected) {
       setTxStatus("pending");
       setShowTxPopup(true);
     }
@@ -560,12 +565,12 @@ const SendToken = () => {
     try {
       const chainId = walletData?.chainId.split(":")[1];
       const token = await getAccessToken();
-      
+
       const response = await fetch("/api/add-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...newToken,
@@ -625,16 +630,30 @@ const SendToken = () => {
               </span>
             </div>
             <div className="text-right  items-end">
-              <button
-                className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
-                  theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#E265FF] text-white"
-                }`}
-                onClick={OpenHistory}
-              >
-                Transaction History
-              </button>
+              <div className="gap-4 flex">
+                <Tooltip title="Leaderboard">
+                  <button
+                    onClick={leaderboard}
+                    className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
+                      theme === "dark"
+                        ? " text-[#363535] border border-[#FFE500] "
+                        : "bg-[#E265FF] text-white"
+                    }`}
+                  >
+                    <Image src={board} width={20} alt="" />
+                  </button>
+                </Tooltip>
+                <button
+                  className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
+                    theme === "dark"
+                      ? "bg-[#FFE500] text-[#363535]"
+                      : "bg-[#E265FF] text-white"
+                  }`}
+                  onClick={OpenHistory}
+                >
+                  Transaction History
+                </button>
+              </div>
             </div>
           </div>
           <div>
@@ -902,7 +921,9 @@ const SendToken = () => {
             recipientWallet={""}
             customizedLink={""}
             recipientEmail={""}
-            senderEmail={""} chainId={walletData?.chainId}          />
+            senderEmail={""}
+            chainId={walletData?.chainId}
+          />
         </div>
 
         {showAddTokenForm && (

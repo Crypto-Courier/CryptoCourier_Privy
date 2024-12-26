@@ -200,7 +200,7 @@ const LeaderBoard: React.FC = () => {
             theme === "dark" ? " py-[30px] " : " py-[30px]  "
           }`}
         >
-          <div className=" mx-auto  px-4 sm:px-6 lg:px-8 h-[100vh] ">
+          <div className=" mx-auto  px-4 sm:px-6 lg:px-8  ">
             <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-100% mr-0 ml-auto flex justify-end mb-4 gap-5">
               <div>
                 <button
