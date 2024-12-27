@@ -26,7 +26,7 @@ import FilterChainData from "../FilterChainData";
 import {
   LeaderboardEntry,
   LeaderboardResponse,
-} from "@/types/leaderboard-types";
+} from "../../types/leaderboard-types";
 import { Tooltip } from "antd";
 import WalletPopup from "../WalletPopup";
 import MonthYearPicker from "../MonthYearPicker";
@@ -69,7 +69,7 @@ const LeaderBoard: React.FC = () => {
     points: {
       total: 0,
       byChain: selectedChains.map((chain) => ({
-        chain: chain.toString(),
+        chainId: chain.toString(),
         points: 0,
       })),
     },

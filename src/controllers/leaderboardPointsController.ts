@@ -3,7 +3,7 @@ import {
   PointEntry,
   LeaderboardPointsData,
   MonthlyPointEntry,
-} from "../types/leaderboard-types-combined";
+} from "../types/leaderboard-types";
 
 export const createOrUpdateLeaderboardPoints = async (
   leaderboardPointsData: LeaderboardPointsData

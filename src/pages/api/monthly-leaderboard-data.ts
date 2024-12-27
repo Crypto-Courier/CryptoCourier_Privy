@@ -3,7 +3,7 @@ import {
   getLeaderboardPointsCollection,
   getTransactionCollection
 } from '../../lib/getCollections';
-import { LeaderboardEntry, LeaderboardResponse, PointsEntry } from '../../types/leaderboard-types';
+import { LeaderboardEntry, LeaderboardResponse, PointEntry } from '../../types/leaderboard-types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -145,7 +145,7 @@ export default async function handler(
 
         if (monthlyData) {
           // Filter points based on chainId
-          const pointsByChain: PointsEntry[] = monthlyData.points
+          const pointsByChain: PointEntry[] = monthlyData.points
             .filter((point: any) => !chainId || point.chainId === chainId)
             .map((point: any) => ({
               chain: point.chainId,
@@ -154,9 +154,9 @@ export default async function handler(
 
           // If chain is selected but user has no points for that chain,
           // add an entry with 0 points
-          if (chainId && !pointsByChain.some(p => p.chain === chainId)) {
+          if (chainId && !pointsByChain.some(p => p.chainId === chainId)) {
             pointsByChain.push({
-              chain: chainId.toString(),
+              chainId: chainId.toString(),
               points: 0
             });
           }
@@ -208,7 +208,7 @@ export default async function handler(
           invites: 0,
           claims: 0,
           transactions: [],
-          points: { total: 0, byChain: chainId ? [{ chain: chainId.toString(), points: 0 }] : [] },
+          points: { total: 0, byChain: chainId ? [{ chainId: chainId.toString(), points: 0 }] : [] },
           rank: leaderboardData.length + 1
         };
         response.userRank = leaderboardData.length + 1;
