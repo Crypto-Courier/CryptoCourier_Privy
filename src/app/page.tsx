@@ -13,13 +13,13 @@ export default function Home() {
   );
 }
 export const metadata = {
-  title: "CryptoCourier",
+  title: "Gryfto",
   description: "Gift token as easy as sending email",
   openGraph: {
-    title: "CryptoCourier",
+    title: "Gryfto",
     description: "Gift token as easy as sending email",
     url: "https://hello-crypto.vercel.app/",
-    siteName: "CryptoCourier",
+    siteName: "Gryfto",
     images: [
       {
         url: "https://ipfs.io/ipfs/QmeSP1QkWJk2FivenDPD64SYFysWs8E5yPMNqyK9P7Sf2b", // Must be an absolute URL

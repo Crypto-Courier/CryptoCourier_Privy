@@ -87,9 +87,9 @@ function Homepage() {
                 />
               </div>
               {/* <div className="sm:absolute lg:hidden md:hidden absolute left-[63px] bg-black opacity-[0.5] text-[27px] px-[7px] pb-[6px]">
-                CryptoCourier
+                Gryfto
               </div> */}
-              <div className="mx-3 ">CryptoCourier</div>
+              <div className="mx-3 ">Gryfto</div>
             </div>
             <div className="hidden lg:inline-flex md-inline-flex sm:hidden mt-0 my-2">
               {theme === "light" ? (

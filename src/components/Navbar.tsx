@@ -3,8 +3,8 @@ import React from "react";
 import "react-toggle/style.css";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { useTheme } from "next-themes";
-import dLogo from "../assets/Dark.gif";
-import lLogo from "../assets/Animation.gif";
+import dLogo from "../assets/dLogo.svg";
+import lLogo from "../assets/lLogo.svg";
 import Image from "next/image";
 import "../styles/Responsive.css";
 import { Connect } from "./Connect";
@@ -15,23 +15,22 @@ const Navbar = () => {
   return (
     <div className="w-[90%] mx-auto relative navbar">
       <div className="flex items-center justify-between gap-y-4 my-[20px]">
-        
         {/* Logo Section */}
         <div className="w-[9rem] sm:w-40 md:w-48 lg:w-56 logo">
           {theme === "light" ? (
             <Image
               src={dLogo}
               alt="CRYPTO-COURIER Dark Logo"
-              width={400}
-              height={400}
+              width={300}
+              height={300}
               className="w-full h-auto"
             />
           ) : (
             <Image
               src={lLogo}
               alt="CRYPTO-COURIER Light Logo"
-              width={400}
-              height={400}
+              width={300}
+              height={300}
               className="w-full h-auto"
             />
           )}

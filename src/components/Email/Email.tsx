@@ -28,7 +28,7 @@ const Email: React.FC<EmailProps> = ({
         }}
       >
         <div style={{ fontSize: "2rem", fontWeight: "bold", color: "white" }}>
-          CryptoCourier
+        Gryfto
         </div>
         <p style={{ fontSize: "15px", color: "white" }}>
           Take your first step into the world of Onchain journey.
@@ -101,7 +101,7 @@ const Email: React.FC<EmailProps> = ({
           fontSize: "12px", // Reduced font size
         }}
       >
-        <p>&copy; 2024 CryptoCourier || All rights reserved.</p>
+        <p>&copy; 2024 Gryfto || All rights reserved.</p>
       </div>
     </div>
   );

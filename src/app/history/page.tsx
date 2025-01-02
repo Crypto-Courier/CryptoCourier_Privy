@@ -18,7 +18,7 @@ export const metadata = {
     title: "Trancation-History",
     description: "Gift token as easy as sending email",
     url: "https://courierbycryptocoutrier.vercel.app/",
-    siteName: "CryptoCourier",
+    siteName: "Gryfto",
     images: [
       {
         url: "https://ipfs.io/ipfs/QmdWkLMj6KjPPs5dRc3Y8eC4phLnWeVufQMacoTJ1Bg5kZ",

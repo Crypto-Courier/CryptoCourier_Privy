@@ -18,7 +18,7 @@ export const metadata = {
     title: "Claim-Token",
     description: "Gift token as easy as sending email",
     url: "https://courierbycryptocoutrier.vercel.app/",
-    siteName: "CryptoCourier",
+    siteName: "Gryfto",
     images: [
       {
         url: "https://ipfs.io/ipfs/QmUxcjJNzEb2HV5sWaywWj4zVLvpZNnr12MJRGPoGLwyvk", // Must be an absolute URL
