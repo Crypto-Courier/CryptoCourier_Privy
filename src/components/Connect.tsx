@@ -1,9 +1,15 @@
-import React, { useEffect, useState, useCallback, useRef, isValidElement } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  isValidElement,
+} from "react";
 import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
 import { useTheme } from "next-themes";
 import { useWallet } from "../context/WalletContext";
 import { Tooltip } from "antd";
-import { chainLogos } from "../utils/chainIdToLogo"
+import { chainLogos } from "../utils/chainIdToLogo";
 import { useRouter } from "next/navigation";
 
 const chainNames: { [key: number]: string } = {
@@ -37,7 +43,8 @@ export const Connect = () => {
   const { wallets } = useWallets();
   const wallet = wallets[0];
   const { theme } = useTheme();
-  const { login, authenticated, ready, user, connectWallet, createWallet } = usePrivy();
+  const { login, authenticated, ready, user, connectWallet, createWallet } =
+    usePrivy();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isEmailConnected, setIsEmailConnected] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
@@ -71,17 +78,21 @@ export const Connect = () => {
   useEffect(() => {
     const createEmbeddedWallet = async () => {
       if (!ready || !authenticated || isCreatingWallet || !user) return;
-      
+
       // Check if user logged in with email and doesn't have an embedded wallet
-      const hasEmbeddedWallet = wallets.some(wallet => wallet.walletClientType === 'privy');
-      const isEmailUser = user.linkedAccounts.some(account => account.type === 'email');
+      const hasEmbeddedWallet = wallets.some(
+        (wallet) => wallet.walletClientType === "privy"
+      );
+      const isEmailUser = user.linkedAccounts.some(
+        (account) => account.type === "email"
+      );
 
       if (isEmailUser && !hasEmbeddedWallet) {
         try {
           setIsCreatingWallet(true);
           const newWallet = await createWallet();
-          console.log('Created new embedded wallet:', newWallet);
-          
+          console.log("Created new embedded wallet:", newWallet);
+
           // Update wallet data with the new embedded wallet
           if (newWallet) {
             setWalletData({
@@ -93,7 +104,7 @@ export const Connect = () => {
             });
           }
         } catch (error) {
-          console.error('Error creating embedded wallet:', error);
+          console.error("Error creating embedded wallet:", error);
         } finally {
           setIsCreatingWallet(false);
         }
@@ -101,7 +112,15 @@ export const Connect = () => {
     };
 
     createEmbeddedWallet();
-  }, [ready, authenticated, user, wallets, createWallet, isCreatingWallet, setWalletData]);
+  }, [
+    ready,
+    authenticated,
+    user,
+    wallets,
+    createWallet,
+    isCreatingWallet,
+    setWalletData,
+  ]);
 
   useEffect(() => {
     checkWalletConnection();
@@ -137,12 +156,12 @@ export const Connect = () => {
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     });
-  
+
     // Clear sessionStorage and localStorage
     localStorage.clear();
     sessionStorage.clear();
   };
-  
+
   useEffect(() => {
     const clearInitialStorage = () => {
       // Clear all cookies
@@ -151,18 +170,18 @@ export const Connect = () => {
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
       });
-    
+
       // Clear sessionStorage and localStorage
       localStorage.clear();
       sessionStorage.clear();
 
       // Optional: Set a flag in localStorage to indicate initial load is done
-      localStorage.setItem('initialLoadCleared', 'true');
+      localStorage.setItem("initialLoadCleared", "true");
     };
 
     // Check if this is the first load
-    const isFirstLoad = !localStorage.getItem('initialLoadCleared');
-    
+    const isFirstLoad = !localStorage.getItem("initialLoadCleared");
+
     if (isFirstLoad) {
       clearInitialStorage();
     }
@@ -194,7 +213,7 @@ export const Connect = () => {
         type="button"
         className="border border-[#FFFFFF] w-50 bg-[#FF3333] py-2 px-4 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center"
       >
-        {isCreatingWallet ? 'Creating Wallet...' : 'Connect Wallet'}
+        {isCreatingWallet ? "Creating Wallet..." : "Connect Wallet"}
       </button>
     );
   }

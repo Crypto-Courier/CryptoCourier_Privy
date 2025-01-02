@@ -16,7 +16,7 @@ const Navbar = () => {
     <div className="w-[90%] mx-auto relative navbar">
       <div className="flex items-center justify-between gap-y-4 my-[20px]">
         {/* Logo Section */}
-        <div className="w-[9rem] sm:w-40 md:w-48 lg:w-56 logo">
+        <div className="w-40 sm:w-40 md:w-48 lg:w-50 logo">
           {theme === "light" ? (
             <Image
               src={dLogo}
