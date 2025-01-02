@@ -59,6 +59,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
   const handleFinish = () => {
     resetFlow();
   };
+  
   const walletSteps = {
     metamask: {
       copy: [
@@ -254,6 +255,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
       ],
     },
   };
+
   // Define Steps for Copy Flow (10 slides)
   const copySteps: Step[] = [
     {
