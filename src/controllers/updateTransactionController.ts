@@ -1,18 +1,24 @@
-import { getTransactionCollection, getUserCollection } from '../lib/getCollections';
+import {
+  getTransactionCollection,
+  getUserCollection,
+} from "../lib/getCollections";
 
-export const updateTransactionStatus = async (
-  transactionHash: string
-) => {
+// Update authenticated and claimed field of transactions
+export const updateTransactionStatus = async (transactionHash: string) => {
+  // Validate the transaction hash
   if (!transactionHash || !/^0x.+$/.test(transactionHash)) {
-    throw new Error('Invalid transaction hash');
+    throw new Error("Invalid transaction hash");
   }
 
   const TransactionModel = await getTransactionCollection();
   const UserModel = await getUserCollection();
 
-  const existingTransaction = await TransactionModel.findOne({ transactionHash });
+  // Check transaction exist or not
+  const existingTransaction = await TransactionModel.findOne({
+    transactionHash,
+  });
   if (!existingTransaction) {
-    throw new Error('Transaction not found');
+    throw new Error("Transaction not found");
   }
 
   const claimerAddress = existingTransaction.claimerWallet.toLowerCase();
@@ -27,7 +33,7 @@ export const updateTransactionStatus = async (
   // Prepare update data
   const updateData: any = {
     claimed: true,
-    claimedAt: new Date()
+    claimedAt: new Date(),
   };
 
   // Only set authenticated if user doesn't exist or chain not authenticated
@@ -36,12 +42,13 @@ export const updateTransactionStatus = async (
     updateData.authenticatedAt = new Date();
   }
 
+  // Perform updation in transaction data
   const updatedTransaction = await TransactionModel.findOneAndUpdate(
     { transactionHash },
     updateData,
     {
       new: true,
-      runValidators: true
+      runValidators: true,
     }
   );
 
