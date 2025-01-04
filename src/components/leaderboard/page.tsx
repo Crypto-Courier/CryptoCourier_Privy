@@ -30,6 +30,7 @@ import {
 import { Tooltip } from "antd";
 import WalletPopup from "../WalletPopup";
 import MonthYearPicker from "../MonthYearPicker";
+// import Signature from "../Signature";
 
 // Define the list of supported chains
 const SUPPORTED_CHAINS = [
@@ -79,6 +80,14 @@ const LeaderBoard: React.FC = () => {
   const handleChainSelect = (chains: number[]) => {
     setSelectedChains(chains);
   };
+
+  // const handleSuccess = (txHash:string) => {
+  //   console.log('Gift claimed successfully!', txHash);
+  // };
+
+  // const handleError = (error:any) => {
+  //   console.error('Failed to claim gift:', error);
+  // };
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -590,6 +599,10 @@ const LeaderBoard: React.FC = () => {
                     </div>
                   )}
                 </div>
+                {/* <Signature
+                 chainId={11155111} // 1 for Ethereum, 137 for Polygon, etc.
+                 giftId={2} // Your gift ID
+                 /> */}
               </div>
             </div>
           </div>
