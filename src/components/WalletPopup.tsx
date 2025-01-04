@@ -18,6 +18,11 @@ import coinbase from "../assets/coinbase.svg";
 import phantom from "../assets/phantom.svg";
 import uniswap from "../assets/uniswap.svg";
 import rubby from "../assets/rubby.svg";
+import Pdown from "../assets/pDownload.svg";
+import Pwallet from "../assets/pWallet.svg";
+import Pkey from "../assets/Pkey.svg";
+import pNetwork from "../assets/pNetwork.svg";
+import device from "../assets/device.svg";
 
 type Step = {
   title: string;
@@ -275,6 +280,186 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   Importing a wallet ensures you can continue managing your
                   tokens and assets securely.
                 </li>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 4",
+          render: () => (
+            <>
+              <div
+                className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                There are 2 methods for export wallet
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Phrase :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This method will export your entire wallet with an account.
+                  You will need to import the entire wallet in your preferred
+                  wallet provider.
+                </li>
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Key :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This method will export only one account which you can import
+                  in your existing wallet using a private key.
+                </li>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 5",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={account} alt="" width={200} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <ul
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    1. For Chrome Extension:
+                  </ul>
+                  <li>Click the account selector at the top of your wallet.</li>
+                  <li>
+                    Select 'Add account or hardware wallet' at the bottom of the
+                    list.
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 6",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={imp} alt="" width={200} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    On the next menu, select{" "}
+                    <span className={`font-bold text-[#FFE500]`}>
+                      'Import account'
+                    </span>
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 7",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={key} alt="" width={200} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    You will be directed to the Import page. Paste your private
+                    key and click 'Import'.
+                    <span className={`font-bold text-[#FFE500]`}>'Import'</span>
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 8",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={imp2} alt="" width={200} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    You should be able to see the newly imported account in the
+                    account selector dropdown with an{" "}
+                    <span className={`font-bold text-[#FFE500]`}>
+                      'Imported'
+                    </span>{" "}
+                    tag next to it.
+                  </li>
+                </div>
               </div>
             </>
           ),
@@ -719,7 +904,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
+                  <Image src={Pdown} alt="" width={200} />
                 </div>
                 <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
                   <ul
@@ -918,7 +1103,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={account} alt="" width={200} />
+                  <Image src={Pwallet} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <ul
@@ -961,7 +1146,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={imp} alt="" width={200} />
+                  <Image src={Pkey} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
@@ -993,7 +1178,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={key} alt="" width={200} />
+                  <Image src={pNetwork} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
@@ -1035,7 +1220,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={imp2} alt="" width={200} />
+                  <Image src={device} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
