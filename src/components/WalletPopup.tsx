@@ -23,6 +23,11 @@ import Pwallet from "../assets/pWallet.svg";
 import Pkey from "../assets/Pkey.svg";
 import pNetwork from "../assets/pNetwork.svg";
 import device from "../assets/device.svg";
+import pSeed from "../assets/pSeed.svg";
+import pImportSeed from "../assets/pImportSeed.svg"
+import recovery from "../assets/Crecovery.svg";
+import Cwallet from "../assets/Cwallet.svg";
+import manually from "../assets/Manually.svg"
 
 type Step = {
   title: string;
@@ -1353,7 +1358,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
+                  <Image src={Pdown} alt="" width={170} />
                 </div>
                 <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
                   <ul
@@ -1552,7 +1557,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={account} alt="" width={200} />
+                  <Image src={Pwallet} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <ul
@@ -1595,7 +1600,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={imp} alt="" width={200} />
+                  <Image src={pSeed} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
@@ -1627,7 +1632,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={key} alt="" width={200} />
+                  <Image src={pImportSeed} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
@@ -1668,7 +1673,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start">
                 <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={imp2} alt="" width={200} />
+                  <Image src={device} alt="" width={170} />
                 </div>
                 <div className="w-[70%] mt-3">
                   <li
@@ -1692,50 +1697,9 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
             </>
           ),
         },
+       
         {
           title: "Slide 9",
-          render: () => (
-            <>
-              <div
-                className={` text-lg text-center mb-3 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Add account in your wallet using
-                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
-              </div>
-              <div className="flex gap-5 items-start">
-                <div className="flex justify-center mt-3 w-[50%]">
-                  <Image src={imp2} alt="" width={200} />
-                </div>
-                <div className="w-[70%] mt-3">
-                  <li
-                    className={` text-lg mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Enable Device Authentication ( if applicable or secure
-                    wallet ) and click on
-                    <span className={`font-bold text-[#FFE500]`}>'Next'</span>
-                  </li>
-                  <li
-                    className={` text-lg mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Click on{" "}
-                    <span className={`font-bold text-[#FFE500]`}>
-                      'get started'
-                    </span>
-                    and your account is ready to use.
-                  </li>
-                </div>
-              </div>
-            </>
-          ),
-        },
-        {
-          title: "Slide 10",
           render: () => (
             <>
               <div
@@ -1807,16 +1771,12 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Click on {""}
+               Coinbase not support to import wallet using 
                 <span className={`font-bold text-[#FFE500]`}>
-                  Copy Phrase
-                </span>{" "}
-                or
-                <span className={`font-bold text-[#FFE500]`}>
-                  {" "}
                   Copy Key
-                </span>{" "}
-                from export wallet.
+                </span>
+            
+                
               </div>
               <div className="flex justify-center mt-5">
                 <Image
@@ -1828,167 +1788,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
             </>
           ),
         },
-        {
-          title: "Slide 2",
-          render: () => (
-            <>
-              <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Download and set up wallet for mobile and desktop
-              </div>
-              <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
-                </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    1. Visit the Official Website :
-                  </ul>
-                  <li>
-                    <a
-                      className="text-blue-600"
-                      href="https://www.coinbase.com/wallet/downloads"
-                      target="_blank"
-                    >
-                      https://www.coinbase.com/wallet/downloads
-                    </a>
-                    .
-                  </li>
-
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    2. For desktop :
-                  </ul>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Click on "I already have a wallet"
-                  </li>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Enter your Secret Recovery Phrase (commonly referred to as a
-                    “seed phrase”) to restore your wallets. Once you have
-                    entered your secret recovery phrase, you will be asked to
-                    then create a new password to access your wallet in the
-                    future.
-                  </li>
-                  <ul
-                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    3. For Mobile :
-                  </ul>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Download the MetaMask app from the App Store (iOS) or Google
-                    Play Store (Android).
-                  </li>
-                </div>
-              </div>
-            </>
-          ),
-        },
-        {
-          title: "Slide 3",
-          render: () => (
-            <>
-              <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Import and export wallet instruction
-              </div>
-              <div>
-                <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-[#FFE500]" : "text-black"
-                  }`}
-                >
-                  1. Export wallet :
-                </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Exporting your wallet means saving the private keys or
-                  recovery phrase associated with your wallet.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  This allows you to access your wallet from any device.{" "}
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  It's important to keep your private keys safe, as anyone with
-                  access to them can control your wallet and the assets within
-                  it. It’s like a password for a wallet but you can't change or
-                  forget it.
-                </li>
-              </div>
-              <div>
-                <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-[#FFE500]" : "text-black"
-                  }`}
-                >
-                  1. Import Wallet :
-                </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Importing your wallet means restoring access to your existing
-                  wallet on a new device by using your private key or recovery
-                  Phrase.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  This process is essential when switching devices or recovering
-                  access to your wallet.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Importing a wallet ensures you can continue managing your
-                  tokens and assets securely.
-                </li>
-              </div>
-            </>
-          ),
-        },
+       
       ],
       phrase: [
         {
@@ -2004,11 +1804,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 <span className={`font-bold text-[#FFE500]`}>
                   Copy Phrase
                 </span>{" "}
-                or
-                <span className={`font-bold text-[#FFE500]`}>
-                  {" "}
-                  Copy Key
-                </span>{" "}
+               
                 from export wallet.
               </div>
               <div className="flex justify-center mt-5">
@@ -2048,12 +1844,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     Go to the official website:{" "}
                     <a
                       className="text-blue-600"
-                      href="https://metamask.io/"
+                      href="https://www.coinbase.com/wallet/downloads"
                       target="_blank"
                     >
-                      https://metamask.io/
-                    </a>
-                    .
+https://www.coinbase.com/wallet/downloads                    </a>
+                    
                   </li>
 
                   <ul
@@ -2090,7 +1885,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Download the MetaMask app from the App Store (iOS) or Google
+                    Download the Coinbase app from the App Store (iOS) or Google
                     Play Store (Android).
                   </li>
                 </div>
@@ -2185,7 +1980,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -2193,17 +1988,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` text-lg mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Phrase :
                 </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
+                <li>
                   This method will export your entire wallet with an account.
                   You will need to import the entire wallet in your preferred
                   wallet provider.
@@ -2211,17 +2002,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` text-lg mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Key :
                 </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
+                <li>
                   This method will export only one account which you can import
                   in your existing wallet using a private key.
                 </li>
@@ -2234,80 +2021,65 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to
-                <span className={`font-bold text-[#FFE500]`}>
-                  {" "}
-                  MetaMask
-                </span>{" "}
-                Using
+                Add account in your wallet using
                 <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={started}
-                    alt=""
-                    className="lg:w-[280px] md:w-[280px] sm:w-[200px] w-[200px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Cwallet} alt="" width={170} />
                 </div>
-                <div className="lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%] mt-3">
+                <div className="w-[70%] mt-3">
                   <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` text-lg mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
-                    1. Open MetaMask :
+                    1. General step:
                   </ul>
-                  <li>Click on the MetaMask extension or open the app.</li>
-
-                  <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Select Import Wallet :
-                  </ul>
-                  <li>Click "Import Wallet" on the startup screen.</li>
+                    Click on “I already have a wallet”
+                  </li>
+                 
                 </div>
               </div>
             </>
           ),
         },
-
         {
           title: "Slide 6",
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to MetaMask Using
-                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={seed}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={recovery} alt="" width={170} />
                 </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Enter Seed Phrase :
-                  </ul>
-                  <li>
-                    Input the 12-word seed phrase of your existing wallet.
+                    Click on 
+
+                    <span className={`font-bold text-[#FFE500]`}>
+                    Recovery Phrase
+                    </span>
                   </li>
                 </div>
               </div>
@@ -2319,30 +2091,30 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to MetaMask Using
-                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={pass}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={manually} alt="" width={170} />
                 </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                <div className="w-[70%] mt-3">
+                 
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Set a Password :
-                  </ul>
-                  <li>Create a new password for this MetaMask account.</li>
+                    Click on
+
+                    <span className={`font-bold text-[#FFE500]`}>
+                      ' Enter Manually'
+                    </span>
+                  </li>
                 </div>
               </div>
             </>
@@ -2353,29 +2125,94 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
                 Add account in your wallet using
                 <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={imp2}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={device} alt="" width={170} />
                 </div>
-                <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
-                  <li>
-                    You should be able to see the newly imported account in the
-                    account selector dropdown with an{" "}
-                    <span className={`font-bold text-[#FFE500]`}>
-                      'Imported'
-                    </span>{" "}
-                    tag next to it.
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Copy phrase from the platform and paste it. Agree Terms and conditions of coinbase.
+
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                     Click on “Continue” and Add Device authentication for Security Purpose. 
+
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+       
+        {
+          title: "Slide 9",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Best Practices
+                <span className={`font-bold text-[#FFE500]`}>
+                  'Wallet Security'
+                </span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className=" mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Always download wallets from official websites or app
+                    stores.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Store your seed phrase/private key offline in a secure
+                    location.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Do not share your seed phrase/private key with anyone, even
+                    if they claim to be support personnel.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Use strong, unique passwords for your wallets.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enable additional security features like biometric
+                    authentication where available.
                   </li>
                 </div>
               </div>
@@ -2390,201 +2227,54 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 1",
           render: () => (
             <>
-              {/* <div
-                          className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          }`}
-                        >
-                          Click on {""}
-                          <span className={`font-bold text-[#FFE500]`}>
-                            Copy Phrase
-                          </span>{" "}
-                          or
-                          <span className={`font-bold text-[#FFE500]`}>
-                            {" "}
-                            Copy Key
-                          </span>{" "}
-                          from export wallet.
-                        </div>
-                        <div className="flex justify-center mt-5">
-                          <Image
-                            src={Exwallet}
-                            alt=""
-                            className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
-                          />
-                        </div> */}
-              <div>Phantom 1</div>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+               Uniswap not support to import wallet using 
+                <span className={`font-bold text-[#FFE500]`}>
+                  Copy Key
+                </span>
+            
+                
+              </div>
+              <div className="flex justify-center mt-5">
+                <Image
+                  src={Exwallet}
+                  alt=""
+                  className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
+                />
+              </div>
             </>
           ),
         },
-        {
-          title: "Slide 2",
-          render: () => (
-            <>
-              {/* <div
-                          className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          }`}
-                        >
-                          Download & Install the Extension or App{" "}
-                        </div>
-                        <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
-                          <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                            <Image src={install} alt="" width={250} />
-                          </div>
-                          <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                            <ul
-                              className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
-                                theme === "dark" ? "text-[#FFE500]" : "text-black"
-                              }`}
-                            >
-                              1. Visit the Official Website :
-                            </ul>
-                            <li>
-                              Go to the official website:{" "}
-                              <a
-                                className="text-blue-600"
-                                href="https://metamask.io/"
-                                target="_blank"
-                              >
-                                https://metamask.io/
-                              </a>
-                              .
-                            </li>
-          
-                            <ul
-                              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                                theme === "dark" ? "text-[#FFE500]" : "text-black"
-                              }`}
-                            >
-                              2. For desktop :
-                            </ul>
-                            <li
-                              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                                theme === "dark" ? "text-white" : "text-black"
-                              }`}
-                            >
-                              Click "Download" and choose the browser extension for
-                              Chrome, Firefox, Brave, or Edge.
-                            </li>
-                            <li
-                              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                                theme === "dark" ? "text-white" : "text-black"
-                              }`}
-                            >
-                              Install the extension from the browser's official store.
-                            </li>
-                            <ul
-                              className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                                theme === "dark" ? "text-[#FFE500]" : "text-black"
-                              }`}
-                            >
-                              3. For Mobile :
-                            </ul>
-                            <li
-                              className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                                theme === "dark" ? "text-white" : "text-black"
-                              }`}
-                            >
-                              Download the MetaMask app from the App Store (iOS) or Google
-                              Play Store (Android).
-                            </li>
-                          </div>
-                        </div> */}
-              <div>Phantom 2</div>
-            </>
-          ),
-        },
-        {
-          title: "Slide 3",
-          render: () => (
-            <>
-              {/* <div
-                          className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          }`}
-                        >
-                          Import and export wallet instruction
-                        </div>
-                        <div>
-                          <ul
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-[#FFE500]" : "text-black"
-                            }`}
-                          >
-                            1. Export wallet :
-                          </ul>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            Exporting your wallet means saving the private keys or
-                            recovery phrase associated with your wallet.
-                          </li>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            This allows you to access your wallet from any device.{" "}
-                          </li>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            It's important to keep your private keys safe, as anyone with
-                            access to them can control your wallet and the assets within
-                            it. It’s like a password for a wallet but you can't change or
-                            forget it.
-                          </li>
-                        </div>
-                        <div>
-                          <ul
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-[#FFE500]" : "text-black"
-                            }`}
-                          >
-                            1. Import Wallet :
-                          </ul>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            Importing your wallet means restoring access to your existing
-                            wallet on a new device by using your private key or recovery
-                            Phrase.
-                          </li>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            This process is essential when switching devices or recovering
-                            access to your wallet.
-                          </li>
-                          <li
-                            className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                              theme === "dark" ? "text-white" : "text-black"
-                            }`}
-                          >
-                            Importing a wallet ensures you can continue managing your
-                            tokens and assets securely.
-                          </li>
-                        </div> */}
-              <div>Phantom 3</div>
-            </>
-          ),
-        },
+       
       ],
       phrase: [
         {
           title: "Slide 1",
           render: () => (
             <>
-              <div>Phantom 1</div>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Click on {""}
+                <span className={`font-bold text-[#FFE500]`}>
+                  Copy Phrase
+                </span>{" "}
+               
+                from export wallet.
+              </div>
+              <div className="flex justify-center mt-5">
+                <Image
+                  src={Exwallet}
+                  alt=""
+                  className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
+                />
+              </div>
             </>
           ),
         },
@@ -2592,7 +2282,75 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 2",
           render: () => (
             <>
-              <div>Phantom 2</div>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Download & Install the Extension or App{" "}
+              </div>
+              <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
+                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+                  <Image src={install} alt="" width={250} />
+                </div>
+                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
+                  <ul
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    1. Visit the Official Website :
+                  </ul>
+                  <li>
+                    Go to the official website:{" "}
+                    <a
+                      className="text-blue-600"
+                      href="https://wallet.uniswap.org/"
+                      target="_blank"
+                    >
+https://wallet.uniswap.org/                 </a>
+                    
+                  </li>
+
+                  <ul
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    2. For desktop :
+                  </ul>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click "Download" and choose the browser extension for
+                    Chrome, Firefox, Brave, or Edge.
+                  </li>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Install the extension from the browser's official store.
+                  </li>
+                  <ul
+                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    3. For Mobile :
+                  </ul>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Download the Uniswap app from the App Store (iOS) or Google
+                    Play Store (Android).
+                  </li>
+                </div>
+              </div>
             </>
           ),
         },
@@ -2600,7 +2358,81 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 3",
           render: () => (
             <>
-              <div>Phantom 3</div>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Import and export wallet instruction
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Export wallet :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Exporting your wallet means saving the private keys or
+                  recovery phrase associated with your wallet.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This allows you to access your wallet from any device.{" "}
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  It's important to keep your private keys safe, as anyone with
+                  access to them can control your wallet and the assets within
+                  it. It’s like a password for a wallet but you can't change or
+                  forget it.
+                </li>
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Import Wallet :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Importing your wallet means restoring access to your existing
+                  wallet on a new device by using your private key or recovery
+                  Phrase.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This process is essential when switching devices or recovering
+                  access to your wallet.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Importing a wallet ensures you can continue managing your
+                  tokens and assets securely.
+                </li>
+              </div>
             </>
           ),
         },
@@ -2608,7 +2440,40 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 4",
           render: () => (
             <>
-              <div>Phantom 4</div>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                There are 2 methods for export wallet
+              </div>
+              <div>
+                <ul
+                  className={` text-lg mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Phrase :
+                </ul>
+                <li>
+                  This method will export your entire wallet with an account.
+                  You will need to import the entire wallet in your preferred
+                  wallet provider.
+                </li>
+              </div>
+              <div>
+                <ul
+                  className={` text-lg mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Key :
+                </ul>
+                <li>
+                  This method will export only one account which you can import
+                  in your existing wallet using a private key.
+                </li>
+              </div>
             </>
           ),
         },
@@ -2616,16 +2481,69 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 5",
           render: () => (
             <>
-              <div>Phantom 5</div>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Cwallet} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <ul
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    1. General step:
+                  </ul>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on “Add an existing wallet”
+                  </li>
+                 
+                </div>
+              </div>
             </>
           ),
         },
-
         {
           title: "Slide 6",
           render: () => (
             <>
-              <div>Phantom 6</div>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={recovery} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on 
+
+                    <span className={`font-bold text-[#FFE500]`}>
+                    'Import a wallet'
+                    </span>
+                  </li>
+                </div>
+              </div>
             </>
           ),
         },
@@ -2633,7 +2551,41 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 7",
           render: () => (
             <>
-              <div>Phantom 7</div>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={manually} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                 
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Copy Phrase from the platform and paste it.
+
+                    
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on “Continue”. It will fetch a wallet.
+
+
+                    
+                  </li>
+                </div>
+              </div>
             </>
           ),
         },
@@ -2641,7 +2593,100 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           title: "Slide 8",
           render: () => (
             <>
-              <div>Phantom 8</div>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={device} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enable notification and Restore wallet phrase if applicable. Enable Biometrics will secure your wallet. So, we recommend turning it on.
+
+
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                     
+Your wallet is ready to use. 
+
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+       
+        {
+          title: "Slide 9",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Best Practices
+                <span className={`font-bold text-[#FFE500]`}>
+                  'Wallet Security'
+                </span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className=" mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Always download wallets from official websites or app
+                    stores.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Store your seed phrase/private key offline in a secure
+                    location.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Do not share your seed phrase/private key with anyone, even
+                    if they claim to be support personnel.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Use strong, unique passwords for your wallets.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enable additional security features like biometric
+                    authentication where available.
+                  </li>
+                </div>
+              </div>
             </>
           ),
         },
@@ -2692,7 +2737,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
+                  <Image src={Pdown} alt="" width={200} />
                 </div>
                 <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
                   <ul
@@ -2703,15 +2748,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     1. Visit the Official Website :
                   </ul>
                   <li>
-                    Go to the official website:{" "}
                     <a
                       className="text-blue-600"
-                      href="https://metamask.io/"
+                      href="https://rabby.io/"
                       target="_blank"
                     >
-                      https://metamask.io/
+                      https://rabby.io/
                     </a>
-                    .
                   </li>
 
                   <ul
@@ -2748,198 +2791,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Download the MetaMask app from the App Store (iOS) or Google
-                    Play Store (Android).
-                  </li>
-                </div>
-              </div>
-            </>
-          ),
-        },
-        {
-          title: "Slide 3",
-          render: () => (
-            <>
-              <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Import and export wallet instruction
-              </div>
-              <div>
-                <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-[#FFE500]" : "text-black"
-                  }`}
-                >
-                  1. Export wallet :
-                </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Exporting your wallet means saving the private keys or
-                  recovery phrase associated with your wallet.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  This allows you to access your wallet from any device.{" "}
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  It's important to keep your private keys safe, as anyone with
-                  access to them can control your wallet and the assets within
-                  it. It’s like a password for a wallet but you can't change or
-                  forget it.
-                </li>
-              </div>
-              <div>
-                <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-[#FFE500]" : "text-black"
-                  }`}
-                >
-                  1. Import Wallet :
-                </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Importing your wallet means restoring access to your existing
-                  wallet on a new device by using your private key or recovery
-                  Phrase.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  This process is essential when switching devices or recovering
-                  access to your wallet.
-                </li>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Importing a wallet ensures you can continue managing your
-                  tokens and assets securely.
-                </li>
-              </div>
-            </>
-          ),
-        },
-      ],
-      phrase: [
-        {
-          title: "Slide 1",
-          render: () => (
-            <>
-              <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Click on {""}
-                <span className={`font-bold text-[#FFE500]`}>
-                  Copy Phrase
-                </span>{" "}
-                or
-                <span className={`font-bold text-[#FFE500]`}>
-                  {" "}
-                  Copy Key
-                </span>{" "}
-                from export wallet.
-              </div>
-              <div className="flex justify-center mt-5">
-                <Image
-                  src={Exwallet}
-                  alt=""
-                  className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
-                />
-              </div>
-            </>
-          ),
-        },
-        {
-          title: "Slide 2",
-          render: () => (
-            <>
-              <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Download & Install the Extension or App{" "}
-              </div>
-              <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
-                </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    1. Visit the Official Website :
-                  </ul>
-                  <li>
-                    Go to the official website:{" "}
-                    <a
-                      className="text-blue-600"
-                      href="https://metamask.io/"
-                      target="_blank"
-                    >
-                      https://metamask.io/
-                    </a>
-                    .
-                  </li>
-
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    2. For desktop :
-                  </ul>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
-                  </li>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Install the extension from the browser's official store.
-                  </li>
-                  <ul
-                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
-                    }`}
-                  >
-                    3. For Mobile :
-                  </ul>
-                  <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Download the MetaMask app from the App Store (iOS) or Google
+                    Download the Rubby app from the App Store (iOS) or Google
                     Play Store (Android).
                   </li>
                 </div>
@@ -3034,7 +2886,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -3042,17 +2894,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` text-lg mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Phrase :
                 </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
+                <li>
                   This method will export your entire wallet with an account.
                   You will need to import the entire wallet in your preferred
                   wallet provider.
@@ -3060,17 +2908,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` text-lg mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Key :
                 </ul>
-                <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
+                <li>
                   This method will export only one account which you can import
                   in your existing wallet using a private key.
                 </li>
@@ -3083,80 +2927,72 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to
-                <span className={`font-bold text-[#FFE500]`}>
-                  {" "}
-                  MetaMask
-                </span>{" "}
-                Using
-                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={started}
-                    alt=""
-                    className="lg:w-[280px] md:w-[280px] sm:w-[200px] w-[200px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Pwallet} alt="" width={170} />
                 </div>
-                <div className="lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%] mt-3">
+                <div className="w-[70%] mt-3">
                   <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` text-lg mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
-                    1. Open MetaMask :
+                    1. General step:
                   </ul>
-                  <li>Click on the MetaMask extension or open the app.</li>
-
-                  <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Select Import Wallet :
-                  </ul>
-                  <li>Click "Import Wallet" on the startup screen.</li>
+                    Click on “Click on “I already have an address”
+                  </li>
+                 
                 </div>
               </div>
             </>
           ),
         },
-
         {
           title: "Slide 6",
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to MetaMask Using
-                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={seed}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Pkey} alt="" width={170} />
                 </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Enter Seed Phrase :
-                  </ul>
-                  <li>
-                    Input the 12-word seed phrase of your existing wallet.
+                    Click on
+                    <span className={`font-bold text-[#FFE500]`}>
+                      'Import Private Key'
+                    </span>
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enter the key that you copied from the platform. Click on “Confirm”
+
                   </li>
                 </div>
               </div>
@@ -3168,30 +3004,27 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
-                Importing a Wallet to MetaMask Using
-                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={pass}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={pNetwork} alt="" width={170} />
                 </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
-                  <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
-                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    1. Set a Password :
-                  </ul>
-                  <li>Create a new password for this MetaMask account.</li>
+                   Set password and agree terms and condition of rabby wallet. Click on “Continue”
+
+                  </li>
+                  
                 </div>
               </div>
             </>
@@ -3202,29 +3035,528 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` text-lg text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
                 Add account in your wallet using
                 <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
-              <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image
-                    src={imp2}
-                    alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
-                  />
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={device} alt="" width={170} />
                 </div>
-                <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                   It will fetch wallet and click on 
+
+                    <span className={`font-bold text-[#FFE500]`}>'Done'</span>
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Your wallet is ready to use.
+
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 9",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Best Practices for{" "}
+                <span className={`font-bold text-[#FFE500]`}>
+                  'Wallet Security'
+                </span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className=" mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Always download wallets from official websites or app
+                    stores.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Store your seed phrase/private key offline in a secure
+                    location.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Do not share your seed phrase/private key with anyone, even
+                    if they claim to be support personnel.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Use strong, unique passwords for your wallets.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enable additional security features like biometric
+                    authentication where available.
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+       
+      ],
+      phrase: [
+        {
+          title: "Slide 1",
+          render: () => (
+            <>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center  ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Click on {""}
+                <span className={`font-bold text-[#FFE500]`}>
+                  Copy Phrase
+                </span>{" "}
+               
+                from export wallet.
+              </div>
+              <div className="flex justify-center mt-5">
+                <Image
+                  src={Exwallet}
+                  alt=""
+                  className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
+                />
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 2",
+          render: () => (
+            <>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Download & Install the Extension or App{" "}
+              </div>
+              <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
+                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
+                  <Image src={install} alt="" width={250} />
+                </div>
+                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
+                  <ul
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    1. Visit the Official Website :
+                  </ul>
                   <li>
-                    You should be able to see the newly imported account in the
-                    account selector dropdown with an{" "}
+                    Go to the official website:{" "}
+                    <a
+                      className="text-blue-600"
+                      href="https://wallet.uniswap.org/"
+                      target="_blank"
+                    >
+https://wallet.uniswap.org/                 </a>
+                    
+                  </li>
+
+                  <ul
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    2. For desktop :
+                  </ul>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click "Download" and choose the browser extension for
+                    Chrome, Firefox, Brave, or Edge.
+                  </li>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Install the extension from the browser's official store.
+                  </li>
+                  <ul
+                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    3. For Mobile :
+                  </ul>
+                  <li
+                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Download the Uniswap app from the App Store (iOS) or Google
+                    Play Store (Android).
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 3",
+          render: () => (
+            <>
+              <div
+                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Import and export wallet instruction
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Export wallet :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Exporting your wallet means saving the private keys or
+                  recovery phrase associated with your wallet.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This allows you to access your wallet from any device.{" "}
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  It's important to keep your private keys safe, as anyone with
+                  access to them can control your wallet and the assets within
+                  it. It’s like a password for a wallet but you can't change or
+                  forget it.
+                </li>
+              </div>
+              <div>
+                <ul
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Import Wallet :
+                </ul>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Importing your wallet means restoring access to your existing
+                  wallet on a new device by using your private key or recovery
+                  Phrase.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  This process is essential when switching devices or recovering
+                  access to your wallet.
+                </li>
+                <li
+                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Importing a wallet ensures you can continue managing your
+                  tokens and assets securely.
+                </li>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 4",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                There are 2 methods for export wallet
+              </div>
+              <div>
+                <ul
+                  className={` text-lg mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Phrase :
+                </ul>
+                <li>
+                  This method will export your entire wallet with an account.
+                  You will need to import the entire wallet in your preferred
+                  wallet provider.
+                </li>
+              </div>
+              <div>
+                <ul
+                  className={` text-lg mt-5 mb-3 ${
+                    theme === "dark" ? "text-[#FFE500]" : "text-black"
+                  }`}
+                >
+                  1. Copy Key :
+                </ul>
+                <li>
+                  This method will export only one account which you can import
+                  in your existing wallet using a private key.
+                </li>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 5",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Pwallet} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <ul
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-[#FFE500]" : "text-black"
+                    }`}
+                  >
+                    1. General step:
+                  </ul>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on “Click on “I already have an address”
+                  </li>
+                 
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 6",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> “Copy Phrase"</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={Pkey} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on
                     <span className={`font-bold text-[#FFE500]`}>
-                      'Imported'
-                    </span>{" "}
-                    tag next to it.
+                      'Import Private Key'
+                    </span>
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+Enter the Phrase that you copied from the platform.
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 7",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={pNetwork} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                   Set password and agree terms and condition of rabby wallet. Click on “Continue”
+
+                  </li>
+                  
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 8",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Add account in your wallet using
+                <span className={`font-bold text-[#FFE500]`}> Copy Phrase</span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className="flex justify-center mt-3 w-[50%]">
+                  <Image src={device} alt="" width={170} />
+                </div>
+                <div className="w-[70%] mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                   It will fetch wallet and click on 
+
+                    <span className={`font-bold text-[#FFE500]`}>'Done'</span>
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Your wallet is ready to use.
+
+                  </li>
+                </div>
+              </div>
+            </>
+          ),
+        },
+        {
+          title: "Slide 9",
+          render: () => (
+            <>
+              <div
+                className={` text-lg text-center mb-3 ${
+                  theme === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                Best Practices for{" "}
+                <span className={`font-bold text-[#FFE500]`}>
+                  'Wallet Security'
+                </span>
+              </div>
+              <div className="flex gap-5 items-start">
+                <div className=" mt-3">
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Always download wallets from official websites or app
+                    stores.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Store your seed phrase/private key offline in a secure
+                    location.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Do not share your seed phrase/private key with anyone, even
+                    if they claim to be support personnel.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Use strong, unique passwords for your wallets.
+                  </li>
+                  <li
+                    className={` text-lg mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Enable additional security features like biometric
+                    authentication where available.
                   </li>
                 </div>
               </div>
@@ -3293,7 +3625,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
 
   return (
     <div>
-      <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[100]  ">
+      <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[100] overflow-y-scroll py-6 scroll ">
         <div
           ref={popupRef}
           className="bg-white rounded-lg w-[80%]  relative  m-auto sm:w-[80%] lg:w-[45%] md:w-[50%]"
