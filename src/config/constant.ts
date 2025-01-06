@@ -20,8 +20,8 @@ export const CONTRACT_ADDRESS =
 
 export const MONGODB_URI =
   process.env.NODE_ENV == "development"
-    ? process.env.MONGODB_URI
-    : process.env.MONGODB_URI;
+    ? process.env.DEVELOPMENT_MONGODB_URI
+    : process.env.PRODUCTION_MONGODB_URI;
 
 export const SENDGRID_API_KEY =
   process.env.NODE_ENV == "development"

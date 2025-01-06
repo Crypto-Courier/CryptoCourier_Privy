@@ -26,9 +26,6 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   const [checking, setChecking] = useState(false);
   const { getAccessToken } = usePrivy();
 
-  const SITE_URL = process.env.NEXT_PUBLIC_PRODUCTION_URL?.split(",");
-  const DEVELOPMENT_URL = process.env.NEXT_PUBLIC_DEVELOPMENT_URL?.split(",");
-
   // Check email embedded wallet from privy
   useEffect(() => {
     if (!isOpen || !recipientEmail || transferType !== "email") return;
