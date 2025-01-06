@@ -935,9 +935,11 @@ const SendToken = () => {
             tokenAmount={tokenAmount}
             tokenSymbol={selectedTokenSymbol}
             recipientEmail={claimerEmail}
+            recipientAddress={claimerWallet}
             onConfirm={handleSend}
             transferType={isValidEmail(claimerEmail) ? "email" : "eoa"}
             isContractCall={isContractCall}
+            chainId={walletData?.chainId.split(":")[1]}
           />
           <TransactionPopup
             isOpen={showTxPopup}

@@ -4,7 +4,9 @@ export interface TransferDetailsProps {
     tokenAmount: string;
     tokenSymbol: string;
     recipientEmail: string;
+    recipientAddress: string;
     onConfirm: (walletAddress: string) => void;
     transferType: 'email' | 'eoa';
     isContractCall: boolean;
+    chainId: string
   }
