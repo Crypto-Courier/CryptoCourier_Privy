@@ -8,15 +8,25 @@ import { TransferDetailsProps } from "../types/transfer-detail-types";
 import axios from "axios";
 import { usePrivy } from "@privy-io/react-auth";
 
+interface GasEstimate {
+  chainName: string;
+  gasPrice: string;
+  estimatedGasLimit: string;
+  transactionFeeETH: string;
+  transactionFeeUSD: string;
+}
+
 const TransferDetails: React.FC<TransferDetailsProps> = ({
   isOpen,
   onClose,
   tokenAmount,
   tokenSymbol,
   recipientEmail,
+  recipientAddress,
   onConfirm,
   transferType,
   isContractCall,
+  chainId,
 }) => {
   const [isWalletCreated, setIsWalletCreated] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
@@ -25,6 +35,25 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
   const { getAccessToken } = usePrivy();
+  const [gasEstimate, setGasEstimate] = useState<GasEstimate | null>(null);
+
+  useEffect(() => {
+    const fetchGasEstimate = async () => {
+      if (!isOpen || !recipientAddress) return;
+
+      try {
+        const response = await fetch(
+          `/api/gas-estimate?chainId=${chainId}&to=${recipientAddress}&value=${tokenAmount}`
+        );
+        const data = await response.json();
+        setGasEstimate(data);
+      } catch (error) {
+        console.error("Failed to fetch gas estimate:", error);
+      }
+    };
+
+    fetchGasEstimate();
+  }, [isOpen, recipientAddress, tokenAmount, chainId]);
 
   // Check email embedded wallet from privy
   useEffect(() => {
@@ -123,6 +152,40 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const renderGasEstimate = () => {
+    if (!gasEstimate) return null;
+
+    return (
+      <div className="mb-4 w-[80%] m-auto">
+        <div
+          className={`rounded-[12px] p-4 ${
+            theme === "dark"
+              ? "bg-[#272626] border border-[#3EFEFEF]"
+              : "border border-[#0052FF]"
+          }`}
+        >
+          <h3
+            className={`font-semibold mb-2 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
+            Estimated Gas Fees
+          </h3>
+          <div
+            className={`text-sm space-y-1 ${
+              theme === "dark" ? "text-[#FFE500]" : "text-black"
+            }`}
+          >
+            <p>Network: {gasEstimate.chainName}</p>
+            <p>Gas Price: {gasEstimate.gasPrice}</p>
+            <p>Estimated Fee: {gasEstimate.transactionFeeETH}</p>
+            <p>({gasEstimate.transactionFeeUSD})</p>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (!isOpen) return null;
@@ -259,7 +322,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   </button>
                 </p>
               </div>
-
+              {renderGasEstimate()}
               <div className="flex gap-5 w-[80%] m-auto">
                 <button
                   onClick={handleCancel}
@@ -315,6 +378,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                     ? "Creating..."
                     : "Create Wallet"}
                 </button>
+                {renderGasEstimate()}
               </div>
             </div>
           ) : (
@@ -413,7 +477,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   You can check out transaction for transparency.
                 </div>
               </div>
-
+              {renderGasEstimate()}
               <div className="flex gap-5 w-[80%] m-auto">
                 <button
                   onClick={handleCancel}
