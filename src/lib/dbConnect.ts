@@ -11,37 +11,31 @@ interface MongooseCache {
 }
 
 declare global {
+  // Ensuring global mongoose cache is typed
   var mongoose: MongooseCache | undefined;
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+const cached: MongooseCache = global.mongoose ?? { conn: null, promise: null };
+global.mongoose = cached;
 
 async function dbConnect() {
-  if (cached?.conn) {
+  if (cached.conn) {
     return cached.conn;
   }
 
-  if (!cached?.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    cached!.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+  if (!cached.promise) {
+    const opts = { bufferCommands: false };
+    cached.promise = mongoose.connect(MONGODB_URI!, opts);
   }
+
   try {
-    cached!.conn = await cached!.promise;
-  } catch (e) {
-    cached!.promise = null;
-    throw e;
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null; // Reset promise in case of failure
+    throw error;
   }
 
-  return cached!.conn;
+  return cached.conn;
 }
 
 export default dbConnect;
