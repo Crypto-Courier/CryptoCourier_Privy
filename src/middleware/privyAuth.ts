@@ -36,10 +36,12 @@ const isValidDomain = (origin: string | undefined): boolean => {
     const allowed = allowedDomains[env as keyof typeof allowedDomains] || [];
     
     return allowed.some(domain => {
+        // Remove trailing slashes
+        const sanitizedDomain = domain.trim().replace(/\/+$/, '');
         if (env === 'development') {
-            return origin.includes(domain);
+            return origin.includes(sanitizedDomain);
         }
-        return origin === `https://${domain}`;
+        return origin === sanitizedDomain || origin === `https://${sanitizedDomain}`;
     });
 };
 
