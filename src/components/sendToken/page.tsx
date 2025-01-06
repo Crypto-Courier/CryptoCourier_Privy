@@ -35,6 +35,7 @@ import { CONTRACT_ADDRESS } from "../../config/constant";
 import chainConfig from "../../config/chains";
 import TransactionPopup from "../TransactionPopup";
 import { sign } from "crypto";
+import { Check, LogOut, ExternalLink, Copy, HelpCircle } from "lucide-react";
 import MenuDivider from "antd/es/menu/MenuDivider";
 import WalletPopup from "../WalletPopup";
 import { Tooltip } from "antd";
@@ -46,6 +47,7 @@ const SendToken = () => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const { writeContractAsync: approveAsync } = useWriteContract();
+  const [isCopied, setIsCopied] = useState(false); // Track copy state
 
   const [previousChainId, setPreviousChainId] = useState<string>("");
   const router = useRouter();
@@ -561,6 +563,19 @@ const SendToken = () => {
     }
   };
 
+  const handleCopyWithFeedback = (address: string) => {
+      if (address) {
+        navigator.clipboard.writeText(address);
+        setIsCopied(true); // Show check icon
+        toast.success("Address copied to clipboard!");
+      } else {
+        toast.error("No address available to copy.");
+      }
+  
+      // Reset back to copy icon after 2 seconds
+      setTimeout(() => setIsCopied(false), 2000);
+    };
+  
   // Handler for adding token into database
   const handleAddToken = async (newToken: AddToken) => {
     try {
@@ -604,31 +619,44 @@ const SendToken = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
-            <div
-              className={`hidden lg:flex md:flex sm:hidden   items-center space-x-3 p-2 rounded-[10px] shadow-lg ${
-                theme === "dark" ? "bg-[#1C1C1C]  " : "bg-[#F4F3F3]  "
-              }`}
-            >
-              <div
-                className={`hidden lg:flex md:flex sm:hidden w-10 h-10 rounded-full  items-center justify-center border-2 transition duration-300 hover:scale-110 ${
-                  theme === "dark"
-                    ? "border-white bg-transparent"
-                    : "border-gray-500 bg-transparent"
-                }`}
-              >
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    theme === "dark"
-                      ? "bg-[#FFE500] text-[#363535]"
-                      : "bg-[#E265FF] text-white"
-                  }`}
-                ></div>
-              </div>
+             <div
+            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
+              theme === "dark"
+                ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+                : "bg-[#F4F3F3] border border-[#000000]"
+            }`}
+            
+          >
+            <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
+              
+            
               <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
                 {gifterAddress
                   ? `${gifterAddress.slice(0, 6)}...${gifterAddress.slice(-4)}`
                   : "Connect or Login"}
               </span>
+              </div>
+              {isCopied ? (
+              <Check
+                size={20}
+                className={`cursor-pointer ${
+                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                }`}
+              />
+            ) : (
+              <Copy
+                size={20}
+                className={`cursor-pointer ${
+                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyWithFeedback(
+                    gifterAddress 
+                  );
+                }}
+              />
+            )}
             </div>
             <div className="text-right  items-end">
               <div className="gap-4 flex">

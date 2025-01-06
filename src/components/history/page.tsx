@@ -180,15 +180,9 @@ const History: React.FC = () => {
                 ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
                 : "bg-[#F4F3F3] border border-[#000000]"
             }`}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown on click
+            
           >
-            <div
-              className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent dropdown toggle when copying
-                handleCopy(dashboardAddress || activeAddress || "");
-              }}
-            >
+            <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
               {/* (viewMode === "dashboard") ? {dashboardAddress
                 ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
                     -4
@@ -221,55 +215,6 @@ const History: React.FC = () => {
               />
             )}
           </div>
-
-          {/* Dropdown content */}
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 w-full rounded-md shadow-lg z-10">
-              <div
-                className={`mt-1 rounded-md ${
-                  theme === "dark"
-                    ? "bg-[#1C1C1C] text-white border border-[#A2A2A2]"
-                    : "bg-white text-black border border-[#1C1C1C]"
-                }`}
-              >
-                <div className="p-2">
-                  <button
-                    onClick={handleExportWallet}
-                    className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
-                      canExportWallet
-                        ? "hover:bg-gray-100 hover:text-gray-900"
-                        : "opacity-50 cursor-not-allowed"
-                    }`}
-                  >
-                    <ExternalLink
-                      size={16}
-                      className="mr-2"
-                      onClick={() => setIsPopupOpen(true)}
-                    />
-                    Export Wallet
-                    <span
-                      className="ml-2 cursor-pointer text-gray-500 hover:text-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering the export action
-                        setIsPopupOpen(true); // Toggle the popup state
-                      }}
-                    >
-                      <HelpCircle size={16} />
-                    </span>
-                  </button>
-                  <div className="logout">
-                    <button
-                      onClick={signOut}
-                      className="rounded-md flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      <LogOut size={16} className="mr-2" />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       );
     }
@@ -283,13 +228,7 @@ const History: React.FC = () => {
             : "bg-[#F4F3F3] border border-[#000000]"
         }`}
       >
-        <div
-          className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent dropdown toggle when copying
-            handleCopy(dashboardAddress || activeAddress || "");
-          }}
-        >
+        <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
           {/* (viewMode === "dashboard") ? {dashboardAddress
                 ? `${dashboardAddress.slice(0, 6)}...${dashboardAddress.slice(
                     -4

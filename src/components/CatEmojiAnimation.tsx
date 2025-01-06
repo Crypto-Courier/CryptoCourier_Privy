@@ -56,7 +56,9 @@ const CatEmojiAnimationy: React.FC = () => {
     const handleClick = (e: MouseEvent) => {
       if (
         e.target instanceof HTMLElement &&
-        (e.target.tagName === "INPUT" || e.target.tagName === "SELECT")
+        (e.target.tagName === "INPUT" ||
+          e.target.tagName === "SELECT" ||
+          e.target.className === "Export")
       ) {
         return; // Do nothing if clicked inside input or select
       }

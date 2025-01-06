@@ -312,7 +312,7 @@ export const Connect = () => {
         <button
           onMouseEnter={() => setShowDropdown(true)}
           // onMouseLeave={() => setShowDropdown(false)}
-          onClick={logout}
+
           type="button"
           className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-2 px-4 md:py-3 sm:py-3 lg:py-3 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center gap-2"
         >
@@ -351,7 +351,7 @@ export const Connect = () => {
       {showDropdown && (
         <div
           ref={dropdownRef}
-          className="absolute -right-10  mt-2 w-48 bg-white dark:bg-[#0A0A0A]/90 backdrop-blur-[80px] rounded-lg shadow-lg overflow-hidden z-50 top-20"
+          className=" Export absolute -right-10  mt-2 w-48 bg-white dark:bg-[#0A0A0A]/90 backdrop-blur-[80px] rounded-lg shadow-lg overflow-hidden z-50 top-20"
         >
           <button
             onClick={handleExportWallet}
@@ -379,14 +379,14 @@ export const Connect = () => {
           </button>
           <button
             onClick={handleCopyAddress}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-white transition-colors dark:hover:text-black duration-150 flex items-center gap-2"
+            className=" Export w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-white transition-colors dark:hover:text-black duration-150 flex items-center gap-2"
           >
             <Copy size={16} />
             {copySuccess ? "Copied!" : "Copy Address"}
           </button>
           <button
             onClick={logout}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-white dark:hover:text-black marker:transition-colors duration-150 flex items-center gap-2"
+            className=" Export w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-white dark:hover:text-black marker:transition-colors duration-150 flex items-center gap-2"
           >
             <LogOutIcon size={16} />
             Disconnect
