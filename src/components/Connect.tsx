@@ -60,6 +60,7 @@ export const Connect = () => {
   const [isEmailConnected, setIsEmailConnected] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
   const walletDropdownRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -202,6 +203,21 @@ export const Connect = () => {
     localStorage.clear();
     sessionStorage.clear();
   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const clearInitialStorage = () => {
@@ -333,7 +349,10 @@ export const Connect = () => {
         </button>
       </div>
       {showDropdown && (
-        <div className="absolute -right-10  mt-2 w-48 bg-white dark:bg-[#0A0A0A]/90 backdrop-blur-[80px] rounded-lg shadow-lg overflow-hidden z-50 top-20">
+        <div
+          ref={dropdownRef}
+          className="absolute -right-10  mt-2 w-48 bg-white dark:bg-[#0A0A0A]/90 backdrop-blur-[80px] rounded-lg shadow-lg overflow-hidden z-50 top-20"
+        >
           <button
             onClick={handleExportWallet}
             className={`Export flex items-center w-full px-4 py-2 text-sm rounded-md ${
