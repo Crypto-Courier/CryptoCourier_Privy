@@ -83,6 +83,25 @@ export const Connect = () => {
     },
   });
 
+  useEffect(() => {
+      let mounted = true;
+  
+      const initializeWallet = async () => {
+        if (ready && authenticated && user) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (mounted) {
+            setIsWalletReady(true);
+          }
+        }
+      };
+  
+      initializeWallet();
+  
+      return () => {
+        mounted = false;
+      };
+    }, [ready, authenticated, user]);
+    
   const checkWalletConnection = useCallback(() => {
     if (authenticated && user) {
       const connectedWallets =
