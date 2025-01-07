@@ -5,7 +5,7 @@ const CHAIN_CONFIG = {
   11155111: {
     name: 'Sepolia',
     relayerUrl: 'http://localhost:3000/relay',
-    contractAddress: process.env.CONTRACT_ADDRESS || "0x3d9562281217AD79D0d7e849B055AD3796ea80e7"
+    contractAddress: process.env.CONTRACT_ADDRESS || "0xe75B1430F740B5cDe629546925ff796354E07097"
   }
 };
 
