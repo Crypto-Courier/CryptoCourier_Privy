@@ -37,6 +37,12 @@ import Udevice from "../assets/u-device.svg";
 import Udone from "../assets/u-done.svg";
 import Cmanually from "../assets/C-manually.svg";
 import CPharse from "../assets/C-phrase.svg";
+import Rwallet from "../assets/R-wallet.svg";
+import Rseed from "../assets/R-seed.svg";
+import Rpassword from "../assets/R-password.svg";
+import done1 from "../assets/R-done.svg";
+import done2 from "../assets/R-done2.svg";
+import Rkey from "../assets/R-key.svg";
 
 type Step = {
   title: string;
@@ -155,14 +161,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className=" w-[100%] mt-3">
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm  mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Visit the Official Website :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md  sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -177,36 +183,36 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   </li>
 
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     2. For desktop :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Install the extension from the browser's official store.
                   </li>
                   <ul
-                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={`lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     3. For Mobile :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -223,7 +229,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -238,7 +244,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   1. Export wallet :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -246,14 +252,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   recovery phrase associated with your wallet.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
                   This allows you to access your wallet from any device.{" "}
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -265,14 +271,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Import Wallet :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -281,7 +287,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   Phrase.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -289,7 +295,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   access to your wallet.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -305,7 +311,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -313,14 +319,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Phrase :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -331,14 +337,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Key :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -359,33 +365,33 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 }`}
               >
                 Add account in your wallet using
-                <span className={`font-bold text-[#FFE500]`}>Copy Key</span>
+                <span className={`font-bold text-[#FFE500]`}> Copy Key </span>
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image src={account} alt="" width={200} />
+                  <Image src={account} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. For Chrome Extension:
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-lg sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click the account selector at the top of your wallet.
                   </li>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Select 'Add account or hardware wallet' at the bottom of the
+                    Select Add account or hardware wallet' at the bottom of the
                     list.
                   </li>
                 </div>
@@ -407,11 +413,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image src={imp} alt="" width={200} />
+                  <Image src={imp} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -439,11 +445,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image src={key} alt="" width={200} />
+                  <Image src={key} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -470,11 +476,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%]">
-                  <Image src={imp2} alt="" width={200} />
+                  <Image src={imp2} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -505,7 +511,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -513,7 +519,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -521,7 +527,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -529,14 +535,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -574,7 +580,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 <Image
                   src={Exwallet1}
                   alt=""
-                  className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
+                  // className="lg:w-[300px] md:w-[300px] sm:w-[200px] w-[200px] m-auto"
                 />
               </div>
             </>
@@ -594,13 +600,17 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className=" w-[100%] mt-3">
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm  mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Visit the Official Website :
                   </ul>
-                  <li>
+                  <li
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
                     Go to the official website:{" "}
                     <a
                       className="text-blue-600"
@@ -609,40 +619,39 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     >
                       https://metamask.io/
                     </a>
-                    .
                   </li>
 
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     2. For desktop :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Install the extension from the browser's official store.
                   </li>
                   <ul
-                    className={`lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={`lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     3. For Mobile :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -659,7 +668,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={` lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={` lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -667,14 +676,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Export wallet :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -682,14 +691,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   recovery phrase associated with your wallet.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
                   This allows you to access your wallet from any device.{" "}
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -701,14 +710,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Import Wallet :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -717,7 +726,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   Phrase.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -725,7 +734,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   access to your wallet.
                 </li>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -741,7 +750,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -749,14 +758,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Phrase :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -767,14 +776,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <ul
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-[#FFE500]" : "text-black"
                   }`}
                 >
                   1. Copy Key :
                 </ul>
                 <li
-                  className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                  className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                     theme === "dark" ? "text-white" : "text-black"
                   }`}
                 >
@@ -790,7 +799,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`  lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -807,32 +816,38 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   <Image
                     src={started}
                     alt=""
-                    className="lg:w-[280px] md:w-[280px] sm:w-[200px] w-[200px] m-auto"
+                    // className="lg:w-[280px] md:w-[280px] sm:w-[200px] w-[200px] m-auto"
                   />
                 </div>
                 <div className="lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={`  lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Open MetaMask :
                   </ul>
-                  <li>Click on the MetaMask extension or open the app.</li>
+                  <li
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on the MetaMask extension or open the app.
+                  </li>
 
                   <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={`  lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Select Import Wallet :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Import Wallet" on the startup screen.
+                    Click Import Wallet on the startup screen.
                   </li>
                 </div>
               </div>
@@ -845,7 +860,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`  lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -857,19 +872,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   <Image
                     src={seed}
                     alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+                    // className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
                   />
                 </div>
                 <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={`  lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={`  lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Enter Seed Phrase :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -885,7 +900,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`  lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -897,19 +912,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   <Image
                     src={pass}
                     alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+                    // className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
                   />
                 </div>
                 <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Set a Password :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -926,7 +941,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
           render: () => (
             <>
               <div
-                className={`  lg:text-lg md:text-l sm:text-sm text-sm text-center mb-3 ${
+                className={`  lg:text-lg md:text-md sm:text-sm text-sm text-center mb-3 ${
                   theme === "dark" ? "text-white" : "text-black"
                 }`}
               >
@@ -938,12 +953,12 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   <Image
                     src={imp2}
                     alt=""
-                    className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
+                    // className="lg:w-[200px] md:w-[200px] sm:w-[180px] w-[180px] m-auto"
                   />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -974,7 +989,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -982,7 +997,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -990,7 +1005,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -998,14 +1013,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1065,14 +1080,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
                 <div className=" w-[100%] mt-3">
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm  mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. Visit the Official Website :
                   </ul>
                   <li
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1087,7 +1102,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                   </li>
 
                   <ul
-                    className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
@@ -1098,8 +1113,8 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
                     className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
@@ -1269,14 +1284,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1286,7 +1301,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     </span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1319,7 +1334,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1351,7 +1366,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1363,7 +1378,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     key which you copied from the platform.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1393,7 +1408,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1424,7 +1439,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1452,7 +1467,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1460,7 +1475,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1468,7 +1483,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1476,14 +1491,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1569,8 +1584,8 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
                     className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
@@ -1740,25 +1755,31 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click on “I already have a wallet”
+                    Click on{" "}
+                    <span className={`font-bold text-[#FFE500]`}>
+                      I already have a wallet.
+                    </span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click on “Other import options”
+                    Click on{" "}
+                    <span className={`font-bold text-[#FFE500]`}>
+                      Other import options.
+                    </span>
                   </li>
                 </div>
               </div>
@@ -1783,13 +1804,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click on
                     <span className={`font-bold text-[#FFE500]`}>
-                      'Import Seed Phrase'
+                      Import Seed Phrase
                     </span>
                   </li>
                 </div>
@@ -1815,7 +1836,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1824,13 +1845,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     the platform.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click on{" "}
                     <span className={`font-bold text-[#FFE500]`}>
-                      'Continue'
+                      Continue.
                     </span>
                   </li>
                 </div>
@@ -1856,13 +1877,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Enable Device Authentication ( if applicable or secure
                     wallet ) and click on
-                    <span className={`font-bold text-[#FFE500]`}>'Next'</span>
+                    <span className={`font-bold text-[#FFE500]`}> Next. </span>
                   </li>
                 </div>
               </div>
@@ -1887,11 +1908,11 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click on 'Continue' and your account is ready to use.
+                    Click on Continue and your account is ready to use.
                   </li>
                 </div>
               </div>
@@ -1915,7 +1936,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1923,7 +1944,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1931,7 +1952,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -1939,14 +1960,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2054,8 +2075,8 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
                     className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
@@ -2225,21 +2246,21 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click on{" "}
                     <span className={`font-bold text-[#FFE500]`}>
                       {" "}
-                      I already have a wallet
+                      I already have a wallet.
                     </span>
                   </li>
                 </div>
@@ -2265,7 +2286,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2297,7 +2318,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2329,7 +2350,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2363,7 +2384,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2371,7 +2392,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2379,7 +2400,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2387,14 +2408,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2420,7 +2441,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 }`}
               >
                 Uniswap not support to import wallet using
-                <span className={`font-bold text-[#FFE500]`}>Copy Key</span>
+                <span className={`font-bold text-[#FFE500]`}> Copy Key </span>
               </div>
               <div className="flex justify-center mt-5">
                 <Image
@@ -2502,8 +2523,8 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
                     className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
@@ -2673,14 +2694,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2714,13 +2735,13 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click on
                     <span className={`font-bold text-[#FFE500]`}>
-                      Import a wallet
+                      Import a wallet.
                     </span>
                   </li>
                 </div>
@@ -2746,7 +2767,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2775,7 +2796,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2806,7 +2827,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2839,7 +2860,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2847,7 +2868,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2855,7 +2876,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2863,14 +2884,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -2958,8 +2979,8 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click "Download" and choose the browser extension for
-                    Chrome, Firefox, Brave, or Edge.
+                    Click Download and choose the browser extension for Chrome,
+                    Firefox, Brave, or Edge.
                   </li>
                   <li
                     className={` lg:text-lg md:text-l sm:text-sm text-sm mt-5 mb-3 ${
@@ -3125,18 +3146,18 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={Pwallet} alt="" />
+                  <Image src={Rwallet} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3161,30 +3182,40 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 }`}
               >
                 Add account in your wallet using
-                <span className={`font-bold text-[#FFE500]`}> “Copy Key</span>
+                <span className={`font-bold text-[#FFE500]`}> Copy Key</span>
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={Pkey} alt="" />
+                  <Image src={Rkey} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click on
+                    Click on {""}
                     <span className={`font-bold text-[#FFE500]`}>
                       Import Private Key.
                     </span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Enter the key that you copied from the platform. Click on
-                    <span className={`font-bold text-[#FFE500]`}>Confirm.</span>
+                    Enter the key that you copied from the platform.
+                  </li>
+                  <li
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on
+                    <span className={`font-bold text-[#FFE500]`}>
+                      {" "}
+                      Confirm.
+                    </span>
                   </li>
                 </div>
               </div>
@@ -3205,16 +3236,26 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={pNetwork} alt="" />
+                  <Image src={Rpassword} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Set password and agree terms and condition of rabby wallet.
-                    Click on “Continue”
+                  </li>
+                  <li
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Click on{" "}
+                    <span className={`font-bold text-[#FFE500]`}>
+                      {" "}
+                      Continue.
+                    </span>
                   </li>
                 </div>
               </div>
@@ -3235,19 +3276,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={device} alt="" />
+                  <Image src={done2} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     It will fetch wallet and click on
-                    <span className={`font-bold text-[#FFE500]`}>'Done'</span>
+                    <span className={`font-bold text-[#FFE500]`}> Done.</span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3275,7 +3316,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3283,7 +3324,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3291,7 +3332,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3299,14 +3340,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3357,10 +3398,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                 Download & Install the Extension or App{" "}
               </div>
               <div className="flex gap-5 items-start justify-center lg:flex-row md:flex-row sm:flex-col flex-col ">
-                <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={install} alt="" width={250} />
-                </div>
-                <div className="lg:w-[60%] md:w-[60%] sm:w-[100%] w-[100%] mt-3">
+                <div className=" w-[100%] mt-3">
                   <ul
                     className={` lg:text-lg md:text-l sm:text-sm text-sm  mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
@@ -3558,24 +3596,24 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={Pwallet} alt="" />
+                  <Image src={Rwallet} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <ul
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-[#FFE500]" : "text-black"
                     }`}
                   >
                     1. General step:
                   </ul>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Click on{" "}
                     <span className={`font-bold text-[#FFE500]`}>
-                      I already have an address
+                      I already have an address.
                     </span>
                   </li>
                 </div>
@@ -3600,25 +3638,27 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={Pkey} alt="" />
+                  <Image src={Rseed} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Click on
+                    Click on {""}
                     <span className={`font-bold text-[#FFE500]`}>
-                      Import Private Key.
+                      Import Seed Phrase.
                     </span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
-                    Enter the Phrase that you copied from the platform.
+                    Enter the{" "}
+                    <span className={`font-bold text-[#FFE500]`}>Phrase</span>{" "}
+                    that you copied from the platform.
                   </li>
                 </div>
               </div>
@@ -3639,15 +3679,21 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={pNetwork} alt="" />
+                  <Image src={Rpassword} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Set password and agree terms and condition of rabby wallet.
+                  </li>
+                  <li
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
                     Click on{" "}
                     <span className={`font-bold text-[#FFE500]`}>
                       {" "}
@@ -3673,19 +3719,19 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className="flex justify-center mt-3 lg:w-[50%] md:w-[50%] sm:w-[100%] w-[100%]">
-                  <Image src={device} alt="" />
+                  <Image src={done1} alt="" />
                 </div>
                 <div className="lg:w-[70%] md:w-[70%] sm:w-[100%] w-[100%] mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     It will fetch wallet and click on
-                    <span className={`font-bold text-[#FFE500]`}>Done</span>
+                    <span className={`font-bold text-[#FFE500]`}> Done </span>
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3713,7 +3759,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               <div className="flex gap-5 items-start lg:flex-row md:flex-row sm:flex-col flex-col">
                 <div className=" mt-3">
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3721,7 +3767,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     stores.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3729,7 +3775,7 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     location.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3737,14 +3783,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
                     if they claim to be support personnel.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
                     Use strong, unique passwords for your wallets.
                   </li>
                   <li
-                    className={` text-lg mt-5 mb-3 ${
+                    className={` lg:text-lg md:text-md sm:text-sm text-sm mt-5 mb-3 ${
                       theme === "dark" ? "text-white" : "text-black"
                     }`}
                   >
@@ -3810,7 +3856,6 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
     setCurrentStep(0); // Reset to the first step
   };
   const isLastStep = currentStep === getCurrentSteps().length - 1;
-  
 
   return (
     <div>
