@@ -30,7 +30,7 @@ import {
 import { Tooltip } from "antd";
 import WalletPopup from "../WalletPopup";
 import MonthYearPicker from "../MonthYearPicker";
-// import Signature from "../Signature";
+import Signature from "../Signature";
 
 // Define the list of supported chains
 const SUPPORTED_CHAINS = [
@@ -599,10 +599,10 @@ const LeaderBoard: React.FC = () => {
                     </div>
                   )}
                 </div>
-                {/* <Signature
+                <Signature
                  chainId={11155111} // 1 for Ethereum, 137 for Polygon, etc.
-                 giftId={2} // Your gift ID
-                 /> */}
+                 giftId={1} // Your gift ID
+                 />
               </div>
             </div>
           </div>

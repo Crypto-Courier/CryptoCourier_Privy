@@ -5,13 +5,14 @@ const CHAIN_CONFIG = {
   11155111: {
     name: 'Sepolia',
     relayerUrl: 'http://localhost:3000/relay',
-    contractAddress: process.env.CONTRACT_ADDRESS || "0xD617F51369e59b83927D5e2FB20Cb3808eC969C2"
+    contractAddress: process.env.CONTRACT_ADDRESS || "0xe75B1430F740B5cDe629546925ff796354E07097"
   }
 };
 
+// Updated ABI to match the new contract
 const GIFT_ABI = [
   "function getNonce(address user) view returns (uint256)",
-  "function claimGiftWithSig(uint256 giftId, uint256 deadline, bytes memory signature) external",
+  "function claimGift(uint256 giftId, uint256 estimateAmount, uint256 deadline, bytes memory signature) external",
 ];
 
 const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | number }) => {
@@ -19,6 +20,7 @@ const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | numb
   const [txHash, setTxHash] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [estimateAmount, setEstimateAmount] = useState('0');
 
   const claimGift = async () => {
     setIsLoading(true);
@@ -63,6 +65,7 @@ const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | numb
       const types = {
         ClaimGift: [
           { name: "giftId", type: "uint256" },
+          { name: "estimateAmount", type: "uint256" },
           { name: "nonce", type: "uint256" },
           { name: "deadline", type: "uint256" },
         ],
@@ -70,12 +73,23 @@ const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | numb
 
       const value = {
         giftId: BigInt(giftId),
+        estimateAmount: BigInt(estimateAmount),
         nonce: BigInt(nonce),
         deadline: BigInt(deadline),
       };
 
       setStatus('Requesting signature...');
       const signature = await signer.signTypedData(domain, types, value);
+
+      console.log('Signature Data:', {
+        signature,
+        domain,
+        types,
+        value,
+        claimer,
+        nonce: nonce.toString(),
+        deadline,
+      });
 
       setStatus('Submitting to relayer...');
       const response = await fetch(CHAIN_CONFIG[chainId as keyof typeof CHAIN_CONFIG].relayerUrl, {
@@ -84,6 +98,7 @@ const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | numb
         body: JSON.stringify({
           chainId,
           giftId: giftId.toString(),
+          estimateAmount,
           deadline: deadline.toString(),
           signature,
           claimer,
@@ -109,6 +124,18 @@ const Signature = ({ chainId, giftId }: { chainId: number, giftId: string | numb
 
   return (
     <div className="p-4">
+    <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Estimate Amount (in wei)
+        </label>
+        <input
+          type="text"
+          value={estimateAmount}
+          onChange={(e) => setEstimateAmount(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="Enter estimate amount"
+        />
+      </div>
       <button
         onClick={claimGift}
         disabled={isLoading}
