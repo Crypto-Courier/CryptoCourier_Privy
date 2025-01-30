@@ -62,7 +62,7 @@ export const wagmiConfig = createConfig({
     superlumio,
     metalL2,
     ham,
-    snax
+    snax,
   ],
   transports: {
     [mode.id]: http(),
@@ -87,7 +87,6 @@ export const wagmiConfig = createConfig({
     [metalL2.id]: http(),
     [ham.id]: http(),
     [snax.id]: http(),
-
   },
 });
 
@@ -149,13 +148,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           superlumio,
           metalL2,
           ham,
-          snax
+          snax,
         ],
       }}
     >
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
-          <ThemeProvider attribute="class" defaultTheme="light">
+          <ThemeProvider attribute="class" defaultTheme="dark">
             <WalletProvider>{children}</WalletProvider>
           </ThemeProvider>
         </WagmiProvider>
