@@ -119,7 +119,7 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-0 right-[1rem] text-gray-500 hover:text-gray-700 text-[25px]"
+          className="absolute top-0 right-[1rem] text-gray-500 hover:text-gray-200 text-[25px]"
         >
           &times;
         </button>
@@ -226,17 +226,17 @@ const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAddToken }) => {
 
           {error && <p className="text-red-500 mb-2">{error}</p>}
 
-          <div className="flex justify-center space-x-2 mb-7 mt-7">
+          <div className="flex justify-center space-x-2 mb-7 mt-7 gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-[#FF336A] text-[#FF336A] rounded-md text-sm font-medium"
+              className="px-4 py-2  text-white  border-[#FF336A]  border rounded-md text-sm font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="hover:scale-110 duration-500 transition 0.3 px-4 py-2 border border-red-300 text-white font-medium bg-[#FF336A] rounded-md shadow-sm text-sm font-medium"
+              className="hover:scale-110 duration-500 transition 0.3 px-4 py-2  text-white  bg-[#FF336A] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#FF336A] rounded-md shadow-sm text-sm font-medium"
               disabled={!tokenFetched}
             >
               Add Token

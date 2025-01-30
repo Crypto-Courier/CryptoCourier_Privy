@@ -243,24 +243,13 @@ const LeaderBoard: React.FC = () => {
                 </button>
               </div>
 
-              {/* <button
-                onClick={invite}
-                className={`invite px-[30px] py-[10px] rounded-full hover:scale-110 duration-500 transition 0.3 text-[12px] sm:text-[12px] md:text-lg lg:text-lg font-bold ${
-                  theme === "dark"
-                    ? "bg-[#FFE500] text-[#363535]"
-                    : "bg-[#FFFFFF] text-black"
-                }`}
-              >
-                Invite Your Friends
-              </button> */}
-
               <Tooltip title="Invite Your Friends">
                 <button
                   onClick={invite}
                   className={`lg:px-[20px] lg:py-[10px] md:px-[20px] md:py-[10px] px-[20px] py-[10px] rounded-lg hover:scale-110 duration-500 transition 0.3 sm:text-[10px] text-[10px] md:text-[15px] lg:text-[15px] ${
                     theme === "dark"
-                      ? " text-[#363535] border bg-[#FFE500] "
-                      : "bg-[#E265FF] text-white"
+                      ? "text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FFE500]"
+                      : "text-white bg-[#E265FF] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#E265FF]"
                   }`}
                 >
                   <Image src={invited} width={20} alt="" />
@@ -600,9 +589,9 @@ const LeaderBoard: React.FC = () => {
                   )}
                 </div>
                 <Signature
-                 chainId={11155111} // 1 for Ethereum, 137 for Polygon, etc.
-                 giftId={1} // Your gift ID
-                 />
+                  chainId={11155111} // 1 for Ethereum, 137 for Polygon, etc.
+                  giftId={1} // Your gift ID
+                />
               </div>
             </div>
           </div>

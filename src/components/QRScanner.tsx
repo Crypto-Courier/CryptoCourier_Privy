@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { ethers } from "ethers";
-import { QRScannerProps, QRResult } from "../types/qr-scanner-types"
+import { useTheme } from "next-themes";
+import { QRScannerProps, QRResult } from "../types/qr-scanner-types";
 
 const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
   const [error, setError] = useState<string>("");
-
+  const { theme } = useTheme();
   const handleScan = (result: QRResult | null): void => {
     if (result) {
       // Validate if the scanned result is an Ethereum address
@@ -22,7 +23,13 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-black dark:bg-white p-4 rounded-lg w-full max-w-sm mx-4 ">
+      <div
+        className={` light:bg-white p-4 rounded-lg w-full max-w-sm mx-4 ${
+          theme === "light"
+            ? "bg-white border border-black"
+            : "bg-black border border-white"
+        }`}
+      >
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-black dark:text-white">
             Scan QR Code
@@ -51,7 +58,11 @@ const QRScanner: React.FC<QRScannerProps> = ({ onScan, onClose }) => {
         <div className="mt-4 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            className={`selection:px-4 py-2 text-sm font-medium  rounded-md  focus:outline-none ${
+              theme === "dark"
+                ? "text-gray-200 bg-gray-800"
+                : " text-gray-800 bg-gray-200"
+            }`}
           >
             Cancel
           </button>

@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 import SwitchNetwork from "@/components/SwitchNetwork";
 import { ChevronDown } from "lucide-react";
 import "../../styles/History.css";
+import "../../styles/theme.css";
 import Navbar from "../Navbar";
 import board from "../../assets/leaderboard.png";
 import Footer from "../Footer";
@@ -24,7 +25,8 @@ import { useWallet } from "../../context/WalletContext";
 import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import QRScanner from "../QRScanner";
-import QR from "../../assets/QR.svg";
+import QR1 from "../../assets/qr1.svg";
+import QR2 from "../../assets/qr2.svg";
 import { Contract, ethers } from "ethers";
 import ERC20_ABI from "../../abis/ERC-20.json";
 import TRANSACTIONS_CONTRACT_ABI from "../../abis/TRANSACTIONS_ABI.json";
@@ -564,18 +566,18 @@ const SendToken = () => {
   };
 
   const handleCopyWithFeedback = (address: string) => {
-      if (address) {
-        navigator.clipboard.writeText(address);
-        setIsCopied(true); // Show check icon
-        toast.success("Address copied to clipboard!");
-      } else {
-        toast.error("No address available to copy.");
-      }
-  
-      // Reset back to copy icon after 2 seconds
-      setTimeout(() => setIsCopied(false), 2000);
-    };
-  
+    if (address) {
+      navigator.clipboard.writeText(address);
+      setIsCopied(true); // Show check icon
+      toast.success("Address copied to clipboard!");
+    } else {
+      toast.error("No address available to copy.");
+    }
+
+    // Reset back to copy icon after 2 seconds
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   // Handler for adding token into database
   const handleAddToken = async (newToken: AddToken) => {
     try {
@@ -619,44 +621,41 @@ const SendToken = () => {
               theme === "dark" ? "bg-black" : "bg-white"
             } rounded-tl-[40px] rounded-tr-[40px] items-center }`}
           >
-             <div
-            className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
-              theme === "dark"
-                ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
-                : "bg-[#F4F3F3] border border-[#000000]"
-            }`}
-            
-          >
-            <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
-              
-            
-              <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
-                {gifterAddress
-                  ? `${gifterAddress.slice(0, 6)}...${gifterAddress.slice(-4)}`
-                  : "Connect or Login"}
-              </span>
+            <div
+              className={`hidden sm:hidden md:flex lg:flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
+                theme === "dark"
+                  ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
+                  : "bg-[#F4F3F3] border border-[#000000]"
+              }`}
+            >
+              <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
+                <span className="hidden lg:flex md:flex sm:hidden font-semibold px-2 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px]">
+                  {gifterAddress
+                    ? `${gifterAddress.slice(0, 6)}...${gifterAddress.slice(
+                        -4
+                      )}`
+                    : "Connect or Login"}
+                </span>
               </div>
               {isCopied ? (
-              <Check
-                size={20}
-                className={`cursor-pointer ${
-                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
-                }`}
-              />
-            ) : (
-              <Copy
-                size={20}
-                className={`cursor-pointer ${
-                  theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
-                }`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCopyWithFeedback(
-                    gifterAddress 
-                  );
-                }}
-              />
-            )}
+                <Check
+                  size={20}
+                  className={`cursor-pointer ${
+                    theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                  }`}
+                />
+              ) : (
+                <Copy
+                  size={20}
+                  className={`cursor-pointer ${
+                    theme === "dark" ? "text-[#ddcb2cb2]" : " text-[#E265FF]"
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopyWithFeedback(gifterAddress);
+                  }}
+                />
+              )}
             </div>
             <div className="text-right  items-end">
               <div className="gap-4 flex">
@@ -675,8 +674,8 @@ const SendToken = () => {
                 <button
                   className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                     theme === "dark"
-                      ? "bg-[#FFE500] text-[#363535]"
-                      : "bg-[#E265FF] text-white"
+                      ? "text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FFE500]"
+                      : "text-white bg-[#E265FF] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#E265FF]"
                   }`}
                   onClick={OpenHistory}
                 >
@@ -707,11 +706,13 @@ const SendToken = () => {
                     </h3>
                     <button
                       onClick={() => setShowAddTokenForm(true)}
-                      className={`addtoken hover:scale-110 duration-500 transition 0.3 ${
-                        theme === "dark"
-                          ? "bg-[#FFE500] text-[#363535]"
-                          : "bg-[#E265FF] text-white"
-                      }  px-4 py-2 rounded-full text-sm`}
+                      className={`group relative overflow-hidden px-4 py-2 rounded-full text-sm transition duration-300 hover:scale-110
+    ${
+      theme === "dark"
+        ? "text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FFE500]"
+        : "text-white bg-[#E265FF] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#E265FF]"
+    }
+  `}
                     >
                       Add Token
                     </button>
@@ -902,7 +903,11 @@ const SendToken = () => {
                       aria-label="Scan QR Code"
                     >
                       scan with...
-                      <Image src={QR} alt="" width={20} />
+                      {theme === "dark" ? (
+                        <Image src={QR1} alt="" width={20} />
+                      ) : (
+                        <Image src={QR2} alt="" width={20} />
+                      )}
                     </button>
                   </div>
 
@@ -914,7 +919,7 @@ const SendToken = () => {
                     <button
                       onClick={handleButtonClick}
                       disabled={isTransactionLoading}
-                      className="hover:scale-110 duration-500 transition 0.3 px-7 lg:py-3 py-2 md:py-3 sm:py-2 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-sm bg-[#FF336A]"
+                      className="hover:scale-110 duration-500 transition 0.3 px-7 lg:py-3 py-2 md:py-3 sm:py-2 lg:px-10 md:px-10 sm:px-10 rounded-full border border-red-300 text-white lg:text-md md:text-md text-sm sm:text-sm  bg-[#FF336A] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#FF336A]"
                     >
                       {isTransactionLoading ? "SENDING..." : "SEND"}
                     </button>

@@ -211,3 +211,37 @@ a:focus {
 .animate {
   animation: animate 5s ease-in-out infinite;
 }
+
+.button {
+  width: 170px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-left: 30px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.button-5 {
+  width: 200px;
+  border-radius: 5px;
+  background-color: #f4f200;
+  background-image: #f4f200;
+  background-image: -moz-linear-gradient(top, #fff 0%, #f4f200 100%);
+  background-image: -webkit-linear-gradient(top, #fff 0%, #f4f200 100%);
+  background-image: linear-gradient(to bottom, #fff 0%, #f4f200 100%);
+  background-size: 300px;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  -webkit-transition: h 300ms ease-in-out;
+  transition: h 300ms ease-in-out;
+  color: black;
+}
+.button-5:hover {
+  background-position: -200%;
+  transition: h 300ms ease-in-out;
+}

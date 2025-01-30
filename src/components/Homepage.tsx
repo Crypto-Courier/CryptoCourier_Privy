@@ -131,7 +131,7 @@ function Homepage() {
           <div className="s3div lg:h-[20vh] md:h-[20vh] sm:h-[17vh] h-[15vh]">
             <div className="s3subdiv flex justify-center">
               <button
-                className="hover:scale-110 duration-500 transition 0.3 send px-0 py-3 text-sm sm:text-sm md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
+                className="send px-0 py-3 text-sm sm:text-sm md:text-xl lg:text-2xl rounded-full relative w-[50%] sm:w-[50%] md:w-[40%] lg:w-[25%] max-w-[300px] bg-[#FFFFFF]/25"
                 onClick={() => OpenSendToken()}
               >
                 {!activeAddress ? "Connect  Wallet " : "Send"}

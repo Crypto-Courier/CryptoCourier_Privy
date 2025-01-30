@@ -3990,14 +3990,14 @@ const WalletPopup: React.FC<WalletPopupProps> = ({ isOpen, onClose }) => {
               {isLastStep ? (
                 <button
                   onClick={handleFinish}
-                  className="px-6 py-2 bg-[#FFE500] text-black rounded-full font-semibold"
+                  className="px-6 py-2 text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-white to-[#FFE500] rounded-full font-semibold"
                 >
                   Finish
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  className="px-6 py-2 bg-[#FFE500] text-black rounded-full"
+                  className="px-6 py-2 text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-white to-[#FFE500] rounded-full"
                 >
                   Next
                 </button>

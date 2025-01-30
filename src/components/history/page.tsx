@@ -180,7 +180,6 @@ const History: React.FC = () => {
                 ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
                 : "bg-[#F4F3F3] border border-[#000000]"
             }`}
-            
           >
             <div className="font-semibold px-2 text-[13px] lg:text-[15px] md:text-[15px] sm:text-[13px]">
               {/* (viewMode === "dashboard") ? {dashboardAddress
@@ -222,7 +221,7 @@ const History: React.FC = () => {
     // Default View
     return (
       <div
-        className={`flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
+        className={`hidden sm:hidden md:flex lg:flex flex items-center space-x-3 p-3 rounded-[10px] flex-row justify-between mb-3 sm:mb-3 md:mb-0 lg:mb-0 cursor-pointer ${
           theme === "dark"
             ? "bg-[#000000]/40 border lg:border-[#ddcb2cb2]"
             : "bg-[#F4F3F3] border border-[#000000]"
@@ -314,8 +313,8 @@ const History: React.FC = () => {
                   <button
                     className={`px-[30px] py-[10px] rounded-full lg:mx-7 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                       theme === "dark"
-                        ? "bg-[#FFE500] text-[#363535]"
-                        : "bg-[#E265FF] text-white"
+                        ? "text-[#363535] bg-[#FFE500] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FFE500]"
+                        : "text-white bg-[#E265FF] hover:bg-gradient-to-b  from-[#d5d5d5d2] to-[#E265FF]"
                     }`}
                     onClick={invite}
                   >

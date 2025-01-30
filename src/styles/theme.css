@@ -1,0 +1,18 @@
+.button-1:hover {
+  background-color: #ffe500;
+  background-image: #ffe500;
+  background-image: -moz-linear-gradient(top, #fff 0%, #ffe500 100%);
+  background-image: -webkit-linear-gradient(top, #fff 0%, #ffe500 100%);
+  background-image: linear-gradient(to bottom, #fff 0%, #ffe500 100%);
+  background-size: 300px;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  -webkit-transition: h 300ms ease-in-out;
+  transition: h 300ms ease-in-out;
+  color: #363535;
+}
+.button-1 {
+  background-position: -200%;
+  transition: h 300ms ease-in-out;
+  color: #363535;
+}
