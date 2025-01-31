@@ -21,15 +21,9 @@ export const metadata = {
     siteName: "Gryfto",
     images: [
       {
-        url: "https://gryfto.com/og-send.png",
-        width: 800,
-        height: 600,
-        alt: "send-token",
-      },
-      {
-        url: "https://gryfto.com/og-send.png",
-        width: 1800,
-        height: 1600,
+        url: "/og-send.png",
+        width: 1200,
+        height: 630,
         alt: "send-token",
       },
     ],

@@ -338,14 +338,10 @@ export const Connect = () => {
           </Tooltip>
 
           {/* Wallet Address */}
-          {walletData?.address ? (
-            <>
-              {walletData?.address.slice(0, 6)}...
+         
+              {walletData?.address.slice(0, 6)}
               {walletData?.address.slice(-4)}
-            </>
-          ) : (
-            "Connected"
-          )}
+           
         </button>
       </div>
       {showDropdown && (
