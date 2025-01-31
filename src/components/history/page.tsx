@@ -301,8 +301,8 @@ const History: React.FC = () => {
                   <button
                     className={`px-[30px] py-[10px] rounded-full lg:mx-5 md:mx-7 sm:mx-7 hover:scale-110 duration-500 transition 0.3 mx-0 text-[12px] lg:text-[15px] md:text-[15px] sm:text-[15px] ${
                       theme === "dark"
-                        ? "bg-[#FFE500] text-[#363535]"
-                        : "bg-[#E265FF] text-white"
+                        ? "bg-[#FFE500] text-[#363535]  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FFE500]"
+                        : "bg-[#E265FF] text-white  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#E265FF]"
                     }`}
                     onClick={SendToken}
                   >

@@ -44,8 +44,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { getAccessToken }  = usePrivy();
-  
+  const { getAccessToken } = usePrivy();
+
   // Toggle expand/collapse for a specific transaction
   const toggleTransactionExpand = (index: any) => {
     setExpandedTxIndex(expandedTxIndex === index ? null : index);
@@ -255,7 +255,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         tokenSymbol: tx.tokenSymbol,
         gifterEmail: tx.gifterEmail,
         transactionHash: tx.transactionHash,
-        getAccessToken
+        getAccessToken,
       });
       toast.success("Email resent successfully!");
     } catch (error) {
@@ -459,7 +459,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                   <div className="hidden justify-end gap-3 md:hidden lg:flex sm:hidden ">
                     {tx.gifterWallet === activeAddress &&
                       isValidEmail(tx.claimerEmail) && (
-                        <div className="resend bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
+                        <div className="resend bg-[#FF336A]  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex items-center gap-2 justify-center">
                           {loadingTxId === index ? (
                             <div className="tracking-wide text-[15px]">
                               Sending
@@ -484,7 +484,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                           )}
                         </div>
                       )}
-                    <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
+                    <div className="trx bg-[#FF336A]  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-3 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
                       <Image
                         src={trx}
                         alt=""
@@ -579,7 +579,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                           )}
                         </div>
                       )}
-                    <div className="trx bg-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
+                    <div className="trx bg-[#FF336A]  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FF336A] hover:scale-110 duration-500 transition 0.3 text-white px-5 py-2 rounded-full text-[11px] lg:text-[15px] md:text-[15px] flex gap-2 justify-center items-center">
                       <Image
                         src={trx}
                         alt=""

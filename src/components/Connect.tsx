@@ -314,7 +314,7 @@ export const Connect = () => {
           // onMouseLeave={() => setShowDropdown(false)}
 
           type="button"
-          className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333] py-2 px-4 md:py-3 sm:py-3 lg:py-3 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center gap-2"
+          className="border border-[#FFFFFF] lg:w-50 md:w-50 sm:w-50 w-30 bg-[#FF3333]  hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FF3333] py-2 px-4 md:py-3 sm:py-3 lg:py-3 rounded-full font-bold hover:scale-110 duration-500 transition 0.3 text-[10px] sm:text-sm md:text-md lg:text-md flex items-center justify-center gap-2"
         >
           {/* Chain Image */}
           <Tooltip
@@ -338,10 +338,9 @@ export const Connect = () => {
           </Tooltip>
 
           {/* Wallet Address */}
-         
-              {walletData?.address.slice(0, 6)}
-              {walletData?.address.slice(-4)}
-           
+
+          {walletData?.address.slice(0, 6)}
+          {walletData?.address.slice(-4)}
         </button>
       </div>
       {showDropdown && (

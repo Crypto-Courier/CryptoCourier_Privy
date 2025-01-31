@@ -337,7 +337,9 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                 <button
                   onClick={handleConfirm}
                   className={`${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    theme === "dark"
+                      ? "bg-[#FE660A] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#EF660A]"
+                      : "bg-[#0052FF] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#0052FF]"
                   } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
                 >
                   Confirm
@@ -369,8 +371,10 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                   onClick={handleCreateWallet}
                   disabled={loading || checking}
                   className={`${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
-                  } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md `}
+                    theme === "dark"
+                      ? "bg-[#FE660A] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FE660A]"
+                      : "bg-[#0052FF] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#0052FF]"
+                  } w-[60%] m-auto text-white py-2 rounded-[10px] flex items-center justify-center mb-2 mt-2 text-sm lg:text-md  md:text-md sm:text-md hover:scale-110 duration-500 transition 0.1 `}
                 >
                   {checking
                     ? "Searching for existing wallet..."
@@ -492,7 +496,7 @@ const TransferDetails: React.FC<TransferDetailsProps> = ({
                 <button
                   onClick={handleConfirm}
                   className={`${
-                    theme === "dark" ? "bg-[#FE660A]" : "bg-[#0052FF]"
+                    theme === "dark" ? "bg-[#FE660A] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#FE660A]" : "bg-[#0052FF] hover:bg-gradient-to-b from-[#d5d5d5d2] to-[#0052FF]"
                   } w-full text-white py-2 lg:py-3 md:py-3 sm:py-3 rounded-[50px] flex items-center justify-center font-semibold hover:scale-110 duration-500 transition 0.1`}
                 >
                   Confirm

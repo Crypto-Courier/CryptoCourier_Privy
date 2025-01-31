@@ -11,22 +11,32 @@ export default function Home() {
   );
 }
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gryfto.com/"),
+  metadataBase: new URL("http://gryfto.com"),
   title: "Gryfto",
   description: "Gift token as easy as sending email",
-  openGraph: {
-    title: "Gryfto",
-    description: "Gift token as easy as sending email",
-    url: "https://gryfto.com/",
-    siteName: "Gryfto",
-    images: [
-      {
-        url: "/opengraph-image.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
 };
+
+// export const metadata = {
+//   openGraph: {
+//     title: "Next.js",
+//     description: "The React Framework for the Web",
+//     url: "http://localhost:3000",
+//     siteName: "Next.js",
+//     images: [
+//       {
+//         url: "opengraph-image.jpg",
+//         width: 800,
+//         height: 600,
+//       },
+//       {
+//         url: "opengraph-image.jpg",
+//         width: 1800,
+//         height: 1600,
+//         alt: "My custom alt",
+//       },
+//     ],
+
+//     locale: "en_US",
+//     type: "website",
+//   },
+// };
