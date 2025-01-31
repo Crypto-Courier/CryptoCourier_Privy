@@ -11,28 +11,28 @@ export default function sendTo() {
     </div>
   );
 }
-export const metadata = {
-  title: "Trancation-History",
-  description: "Gift token as easy as sending email",
-  openGraph: {
-    title: "Trancation-History",
-    description: "Gift token as easy as sending email",
-    url: "https://gryfto.com/history",
-    siteName: "Gryfto",
-    images: [
-      {
-        url: "https://gryfto.com/og-send.png",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://gryfto.com/og-send.png",
-        width: 1800,
-        height: 1600,
-        alt: "send token",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-};
+// export const metadata = {
+//   title: "Trancation-History",
+//   description: "Gift token as easy as sending email",
+//   openGraph: {
+//     title: "Trancation-History",
+//     description: "Gift token as easy as sending email",
+//     url: "https://gryfto.com/history",
+//     siteName: "Gryfto",
+//     images: [
+//       {
+//         url: "https://gryfto.com/og-send.png",
+//         width: 800,
+//         height: 600,
+//       },
+//       {
+//         url: "https://gryfto.com/og-send.png",
+//         width: 1800,
+//         height: 1600,
+//         alt: "send token",
+//       },
+//     ],
+//     locale: "en_US",
+//     type: "website",
+//   },
+// };
