@@ -17,19 +17,19 @@ export const metadata = {
   openGraph: {
     title: "Trancation-History",
     description: "Gift token as easy as sending email",
-    url: "https://courierbycryptocoutrier.vercel.app/",
+    url: "https://gryfto.com/history",
     siteName: "Gryfto",
     images: [
       {
-        url: "https://ipfs.io/ipfs/QmdWkLMj6KjPPs5dRc3Y8eC4phLnWeVufQMacoTJ1Bg5kZ",
+        url: "https://gryfto.com/og-send.png",
         width: 800,
         height: 600,
       },
       {
-        url: "https://ipfs.io/ipfs/QmdWkLMj6KjPPs5dRc3Y8eC4phLnWeVufQMacoTJ1Bg5kZ",
+        url: "https://gryfto.com/og-send.png",
         width: 1800,
         height: 1600,
-        alt: "My custom alt",
+        alt: "send token",
       },
     ],
     locale: "en_US",
