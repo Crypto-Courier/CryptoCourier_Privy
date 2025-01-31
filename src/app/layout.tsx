@@ -18,7 +18,7 @@ import CatEmojiAnimation from "@/components/CatEmojiAnimation";
 // });
 
 export const metadata: Metadata = {
-  title: "Crypto-Courier",
+  title: "Gryfto",
   description: "Gift token as easy as sending email",
 };
 
