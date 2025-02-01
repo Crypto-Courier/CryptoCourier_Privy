@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import dLogo from "../assets/dLogo.svg";
 import lLogo from "../assets/lLogo.svg";
 import Image from "next/image";
-import "../styles/Responsive.css";
 import { Connect } from "./Connect";
 
 const Navbar = () => {
