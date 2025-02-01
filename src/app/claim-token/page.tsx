@@ -12,8 +12,24 @@ export default function sendTo() {
     </div>
   );
 }
+
 export const metadata: Metadata = {
-  metadataBase: new URL("http://gryfto.com"),
+  metadataBase: new URL("http://gryfto.com/claim-token"),
   title: "Claim-Token",
   description: "Claim your gifted token",
+  openGraph: {
+    images: [
+      {
+        url: "opengraph-image.jpg",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "opengraph-image.jpg",
+        width: 1800,
+        height: 1600,
+        alt: "Homepage",
+      },
+    ],
+  },
 };

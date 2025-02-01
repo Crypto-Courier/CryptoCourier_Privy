@@ -1,6 +1,4 @@
 import SentToken from "../../components/sendToken/page";
-import Image from "next/image";
-import img from "../assets/darkbg.png";
 import { Metadata } from "next";
 
 export default function SendToken() {
@@ -13,7 +11,22 @@ export default function SendToken() {
   );
 }
 export const metadata: Metadata = {
-  metadataBase: new URL("http://gryfto.com"),
+  metadataBase: new URL("http://gryfto.com/send-token"),
   title: "Send-Token",
-  description: "gift token as easy as sending email",
+  description: "Gift token as easy as sending email",
+  openGraph: {
+    images: [
+      {
+        url: "opengraph-image.jpg",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "opengraph-image.jpg",
+        width: 1800,
+        height: 1600,
+        alt: "Homepage",
+      },
+    ],
+  },
 };

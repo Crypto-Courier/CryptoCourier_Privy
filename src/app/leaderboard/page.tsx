@@ -12,8 +12,24 @@ export default function sendTo() {
     </div>
   );
 }
+
 export const metadata: Metadata = {
-  metadataBase: new URL("http://gryfto.com"),
+  metadataBase: new URL("http://gryfto.com/leaderboard"),
   title: "Leaderboard",
   description: "Provide top 10 users based on number of claimers",
+  openGraph: {
+    images: [
+      {
+        url: "opengraph-image.jpg",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "opengraph-image.jpg",
+        width: 1800,
+        height: 1600,
+        alt: "Homepage",
+      },
+    ],
+  },
 };

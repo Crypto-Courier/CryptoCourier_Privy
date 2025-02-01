@@ -12,8 +12,24 @@ export default function sendTo() {
     </div>
   );
 }
+
 export const metadata: Metadata = {
-  metadataBase: new URL("http://gryfto.com"),
-  title: "History",
+  metadataBase: new URL("http://gryfto.com/history"),
+  title: "Transaction-History",
   description: "provide history of all the transactions",
+  openGraph: {
+    images: [
+      {
+        url: "opengraph-image.jpg",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "opengraph-image.jpg",
+        width: 1800,
+        height: 1600,
+        alt: "Homepage",
+      },
+    ],
+  },
 };
